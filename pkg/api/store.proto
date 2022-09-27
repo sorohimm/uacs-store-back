@@ -28,6 +28,7 @@ message ProductResponse {
   string name = 20;
   float price = 30;
   string img = 40;
+  repeated ProductInfo info = 50;
 }
 
 message AllProductsRequest {

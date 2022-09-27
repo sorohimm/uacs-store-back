@@ -227,6 +227,12 @@
         },
         "img": {
           "type": "string"
+        },
+        "info": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/uacs_storeProductInfo"
+          }
         }
       }
     }
