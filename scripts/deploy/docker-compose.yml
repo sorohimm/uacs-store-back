@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: uacs-store-postgres
+    environment:
+      TZ: 'GMT-3'
+      PGTZ: 'GMT-3'
+      POSTGRES_DB: uacs_store
+      POSTGRES_USER: pg
+      POSTGRES_PASSWORD: test
+    ports:
+      - "5432:5432"
