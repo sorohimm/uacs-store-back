@@ -11,20 +11,20 @@ default: all
 
 .PHIONY: all
 all:tidy
-all:build
+all:store
 
-.PHONY: build
-build: UACS_STORE_OUT := $(OUT_DIR)/uacs_store
-build: UACS_STORE_MAIN := ./cmd
-build:
+.PHONY: store
+store: UACS_STORE_OUT := $(OUT_DIR)/uacs_store
+store: UACS_STORE_MAIN := ./cmd/store
+store:
 	@echo BUILDING $(RULESRVOUT)
 	$(V)go build  -ldflags "-s -w -X main.version=${RELEASE} -X main.buildTime=${BUILD_TIME}" -o $(UACS_STORE_OUT) $(UACS_STORE_MAIN)
 	@echo DONE
 
-.PHONY: linux
-linux: export GOOS := linux
-linux: export GOARCH := amd64
-linux: build
+.PHONY: store_linux
+store_linux: export GOOS := linux
+store_linux: export GOARCH := amd64
+store_linux: store
 
 #### docker compose
 .PHONY: compose-up
