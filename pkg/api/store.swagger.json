@@ -129,7 +129,15 @@
       }
     },
     "uacs_storeAllProductsResponse": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "products": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/uacs_storeProductResponse"
+          }
+        }
+      }
     },
     "uacs_storeProductResponse": {
       "type": "object",

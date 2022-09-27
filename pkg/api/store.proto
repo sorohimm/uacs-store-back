@@ -24,7 +24,7 @@ message AllProductsRequest {
 }
 
 message AllProductsResponse {
-
+  repeated ProductResponse products = 10;
 }
 
 service StoreService {

@@ -3,8 +3,14 @@ package api
 import (
 	"context"
 	"errors"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/sorohimm/shop/internal/service/api/handler"
+	"github.com/sorohimm/shop/internal/service/api/initial"
 	"github.com/sorohimm/shop/internal/storage/postgres"
+	"github.com/sorohimm/shop/pkg/api"
+	"go.uber.org/zap"
+	"google.golang.org/grpc"
 	"os"
 
 	"github.com/sorohimm/shop/internal"
@@ -43,7 +49,7 @@ func (o *Service) initLogger(ctx context.Context, version, built, appName string
 		appConf.Log.Level,
 		appConf.Log.EncType)
 	if err != nil {
-		stdl.Fatal(err)
+		stdl.Fatalf("failed to init logger: %v", err)
 	}
 	logger := l.Sugar().With("v", version, "built", built, "app", appName)
 	return log.CtxWithLogger(ctx, logger.Desugar())
@@ -64,5 +70,36 @@ func (o *Service) Init(ctx context.Context, appName, version, built string) {
 		logger.Fatalf("failed to init ruleset.RepoRuleset from postgres: %v", err)
 	}
 
-	logger.Debug(pool)
+	appConf := config.FromContext(ctx)
+
+	storeHandler := handler.NewStoreRequesterHandler(pool)
+	o.Add(initial.Grpc(ctx, func(s *grpc.Server) {
+		api.RegisterStoreServiceServer(s, storeHandler)
+	}))
+
+	exec, inter, err := initial.HTTP(ctx, appConf,
+		func(ctx context.Context, mux *runtime.ServeMux, grpcAddr string, opts []grpc.DialOption) error {
+			if err := api.RegisterStoreServiceHandlerFromEndpoint(ctx, mux, grpcAddr, opts); err != nil {
+				return err
+			}
+			return nil
+		})
+	if err != nil {
+		logger.Fatalf("failed to init http: %v", err)
+	}
+	o.Add(exec, inter)
+
+	o.run(ctx)
+}
+
+func (o *Service) run(ctx context.Context) {
+	logger := log.FromContext(ctx).Sugar()
+	// running application
+	if err := o.RunGroup.Run(func(err error) {
+		if err != nil {
+			logger.Error(err)
+		}
+	}); err != nil {
+		logger.Error("unexpected error", zap.Error(err))
+	}
 }
