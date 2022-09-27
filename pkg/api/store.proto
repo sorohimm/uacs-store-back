@@ -27,7 +27,7 @@ message AllProductsResponse {
 
 }
 
-service UACSStoreService {
+service StoreService {
   rpc GetProduct (ProductRequest) returns (ProductResponse) {
     option (google.api.http) = {
       get: "/v1/product/{id}"

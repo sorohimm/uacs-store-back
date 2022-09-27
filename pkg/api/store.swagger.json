@@ -6,7 +6,7 @@
   },
   "tags": [
     {
-      "name": "UACSStoreService"
+      "name": "StoreService"
     }
   ],
   "consumes": [
@@ -18,7 +18,7 @@
   "paths": {
     "/v1/product": {
       "get": {
-        "operationId": "UACSStoreService_GetAllProducts",
+        "operationId": "StoreService_GetAllProducts",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -64,13 +64,13 @@
           }
         ],
         "tags": [
-          "UACSStoreService"
+          "StoreService"
         ]
       }
     },
     "/v1/product/{id}": {
       "get": {
-        "operationId": "UACSStoreService_GetProduct",
+        "operationId": "StoreService_GetProduct",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -95,7 +95,7 @@
           }
         ],
         "tags": [
-          "UACSStoreService"
+          "StoreService"
         ]
       }
     }
