@@ -2,6 +2,7 @@ package product
 
 import (
 	"context"
+
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/sorohimm/shop/pkg/api"
 )
@@ -17,7 +18,6 @@ type ProductRepo struct {
 }
 
 func (o *ProductRepo) GetProductById(ctx context.Context, id int64) (*Product, error) {
-
 	return nil, nil
 }
 

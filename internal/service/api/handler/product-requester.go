@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/jackc/pgx/v4/pgxpool"
+
 	"github.com/sorohimm/shop/internal/storage"
 	"github.com/sorohimm/shop/internal/storage/postgres/api/product"
-
 	"github.com/sorohimm/shop/pkg/api"
 )
 
