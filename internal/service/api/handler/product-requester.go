@@ -2,6 +2,9 @@ package handler
 
 import (
 	"context"
+	"errors"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"github.com/jackc/pgx/v4/pgxpool"
 
@@ -22,7 +25,15 @@ type StoreRequesterHandler struct {
 }
 
 func (o *StoreRequesterHandler) GetProduct(ctx context.Context, req *api.ProductRequest) (*api.ProductResponse, error) {
-	return nil, nil
+	prod, err := o.productRequester.GetProductById(ctx, req.GetId())
+	if err != nil {
+		if errors.Is(err, product.ErrNotFound) {
+			return nil, status.Errorf(codes.NotFound, err.Error())
+		}
+		return nil, status.Errorf(codes.Internal, err.Error())
+	}
+
+	return prod.ToAPIResponse(), nil
 }
 
 func (o *StoreRequesterHandler) GetAllProducts(ctx context.Context, req *api.AllProductsRequest) (*api.AllProductsResponse, error) {

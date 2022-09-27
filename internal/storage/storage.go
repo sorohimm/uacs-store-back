@@ -9,7 +9,7 @@ import (
 
 type ProductRequester interface {
 	GetProductById(ctx context.Context, id int64) (*product.Product, error)
-	GetAllProducts(ctx context.Context) (product.Products, error)
+	GetAllProducts(ctx context.Context, limit int64, offset int64) (product.Products, error)
 }
 
 type ProductCommander interface {
