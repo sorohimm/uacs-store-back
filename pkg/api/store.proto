@@ -10,21 +10,19 @@ message LangValue {
   string Val = 20;
 }
 
-message FoundationRequest {
+message ProductRequest {
+  int64 id = 10;
+}
+
+message ProductResponse {
   int64 id = 10;
 }
 
 
 service ICDService {
-  rpc GetRoot (RootRequest) returns (RootResponse) {
+  rpc GetProduct (ProductRequest) returns (ProductResponse) {
     option (google.api.http) = {
-      get: "/v1/icd/entity"
+      get: "/v1/product"
     };
   };
-
-  rpc GetFoundation (FoundationRequest) returns (FoundationResponse) {
-    option (google.api.http) = {
-      get: "/v1/icd/entity/{id}"
-    };
-  }
 }
