@@ -18,86 +18,122 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// ICDServiceClient is the client API for ICDService service.
+// UACSStoreServiceClient is the client API for UACSStoreService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type ICDServiceClient interface {
+type UACSStoreServiceClient interface {
 	GetProduct(ctx context.Context, in *ProductRequest, opts ...grpc.CallOption) (*ProductResponse, error)
+	GetAllProducts(ctx context.Context, in *AllProductsRequest, opts ...grpc.CallOption) (*AllProductsResponse, error)
 }
 
-type iCDServiceClient struct {
+type uACSStoreServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewICDServiceClient(cc grpc.ClientConnInterface) ICDServiceClient {
-	return &iCDServiceClient{cc}
+func NewUACSStoreServiceClient(cc grpc.ClientConnInterface) UACSStoreServiceClient {
+	return &uACSStoreServiceClient{cc}
 }
 
-func (c *iCDServiceClient) GetProduct(ctx context.Context, in *ProductRequest, opts ...grpc.CallOption) (*ProductResponse, error) {
+func (c *uACSStoreServiceClient) GetProduct(ctx context.Context, in *ProductRequest, opts ...grpc.CallOption) (*ProductResponse, error) {
 	out := new(ProductResponse)
-	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.ICDService/GetProduct", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.UACSStoreService/GetProduct", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ICDServiceServer is the server API for ICDService service.
-// All implementations must embed UnimplementedICDServiceServer
+func (c *uACSStoreServiceClient) GetAllProducts(ctx context.Context, in *AllProductsRequest, opts ...grpc.CallOption) (*AllProductsResponse, error) {
+	out := new(AllProductsResponse)
+	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.UACSStoreService/GetAllProducts", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// UACSStoreServiceServer is the server API for UACSStoreService service.
+// All implementations must embed UnimplementedUACSStoreServiceServer
 // for forward compatibility
-type ICDServiceServer interface {
+type UACSStoreServiceServer interface {
 	GetProduct(context.Context, *ProductRequest) (*ProductResponse, error)
-	mustEmbedUnimplementedICDServiceServer()
+	GetAllProducts(context.Context, *AllProductsRequest) (*AllProductsResponse, error)
+	mustEmbedUnimplementedUACSStoreServiceServer()
 }
 
-// UnimplementedICDServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedICDServiceServer struct {
+// UnimplementedUACSStoreServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedUACSStoreServiceServer struct {
 }
 
-func (UnimplementedICDServiceServer) GetProduct(context.Context, *ProductRequest) (*ProductResponse, error) {
+func (UnimplementedUACSStoreServiceServer) GetProduct(context.Context, *ProductRequest) (*ProductResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProduct not implemented")
 }
-func (UnimplementedICDServiceServer) mustEmbedUnimplementedICDServiceServer() {}
+func (UnimplementedUACSStoreServiceServer) GetAllProducts(context.Context, *AllProductsRequest) (*AllProductsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllProducts not implemented")
+}
+func (UnimplementedUACSStoreServiceServer) mustEmbedUnimplementedUACSStoreServiceServer() {}
 
-// UnsafeICDServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ICDServiceServer will
+// UnsafeUACSStoreServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to UACSStoreServiceServer will
 // result in compilation errors.
-type UnsafeICDServiceServer interface {
-	mustEmbedUnimplementedICDServiceServer()
+type UnsafeUACSStoreServiceServer interface {
+	mustEmbedUnimplementedUACSStoreServiceServer()
 }
 
-func RegisterICDServiceServer(s grpc.ServiceRegistrar, srv ICDServiceServer) {
-	s.RegisterService(&ICDService_ServiceDesc, srv)
+func RegisterUACSStoreServiceServer(s grpc.ServiceRegistrar, srv UACSStoreServiceServer) {
+	s.RegisterService(&UACSStoreService_ServiceDesc, srv)
 }
 
-func _ICDService_GetProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UACSStoreService_GetProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ProductRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ICDServiceServer).GetProduct(ctx, in)
+		return srv.(UACSStoreServiceServer).GetProduct(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/github.com.sorohimm.uacs_store.ICDService/GetProduct",
+		FullMethod: "/github.com.sorohimm.uacs_store.UACSStoreService/GetProduct",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ICDServiceServer).GetProduct(ctx, req.(*ProductRequest))
+		return srv.(UACSStoreServiceServer).GetProduct(ctx, req.(*ProductRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// ICDService_ServiceDesc is the grpc.ServiceDesc for ICDService service.
+func _UACSStoreService_GetAllProducts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AllProductsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UACSStoreServiceServer).GetAllProducts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/github.com.sorohimm.uacs_store.UACSStoreService/GetAllProducts",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UACSStoreServiceServer).GetAllProducts(ctx, req.(*AllProductsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// UACSStoreService_ServiceDesc is the grpc.ServiceDesc for UACSStoreService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var ICDService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "github.com.sorohimm.uacs_store.ICDService",
-	HandlerType: (*ICDServiceServer)(nil),
+var UACSStoreService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "github.com.sorohimm.uacs_store.UACSStoreService",
+	HandlerType: (*UACSStoreServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetProduct",
-			Handler:    _ICDService_GetProduct_Handler,
+			Handler:    _UACSStoreService_GetProduct_Handler,
+		},
+		{
+			MethodName: "GetAllProducts",
+			Handler:    _UACSStoreService_GetAllProducts_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

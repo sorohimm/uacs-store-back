@@ -6,7 +6,7 @@
   },
   "tags": [
     {
-      "name": "ICDService"
+      "name": "UACSStoreService"
     }
   ],
   "consumes": [
@@ -18,7 +18,59 @@
   "paths": {
     "/v1/product": {
       "get": {
-        "operationId": "ICDService_GetProduct",
+        "operationId": "UACSStoreService_GetAllProducts",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/uacs_storeAllProductsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "brandId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "typeId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "UACSStoreService"
+        ]
+      }
+    },
+    "/v1/product/{id}": {
+      "get": {
+        "operationId": "UACSStoreService_GetProduct",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -36,14 +88,14 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
-            "required": false,
+            "in": "path",
+            "required": true,
             "type": "string",
             "format": "int64"
           }
         ],
         "tags": [
-          "ICDService"
+          "UACSStoreService"
         ]
       }
     }
@@ -76,12 +128,25 @@
         }
       }
     },
+    "uacs_storeAllProductsResponse": {
+      "type": "object"
+    },
     "uacs_storeProductResponse": {
       "type": "object",
       "properties": {
         "id": {
           "type": "string",
           "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "price": {
+          "type": "number",
+          "format": "float"
+        },
+        "img": {
+          "type": "string"
         }
       }
     }

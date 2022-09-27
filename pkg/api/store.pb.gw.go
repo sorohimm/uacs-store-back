@@ -31,19 +31,25 @@ var _ = runtime.String
 var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
-var (
-	filter_ICDService_GetProduct_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
-)
-
-func request_ICDService_GetProduct_0(ctx context.Context, marshaler runtime.Marshaler, client ICDServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_UACSStoreService_GetProduct_0(ctx context.Context, marshaler runtime.Marshaler, client UACSStoreServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq ProductRequest
 	var metadata runtime.ServerMetadata
 
-	if err := req.ParseForm(); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ICDService_GetProduct_0); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+
+	protoReq.Id, err = runtime.Int64(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
 	}
 
 	msg, err := client.GetProduct(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -51,15 +57,25 @@ func request_ICDService_GetProduct_0(ctx context.Context, marshaler runtime.Mars
 
 }
 
-func local_request_ICDService_GetProduct_0(ctx context.Context, marshaler runtime.Marshaler, server ICDServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_UACSStoreService_GetProduct_0(ctx context.Context, marshaler runtime.Marshaler, server UACSStoreServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq ProductRequest
 	var metadata runtime.ServerMetadata
 
-	if err := req.ParseForm(); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ICDService_GetProduct_0); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+
+	protoReq.Id, err = runtime.Int64(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
 	}
 
 	msg, err := server.GetProduct(ctx, &protoReq)
@@ -67,13 +83,49 @@ func local_request_ICDService_GetProduct_0(ctx context.Context, marshaler runtim
 
 }
 
-// RegisterICDServiceHandlerServer registers the http handlers for service ICDService to "mux".
-// UnaryRPC     :call ICDServiceServer directly.
-// StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterICDServiceHandlerFromEndpoint instead.
-func RegisterICDServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server ICDServiceServer) error {
+var (
+	filter_UACSStoreService_GetAllProducts_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+)
 
-	mux.Handle("GET", pattern_ICDService_GetProduct_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+func request_UACSStoreService_GetAllProducts_0(ctx context.Context, marshaler runtime.Marshaler, client UACSStoreServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq AllProductsRequest
+	var metadata runtime.ServerMetadata
+
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_UACSStoreService_GetAllProducts_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	msg, err := client.GetAllProducts(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
+func local_request_UACSStoreService_GetAllProducts_0(ctx context.Context, marshaler runtime.Marshaler, server UACSStoreServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq AllProductsRequest
+	var metadata runtime.ServerMetadata
+
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_UACSStoreService_GetAllProducts_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	msg, err := server.GetAllProducts(ctx, &protoReq)
+	return msg, metadata, err
+
+}
+
+// RegisterUACSStoreServiceHandlerServer registers the http handlers for service UACSStoreService to "mux".
+// UnaryRPC     :call UACSStoreServiceServer directly.
+// StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterUACSStoreServiceHandlerFromEndpoint instead.
+func RegisterUACSStoreServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server UACSStoreServiceServer) error {
+
+	mux.Handle("GET", pattern_UACSStoreService_GetProduct_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -81,12 +133,12 @@ func RegisterICDServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/github.com.sorohimm.uacs_store.ICDService/GetProduct", runtime.WithHTTPPathPattern("/v1/product"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/github.com.sorohimm.uacs_store.UACSStoreService/GetProduct", runtime.WithHTTPPathPattern("/v1/product/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_ICDService_GetProduct_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_UACSStoreService_GetProduct_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -94,16 +146,41 @@ func RegisterICDServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 			return
 		}
 
-		forward_ICDService_GetProduct_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_UACSStoreService_GetProduct_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("GET", pattern_UACSStoreService_GetAllProducts_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/github.com.sorohimm.uacs_store.UACSStoreService/GetAllProducts", runtime.WithHTTPPathPattern("/v1/product"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_UACSStoreService_GetAllProducts_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_UACSStoreService_GetAllProducts_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
 	return nil
 }
 
-// RegisterICDServiceHandlerFromEndpoint is same as RegisterICDServiceHandler but
+// RegisterUACSStoreServiceHandlerFromEndpoint is same as RegisterUACSStoreServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterICDServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterUACSStoreServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.Dial(endpoint, opts...)
 	if err != nil {
 		return err
@@ -123,41 +200,63 @@ func RegisterICDServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.Ser
 		}()
 	}()
 
-	return RegisterICDServiceHandler(ctx, mux, conn)
+	return RegisterUACSStoreServiceHandler(ctx, mux, conn)
 }
 
-// RegisterICDServiceHandler registers the http handlers for service ICDService to "mux".
+// RegisterUACSStoreServiceHandler registers the http handlers for service UACSStoreService to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterICDServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterICDServiceHandlerClient(ctx, mux, NewICDServiceClient(conn))
+func RegisterUACSStoreServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterUACSStoreServiceHandlerClient(ctx, mux, NewUACSStoreServiceClient(conn))
 }
 
-// RegisterICDServiceHandlerClient registers the http handlers for service ICDService
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "ICDServiceClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "ICDServiceClient"
+// RegisterUACSStoreServiceHandlerClient registers the http handlers for service UACSStoreService
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "UACSStoreServiceClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "UACSStoreServiceClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "ICDServiceClient" to call the correct interceptors.
-func RegisterICDServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client ICDServiceClient) error {
+// "UACSStoreServiceClient" to call the correct interceptors.
+func RegisterUACSStoreServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client UACSStoreServiceClient) error {
 
-	mux.Handle("GET", pattern_ICDService_GetProduct_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_UACSStoreService_GetProduct_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/github.com.sorohimm.uacs_store.ICDService/GetProduct", runtime.WithHTTPPathPattern("/v1/product"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/github.com.sorohimm.uacs_store.UACSStoreService/GetProduct", runtime.WithHTTPPathPattern("/v1/product/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_ICDService_GetProduct_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_UACSStoreService_GetProduct_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_ICDService_GetProduct_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_UACSStoreService_GetProduct_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("GET", pattern_UACSStoreService_GetAllProducts_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/github.com.sorohimm.uacs_store.UACSStoreService/GetAllProducts", runtime.WithHTTPPathPattern("/v1/product"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_UACSStoreService_GetAllProducts_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_UACSStoreService_GetAllProducts_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -165,9 +264,13 @@ func RegisterICDServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 }
 
 var (
-	pattern_ICDService_GetProduct_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "product"}, ""))
+	pattern_UACSStoreService_GetProduct_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "product", "id"}, ""))
+
+	pattern_UACSStoreService_GetAllProducts_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "product"}, ""))
 )
 
 var (
-	forward_ICDService_GetProduct_0 = runtime.ForwardResponseMessage
+	forward_UACSStoreService_GetProduct_0 = runtime.ForwardResponseMessage
+
+	forward_UACSStoreService_GetAllProducts_0 = runtime.ForwardResponseMessage
 )

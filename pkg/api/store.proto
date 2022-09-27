@@ -5,22 +5,36 @@ option go_package = "github.com/sorohimm/shop/pkg/api";
 
 import "google/api/annotations.proto";
 
-message LangValue {
-  string Lang = 10;
-  string Val = 20;
-}
-
 message ProductRequest {
   int64 id = 10;
 }
 
 message ProductResponse {
   int64 id = 10;
+  string name = 20;
+  float price = 30;
+  string img = 40;
 }
 
+message AllProductsRequest {
+  int64 brand_id = 10;
+  int64 type_id = 20;
+  int64 limit = 30;
+  int64 page = 40;
+}
 
-service ICDService {
+message AllProductsResponse {
+
+}
+
+service UACSStoreService {
   rpc GetProduct (ProductRequest) returns (ProductResponse) {
+    option (google.api.http) = {
+      get: "/v1/product/{id}"
+    };
+  };
+
+  rpc GetAllProducts (AllProductsRequest) returns (AllProductsResponse) {
     option (google.api.http) = {
       get: "/v1/product"
     };
