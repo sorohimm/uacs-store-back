@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package github.com.sorohimm.uacs_store;
+option go_package = "github.com/sorohimm/shop/pkg/api";
+
+import "google/api/annotations.proto";
+
+message LangValue {
+  string Lang = 10;
+  string Val = 20;
+}
+
+message FoundationRequest {
+  int64 id = 10;
+}
+
+
+service ICDService {
+  rpc GetRoot (RootRequest) returns (RootResponse) {
+    option (google.api.http) = {
+      get: "/v1/icd/entity"
+    };
+  };
+
+  rpc GetFoundation (FoundationRequest) returns (FoundationResponse) {
+    option (google.api.http) = {
+      get: "/v1/icd/entity/{id}"
+    };
+  }
+}

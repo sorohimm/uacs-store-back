@@ -1,13 +1,16 @@
-package store
+package api
 
 import (
 	"context"
 	"errors"
+	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/sorohimm/shop/internal/storage/postgres"
+	"os"
+
 	"github.com/sorohimm/shop/internal"
 	"github.com/sorohimm/shop/internal/conf"
 	"github.com/sorohimm/shop/internal/log"
-	"github.com/sorohimm/shop/internal/service/store/config"
-	"os"
+	"github.com/sorohimm/shop/internal/service/api/config"
 
 	stdl "log"
 )
@@ -47,5 +50,19 @@ func (o *Service) initLogger(ctx context.Context, version, built, appName string
 }
 
 func (o *Service) Init(ctx context.Context, appName, version, built string) {
+	var (
+		err  error
+		pool *pgxpool.Pool
+	)
 
+	logger := log.FromContext(ctx).Sugar()
+
+	ctx = o.initConfigs(ctx)
+	ctx = o.initLogger(ctx, version, built, appName)
+
+	if pool, err = postgres.NewPGXPool(ctx, config.FromContext(ctx).Postgres); err != nil {
+		logger.Fatalf("failed to init ruleset.RepoRuleset from postgres: %v", err)
+	}
+
+	logger.Debug(pool)
 }
