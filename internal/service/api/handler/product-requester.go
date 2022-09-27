@@ -37,5 +37,33 @@ func (o *StoreRequesterHandler) GetProduct(ctx context.Context, req *api.Product
 }
 
 func (o *StoreRequesterHandler) GetAllProducts(ctx context.Context, req *api.AllProductsRequest) (*api.AllProductsResponse, error) {
-	return nil, nil
+	limit := req.GetLimit()
+	offset := req.GetPage()*limit - limit
+
+	var (
+		prod *product.Products
+		err  error
+	)
+
+	if req.GetBrandId() != 0 && req.GetTypeId() == 0 {
+		prod, err = o.productRequester.GetAllProducts(ctx, limit, offset)
+	}
+	if req.GetBrandId() != 0 && req.GetTypeId() != 0 {
+		prod, err = o.productRequester.GetAllProductsWithBrandAndType(ctx, req.GetTypeId(), req.GetBrandId(), limit, offset)
+	}
+	if req.GetBrandId() == 0 && req.GetTypeId() != 0 {
+		prod, err = o.productRequester.GetAllProductsWithType(ctx, req.GetTypeId(), limit, offset)
+	}
+	if req.GetBrandId() != 0 && req.GetTypeId() == 0 {
+		prod, err = o.productRequester.GetAllProductsWithBrand(ctx, req.GetBrandId(), limit, offset)
+	}
+
+	if err != nil {
+		if errors.Is(err, product.ErrNotFound) {
+			return nil, status.Errorf(codes.NotFound, err.Error())
+		}
+		return nil, status.Errorf(codes.Internal, err.Error())
+	}
+
+	return prod.ToAPIResponse(), nil
 }

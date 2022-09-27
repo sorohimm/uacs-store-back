@@ -88,36 +88,12 @@
         },
         "parameters": [
           {
-            "name": "name",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
-          },
-          {
-            "name": "price",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "brandId",
-            "in": "query",
-            "required": false,
-            "type": "number",
-            "format": "float"
-          },
-          {
-            "name": "typeId",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "info",
-            "in": "query",
-            "required": false,
-            "type": "string"
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/uacs_storeCreateProductRequest"
+            }
           }
         ],
         "tags": [
@@ -193,6 +169,45 @@
           "items": {
             "$ref": "#/definitions/uacs_storeProductResponse"
           }
+        }
+      }
+    },
+    "uacs_storeCreateProductRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "format": "int64"
+        },
+        "price": {
+          "type": "string"
+        },
+        "brandId": {
+          "type": "number",
+          "format": "float"
+        },
+        "typeId": {
+          "type": "string"
+        },
+        "info": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/uacs_storeProductInfo"
+          }
+        }
+      }
+    },
+    "uacs_storeProductInfo": {
+      "type": "object",
+      "properties": {
+        "productId": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
         }
       }
     },

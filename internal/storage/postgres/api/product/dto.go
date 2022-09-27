@@ -20,11 +20,11 @@ func (o *Product) ToAPIResponse() *api.ProductResponse {
 
 type Products []*Product
 
-func (o Products) ToAPIResponse() []*api.ProductResponse {
-	var res []*api.ProductResponse
+func (o Products) ToAPIResponse() *api.AllProductsResponse {
+	var products []*api.ProductResponse
 	for _, el := range o {
-		res = append(res, el.ToAPIResponse())
+		products = append(products, el.ToAPIResponse())
 	}
 
-	return res
+	return &api.AllProductsResponse{Products: products}
 }
