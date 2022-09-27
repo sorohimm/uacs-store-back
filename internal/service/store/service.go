@@ -1,6 +1,9 @@
 package store
 
-import "github.com/sorohimm/shop/internal"
+import (
+	"context"
+	"github.com/sorohimm/shop/internal"
+)
 
 func NewService() *Service {
 	return &Service{
@@ -10,4 +13,8 @@ func NewService() *Service {
 
 type Service struct {
 	*internal.RunGroup
+}
+
+func (o *Service) Init(ctx context.Context, appName, version, built string) {
+
 }
