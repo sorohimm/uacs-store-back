@@ -1,1 +1,1 @@
-drop schema if exists shop;
+DROP SCHEMA if EXISTS store;

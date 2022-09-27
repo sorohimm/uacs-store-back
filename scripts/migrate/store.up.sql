@@ -1,61 +1,61 @@
 BEGIN;
 
-create table if not exists store.user
+CREATE TABLE if NOT EXISTS store.user
 (
-    id integer not null AUTO_INCREMENT,
-    email text unique not null,
-    password text  not null,
-    role text not null,
-    primary key(id)
+    id integer NOT NULL AUTO_INCREMENT,
+    email text unique NOT NULL,
+    password text  NOT NULL,
+    role text NOT NULL,
+    PRIMARY KEY(id)
 );
 
-create table if not exists store.basket
+CREATE TABLE if NOT EXISTS store.basket
 (
-    id integer not null AUTO_INCREMENT,
-    user_id text not null,
-    primary key(id)
+    id integer NOT NULL AUTO_INCREMENT,
+    user_id text NOT NULL,
+    PRIMARY KEY(id)
 );
 
-create table if not exists store.basket_product
+CREATE TABLE if NOT EXISTS store.basket_product
 (
-    id integer not null AUTO_INCREMENT,
-    product_id text not null,
-    basket_id text not null,
-    primary key(id)
+    id integer NOT NULL AUTO_INCREMENT,
+    product_id text NOT NULL,
+    basket_id text NOT NULL,
+    PRIMARY KEY(id)
 );
 
-create table if not exists store.product
+CREATE TABLE if NOT EXISTS store.product
 (
-    id integer not null AUTO_INCREMENT,
-    name text unique not null,
-    price real not null,
-    img text not null,
-    type_id text not null,
-    brand_id text not null,
-    primary key(id)
+    id integer NOT NULL AUTO_INCREMENT,
+    name text unique NOT NULL,
+    price real NOT NULL,
+    img text NOT NULL,
+    type_id text NOT NULL,
+    brand_id text NOT NULL,
+    PRIMARY KEY(id)
 );
 
-create table if not exists store.product_info
+CREATE TABLE if NOT EXISTS store.product_info
 (
-    id integer not null AUTO_INCREMENT,
-    product_id text not null,
-    title text not null,
-    description text not null,
-    primary key(id)
+    id integer NOT NULL AUTO_INCREMENT,
+    product_id text NOT NULL,
+    title text NOT NULL,
+    description text NOT NULL,
+    PRIMARY KEY(id)
 );
 
-create table if not exists store.type
+CREATE TABLE if NOT EXISTS store.type
 (
-    id integer not null AUTO_INCREMENT,
-    name text not null,
-    primary key(id)
+    id integer NOT NULL AUTO_INCREMENT,
+    name text NOT NULL,
+    PRIMARY KEY(id)
 );
 
-create table if not exists store.brand
+CREATE TABLE if NOT EXISTS store.brand
 (
-    id integer not null AUTO_INCREMENT,
-    name text not null,
-    primary key(id)
+    id integer NOT NULL AUTO_INCREMENT,
+    name text NOT NULL,
+    PRIMARY KEY(id)
 );
 
 
