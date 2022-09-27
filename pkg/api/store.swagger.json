@@ -6,7 +6,10 @@
   },
   "tags": [
     {
-      "name": "StoreService"
+      "name": "StoreServiceRequester"
+    },
+    {
+      "name": "StoreServiceCommander"
     }
   ],
   "consumes": [
@@ -18,7 +21,7 @@
   "paths": {
     "/v1/product": {
       "get": {
-        "operationId": "StoreService_GetAllProducts",
+        "operationId": "StoreServiceRequester_GetAllProducts",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -64,13 +67,67 @@
           }
         ],
         "tags": [
-          "StoreService"
+          "StoreServiceRequester"
+        ]
+      },
+      "post": {
+        "operationId": "StoreServiceCommander_CreateProduct",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/uacs_storeProductResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "price",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "brandId",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "float"
+          },
+          {
+            "name": "typeId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "info",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "StoreServiceCommander"
         ]
       }
     },
     "/v1/product/{id}": {
       "get": {
-        "operationId": "StoreService_GetProduct",
+        "operationId": "StoreServiceRequester_GetProduct",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -95,7 +152,7 @@
           }
         ],
         "tags": [
-          "StoreService"
+          "StoreServiceRequester"
         ]
       }
     }

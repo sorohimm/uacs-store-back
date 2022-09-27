@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/sorohimm/shop/internal/storage"
 	"github.com/sorohimm/shop/internal/storage/postgres/api/product"
@@ -16,7 +17,7 @@ func NewStoreRequesterHandler(pool *pgxpool.Pool) *StoreRequesterHandler {
 }
 
 type StoreRequesterHandler struct {
-	api.UnimplementedStoreServiceServer
+	api.UnimplementedStoreServiceRequesterServer
 	productRequester storage.ProductRequester
 }
 

@@ -72,14 +72,19 @@ func (o *Service) Init(ctx context.Context, appName, version, built string) {
 
 	appConf := config.FromContext(ctx)
 
-	storeHandler := handler.NewStoreRequesterHandler(pool)
+	storeReqHandler := handler.NewStoreRequesterHandler(pool)
+	storeCommandHandler := handler.NewStoreCommanderHandler(pool)
 	o.Add(initial.Grpc(ctx, func(s *grpc.Server) {
-		api.RegisterStoreServiceServer(s, storeHandler)
+		api.RegisterStoreServiceRequesterServer(s, storeReqHandler)
+		api.RegisterStoreServiceCommanderServer(s, storeCommandHandler)
 	}))
 
 	exec, inter, err := initial.HTTP(ctx, appConf,
 		func(ctx context.Context, mux *runtime.ServeMux, grpcAddr string, opts []grpc.DialOption) error {
-			if err := api.RegisterStoreServiceHandlerFromEndpoint(ctx, mux, grpcAddr, opts); err != nil {
+			if err = api.RegisterStoreServiceRequesterHandlerFromEndpoint(ctx, mux, grpcAddr, opts); err != nil {
+				return err
+			}
+			if err = api.RegisterStoreServiceCommanderHandlerFromEndpoint(ctx, mux, grpcAddr, opts); err != nil {
 				return err
 			}
 			return nil

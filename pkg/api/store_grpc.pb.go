@@ -18,122 +18,208 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// StoreServiceClient is the client API for StoreService service.
+// StoreServiceRequesterClient is the client API for StoreServiceRequester service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type StoreServiceClient interface {
+type StoreServiceRequesterClient interface {
 	GetProduct(ctx context.Context, in *ProductRequest, opts ...grpc.CallOption) (*ProductResponse, error)
 	GetAllProducts(ctx context.Context, in *AllProductsRequest, opts ...grpc.CallOption) (*AllProductsResponse, error)
 }
 
-type storeServiceClient struct {
+type storeServiceRequesterClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewStoreServiceClient(cc grpc.ClientConnInterface) StoreServiceClient {
-	return &storeServiceClient{cc}
+func NewStoreServiceRequesterClient(cc grpc.ClientConnInterface) StoreServiceRequesterClient {
+	return &storeServiceRequesterClient{cc}
 }
 
-func (c *storeServiceClient) GetProduct(ctx context.Context, in *ProductRequest, opts ...grpc.CallOption) (*ProductResponse, error) {
+func (c *storeServiceRequesterClient) GetProduct(ctx context.Context, in *ProductRequest, opts ...grpc.CallOption) (*ProductResponse, error) {
 	out := new(ProductResponse)
-	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.StoreService/GetProduct", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.StoreServiceRequester/GetProduct", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *storeServiceClient) GetAllProducts(ctx context.Context, in *AllProductsRequest, opts ...grpc.CallOption) (*AllProductsResponse, error) {
+func (c *storeServiceRequesterClient) GetAllProducts(ctx context.Context, in *AllProductsRequest, opts ...grpc.CallOption) (*AllProductsResponse, error) {
 	out := new(AllProductsResponse)
-	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.StoreService/GetAllProducts", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.StoreServiceRequester/GetAllProducts", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// StoreServiceServer is the server API for StoreService service.
-// All implementations must embed UnimplementedStoreServiceServer
+// StoreServiceRequesterServer is the server API for StoreServiceRequester service.
+// All implementations must embed UnimplementedStoreServiceRequesterServer
 // for forward compatibility
-type StoreServiceServer interface {
+type StoreServiceRequesterServer interface {
 	GetProduct(context.Context, *ProductRequest) (*ProductResponse, error)
 	GetAllProducts(context.Context, *AllProductsRequest) (*AllProductsResponse, error)
-	mustEmbedUnimplementedStoreServiceServer()
+	mustEmbedUnimplementedStoreServiceRequesterServer()
 }
 
-// UnimplementedStoreServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedStoreServiceServer struct {
+// UnimplementedStoreServiceRequesterServer must be embedded to have forward compatible implementations.
+type UnimplementedStoreServiceRequesterServer struct {
 }
 
-func (UnimplementedStoreServiceServer) GetProduct(context.Context, *ProductRequest) (*ProductResponse, error) {
+func (UnimplementedStoreServiceRequesterServer) GetProduct(context.Context, *ProductRequest) (*ProductResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProduct not implemented")
 }
-func (UnimplementedStoreServiceServer) GetAllProducts(context.Context, *AllProductsRequest) (*AllProductsResponse, error) {
+func (UnimplementedStoreServiceRequesterServer) GetAllProducts(context.Context, *AllProductsRequest) (*AllProductsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllProducts not implemented")
 }
-func (UnimplementedStoreServiceServer) mustEmbedUnimplementedStoreServiceServer() {}
+func (UnimplementedStoreServiceRequesterServer) mustEmbedUnimplementedStoreServiceRequesterServer() {}
 
-// UnsafeStoreServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to StoreServiceServer will
+// UnsafeStoreServiceRequesterServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to StoreServiceRequesterServer will
 // result in compilation errors.
-type UnsafeStoreServiceServer interface {
-	mustEmbedUnimplementedStoreServiceServer()
+type UnsafeStoreServiceRequesterServer interface {
+	mustEmbedUnimplementedStoreServiceRequesterServer()
 }
 
-func RegisterStoreServiceServer(s grpc.ServiceRegistrar, srv StoreServiceServer) {
-	s.RegisterService(&StoreService_ServiceDesc, srv)
+func RegisterStoreServiceRequesterServer(s grpc.ServiceRegistrar, srv StoreServiceRequesterServer) {
+	s.RegisterService(&StoreServiceRequester_ServiceDesc, srv)
 }
 
-func _StoreService_GetProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _StoreServiceRequester_GetProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ProductRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StoreServiceServer).GetProduct(ctx, in)
+		return srv.(StoreServiceRequesterServer).GetProduct(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/github.com.sorohimm.uacs_store.StoreService/GetProduct",
+		FullMethod: "/github.com.sorohimm.uacs_store.StoreServiceRequester/GetProduct",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StoreServiceServer).GetProduct(ctx, req.(*ProductRequest))
+		return srv.(StoreServiceRequesterServer).GetProduct(ctx, req.(*ProductRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StoreService_GetAllProducts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _StoreServiceRequester_GetAllProducts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AllProductsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StoreServiceServer).GetAllProducts(ctx, in)
+		return srv.(StoreServiceRequesterServer).GetAllProducts(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/github.com.sorohimm.uacs_store.StoreService/GetAllProducts",
+		FullMethod: "/github.com.sorohimm.uacs_store.StoreServiceRequester/GetAllProducts",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StoreServiceServer).GetAllProducts(ctx, req.(*AllProductsRequest))
+		return srv.(StoreServiceRequesterServer).GetAllProducts(ctx, req.(*AllProductsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// StoreService_ServiceDesc is the grpc.ServiceDesc for StoreService service.
+// StoreServiceRequester_ServiceDesc is the grpc.ServiceDesc for StoreServiceRequester service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var StoreService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "github.com.sorohimm.uacs_store.StoreService",
-	HandlerType: (*StoreServiceServer)(nil),
+var StoreServiceRequester_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "github.com.sorohimm.uacs_store.StoreServiceRequester",
+	HandlerType: (*StoreServiceRequesterServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetProduct",
-			Handler:    _StoreService_GetProduct_Handler,
+			Handler:    _StoreServiceRequester_GetProduct_Handler,
 		},
 		{
 			MethodName: "GetAllProducts",
-			Handler:    _StoreService_GetAllProducts_Handler,
+			Handler:    _StoreServiceRequester_GetAllProducts_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "pkg/api/store.proto",
+}
+
+// StoreServiceCommanderClient is the client API for StoreServiceCommander service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type StoreServiceCommanderClient interface {
+	CreateProduct(ctx context.Context, in *CreateProductRequest, opts ...grpc.CallOption) (*ProductResponse, error)
+}
+
+type storeServiceCommanderClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewStoreServiceCommanderClient(cc grpc.ClientConnInterface) StoreServiceCommanderClient {
+	return &storeServiceCommanderClient{cc}
+}
+
+func (c *storeServiceCommanderClient) CreateProduct(ctx context.Context, in *CreateProductRequest, opts ...grpc.CallOption) (*ProductResponse, error) {
+	out := new(ProductResponse)
+	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.StoreServiceCommander/CreateProduct", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// StoreServiceCommanderServer is the server API for StoreServiceCommander service.
+// All implementations must embed UnimplementedStoreServiceCommanderServer
+// for forward compatibility
+type StoreServiceCommanderServer interface {
+	CreateProduct(context.Context, *CreateProductRequest) (*ProductResponse, error)
+	mustEmbedUnimplementedStoreServiceCommanderServer()
+}
+
+// UnimplementedStoreServiceCommanderServer must be embedded to have forward compatible implementations.
+type UnimplementedStoreServiceCommanderServer struct {
+}
+
+func (UnimplementedStoreServiceCommanderServer) CreateProduct(context.Context, *CreateProductRequest) (*ProductResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateProduct not implemented")
+}
+func (UnimplementedStoreServiceCommanderServer) mustEmbedUnimplementedStoreServiceCommanderServer() {}
+
+// UnsafeStoreServiceCommanderServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to StoreServiceCommanderServer will
+// result in compilation errors.
+type UnsafeStoreServiceCommanderServer interface {
+	mustEmbedUnimplementedStoreServiceCommanderServer()
+}
+
+func RegisterStoreServiceCommanderServer(s grpc.ServiceRegistrar, srv StoreServiceCommanderServer) {
+	s.RegisterService(&StoreServiceCommander_ServiceDesc, srv)
+}
+
+func _StoreServiceCommander_CreateProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateProductRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StoreServiceCommanderServer).CreateProduct(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/github.com.sorohimm.uacs_store.StoreServiceCommander/CreateProduct",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StoreServiceCommanderServer).CreateProduct(ctx, req.(*CreateProductRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// StoreServiceCommander_ServiceDesc is the grpc.ServiceDesc for StoreServiceCommander service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var StoreServiceCommander_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "github.com.sorohimm.uacs_store.StoreServiceCommander",
+	HandlerType: (*StoreServiceCommanderServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateProduct",
+			Handler:    _StoreServiceCommander_CreateProduct_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

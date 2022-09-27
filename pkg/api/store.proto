@@ -27,7 +27,7 @@ message AllProductsResponse {
   repeated ProductResponse products = 10;
 }
 
-service StoreService {
+service StoreServiceRequester {
   rpc GetProduct (ProductRequest) returns (ProductResponse) {
     option (google.api.http) = {
       get: "/v1/product/{id}"
@@ -37,6 +37,22 @@ service StoreService {
   rpc GetAllProducts (AllProductsRequest) returns (AllProductsResponse) {
     option (google.api.http) = {
       get: "/v1/product"
+    };
+  };
+}
+
+message CreateProductRequest {
+  int64 name = 10;
+  string price = 20;
+  float brandId = 30;
+  string typeId = 40;
+  string info = 50;
+}
+
+service StoreServiceCommander {
+  rpc CreateProduct (CreateProductRequest) returns (ProductResponse) {
+    option (google.api.http) = {
+      post: "/v1/product"
     };
   };
 }
