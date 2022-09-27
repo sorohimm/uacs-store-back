@@ -10,9 +10,9 @@ import (
 	"github.com/sorohimm/shop/pkg/api"
 )
 
-func NewStoreCommanderHandler(pool *pgxpool.Pool) *StoreCommanderHandler {
+func NewStoreCommanderHandler(schema string, pool *pgxpool.Pool) *StoreCommanderHandler {
 	return &StoreCommanderHandler{
-		productCommander: product.NewProductRepo(pool),
+		productCommander: product.NewProductRepo(schema, pool),
 	}
 }
 

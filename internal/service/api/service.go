@@ -70,16 +70,16 @@ func (o *Service) Init(ctx context.Context, appName, version, built string) {
 		logger.Fatalf("failed to init ruleset.RepoRuleset from postgres: %v", err)
 	}
 
-	appConf := config.FromContext(ctx)
+	cfg := config.FromContext(ctx)
 
-	storeReqHandler := handler.NewStoreRequesterHandler(pool)
-	storeCommandHandler := handler.NewStoreCommanderHandler(pool)
+	storeReqHandler := handler.NewStoreRequesterHandler(cfg.Postgres.SchemaName, pool)
+	storeCommandHandler := handler.NewStoreCommanderHandler(cfg.Postgres.SchemaName, pool)
 	o.Add(initial.Grpc(ctx, func(s *grpc.Server) {
 		api.RegisterStoreServiceRequesterServer(s, storeReqHandler)
 		api.RegisterStoreServiceCommanderServer(s, storeCommandHandler)
 	}))
 
-	exec, inter, err := initial.HTTP(ctx, appConf,
+	exec, inter, err := initial.HTTP(ctx, cfg,
 		func(ctx context.Context, mux *runtime.ServeMux, grpcAddr string, opts []grpc.DialOption) error {
 			if err = api.RegisterStoreServiceRequesterHandlerFromEndpoint(ctx, mux, grpcAddr, opts); err != nil {
 				return err
@@ -92,8 +92,8 @@ func (o *Service) Init(ctx context.Context, appName, version, built string) {
 	if err != nil {
 		logger.Fatalf("failed to init http: %v", err)
 	}
-	o.Add(exec, inter)
 
+	o.Add(exec, inter)
 	o.run(ctx)
 }
 
