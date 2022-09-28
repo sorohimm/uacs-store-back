@@ -41,12 +41,12 @@ gen-api:
 #### docker compose
 .PHONY: compose-up
 compose-up:
-	docker compose -f scripts/deploy/docker-compose.yaml up -d
+	docker compose -f scripts/deploy/local/docker-compose.yml up -d
 
 
 .PHONY: compose-down
 compose-down:
-	docker compose -f scripts/deploy/docker-compose.yaml down
+	docker compose -f scripts/deploy/local/docker-compose.yml down
 
 
 ## Настройка GOPRIVATE https://gist.github.com/MicahParks/1ba2b19c39d1e5fccc3e892837b10e21
@@ -59,11 +59,11 @@ tidy:
 MIGRATE_PATH := scripts/migrate
 .PHONY: migrate-up
 migrate-up:
-	migrate -database 'postgresql://pg:test@localhost:5432/icd11?sslmode=disable' -path $(MIGRATE_PATH) -verbose up
+	migrate -database 'postgresql://pg:test@localhost:5432/uacs_store?sslmode=disable' -path $(MIGRATE_PATH) -verbose up
 
 .PHONY: migrate-down
 migrate-down:
-	migrate -database 'postgresql://pg:test@localhost:5432/icd11?sslmode=disable' -path $(MIGRATE_PATH) -verbose down
+	migrate -database 'postgresql://pg:test@localhost:5432/uacs_store?sslmode=disable' -path $(MIGRATE_PATH) -verbose down
 
 NAME:=@
 .PHONY: migrate-create
