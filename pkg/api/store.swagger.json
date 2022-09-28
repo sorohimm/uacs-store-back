@@ -176,18 +176,19 @@
       "type": "object",
       "properties": {
         "name": {
-          "type": "string",
-          "format": "int64"
-        },
-        "price": {
           "type": "string"
         },
-        "brandId": {
+        "price": {
           "type": "number",
           "format": "float"
         },
+        "brandId": {
+          "type": "string",
+          "format": "int64"
+        },
         "typeId": {
-          "type": "string"
+          "type": "string",
+          "format": "int64"
         },
         "info": {
           "type": "array",

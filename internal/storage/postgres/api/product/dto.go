@@ -2,11 +2,18 @@ package product
 
 import "github.com/sorohimm/shop/pkg/api"
 
+type ProductInfo struct {
+	ProductId   string
+	Title       string
+	Description string
+}
+
 type Product struct {
 	Id    int64
 	Name  string
 	Price float32
 	Img   string
+	Inf   []*ProductInfo
 }
 
 func (o *Product) ToAPIResponse() *api.ProductResponse {

@@ -183,19 +183,34 @@ func (o *ProductRepo) scanAllProducts(rows pgx.Rows) (*Products, error) {
 }
 
 func (o *ProductRepo) CreateProduct(ctx context.Context, request *api.CreateProductRequest) (*Product, error) {
-	_ = `
+	sql := `
 INSERT INTO ` + o.schema + `.` + postgres.ProductTableName + `
 (
 name,
-price,	
-img,
+price,
 brand_id,
 type_id
 )
 VALUES  ($1,$2,$3,$4,$5)
-ON CONFLICT (id) DO NOTHING`
+RETURNING id;` // Todo: add img field
 
-	return nil, nil
+	rows, err := o.pool.Query(ctx, sql, request.Name, request.Price, request.BrandId, request.TypeId)
+	if err != nil {
+		return nil, err
+	}
+
+	var id int64
+	if err = rows.Scan(&id); err != nil {
+		return nil, err
+	}
+
+	product := &Product{
+		Id:    id,
+		Name:  request.Name,
+		Price: request.Price,
+	}
+
+	return product, nil
 }
 
 func (o *ProductRepo) AddInfo(ctx context.Context) error {

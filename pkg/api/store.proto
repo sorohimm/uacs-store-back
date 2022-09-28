@@ -6,10 +6,10 @@ option go_package = "github.com/sorohimm/shop/pkg/api";
 import "google/api/annotations.proto";
 
 message CreateProductRequest {
-  int64 name = 10;
-  string price = 20;
-  float brandId = 30;
-  string typeId = 40;
+  string name = 10;
+  float price = 20;
+  int64 brandId = 30;
+  int64 typeId = 40;
   repeated ProductInfo info = 50;
 }
 
