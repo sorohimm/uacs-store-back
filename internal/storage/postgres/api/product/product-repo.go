@@ -27,12 +27,12 @@ type ProductRepo struct {
 }
 
 func (o *ProductRepo) GetProductById(ctx context.Context, id int64) (*Product, error) {
-	sql := `SELECT 
-		 id,
-		 name,
-		 price,
-		 img,
-		 FROM ` + o.schema + `.` + postgres.ProductTableName + ` WHERE id=$1`
+	sql := `
+SELECT 
+id,
+name,
+price
+FROM ` + o.schema + `.` + postgres.ProductTableName + ` WHERE id=$1` // TODO: add image
 
 	logger := log.FromContext(ctx).Sugar()
 	logger.Debug(sql)
@@ -44,7 +44,6 @@ func (o *ProductRepo) GetProductById(ctx context.Context, id int64) (*Product, e
 		&prod.Id,
 		&prod.Name,
 		&prod.Price,
-		&prod.Img,
 	); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, ErrNotFound
@@ -56,14 +55,15 @@ func (o *ProductRepo) GetProductById(ctx context.Context, id int64) (*Product, e
 }
 
 func (o *ProductRepo) GetAllProducts(ctx context.Context, limit int64, offset int64) (*Products, error) {
-	sql := `SELECT 
-		 id,
-		 name,
-		 price,
-		 img,
-		 FROM ` + o.schema + `.` + postgres.ProductTableName + ` 
-		 ORDER BY id
-		 LIMIT $1 OFFSET $2;`
+	sql := `
+SELECT 
+id,
+name,
+price,
+img
+FROM ` + o.schema + `.` + postgres.ProductTableName + ` 
+ORDER BY id
+LIMIT $1 OFFSET $2;`
 
 	logger := log.FromContext(ctx).Sugar()
 	logger.Debug(sql)
@@ -83,15 +83,16 @@ func (o *ProductRepo) GetAllProducts(ctx context.Context, limit int64, offset in
 
 func (o *ProductRepo) GetAllProductsWithBrand(ctx context.Context, brandId int64, limit int64, offset int64) (*Products, error) {
 
-	sql := `SELECT 
-		 id,
-		 name,
-		 price,
-		 img,
-		 FROM ` + o.schema + `.` + postgres.ProductTableName + ` 
-		 WHERE brand_id = $1
-		 ORDER BY id
-		 LIMIT $2 OFFSET $3;`
+	sql := `
+SELECT 
+id,
+name,
+price,
+img
+FROM ` + o.schema + `.` + postgres.ProductTableName + ` 
+WHERE brand_id = $1
+ORDER BY id
+LIMIT $2 OFFSET $3;`
 
 	logger := log.FromContext(ctx).Sugar()
 	logger.Debug(sql)
@@ -110,15 +111,16 @@ func (o *ProductRepo) GetAllProductsWithBrand(ctx context.Context, brandId int64
 }
 
 func (o *ProductRepo) GetAllProductsWithType(ctx context.Context, typeId int64, limit int64, offset int64) (*Products, error) {
-	sql := `SELECT 
-			id,
-			name,
-			price,
-			img,
-			FROM ` + o.schema + `.` + postgres.ProductTableName + ` 
-			WHERE type_id = $1
-			ORDER BY id
-			LIMIT $2 OFFSET $3;`
+	sql := `
+SELECT 
+id,
+name,
+price,
+img
+FROM ` + o.schema + `.` + postgres.ProductTableName + ` 
+WHERE type_id = $1
+ORDER BY id
+LIMIT $2 OFFSET $3;`
 
 	logger := log.FromContext(ctx).Sugar()
 	logger.Debug(sql)
@@ -137,15 +139,16 @@ func (o *ProductRepo) GetAllProductsWithType(ctx context.Context, typeId int64, 
 }
 
 func (o *ProductRepo) GetAllProductsWithBrandAndType(ctx context.Context, typeId int64, brandId int64, limit int64, offset int64) (*Products, error) {
-	sql := `SELECT 
-		 id,
-		 name,
-		 price,
-		 img,
-		 FROM ` + o.schema + `.` + postgres.ProductTableName + ` 
-		 WHERE type_id = $1 AND brand_id = $2
-		 ORDER BY id
-		 LIMIT $3 OFFSET $4;`
+	sql := `
+SELECT 
+id,
+name,
+price,
+img
+FROM ` + o.schema + `.` + postgres.ProductTableName + ` 
+WHERE type_id = $1 AND brand_id = $2
+ORDER BY id
+LIMIT $3 OFFSET $4;`
 
 	logger := log.FromContext(ctx).Sugar()
 	logger.Debug(sql)
@@ -196,13 +199,10 @@ type_id
 VALUES  ($1,$2,$3,$4)
 RETURNING id;` // Todo: add img field
 
-	rows, err := o.pool.Query(ctx, sql, request.Name, request.Price, request.BrandId, request.TypeId)
-	if err != nil {
-		return nil, err
-	}
+	row := o.pool.QueryRow(ctx, sql, request.Name, request.Price, request.BrandId, request.TypeId)
 
 	var id int64
-	if err = rows.Scan(&id); err != nil {
+	if err := row.Scan(&id); err != nil {
 		return nil, err
 	}
 

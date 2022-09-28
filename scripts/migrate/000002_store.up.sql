@@ -34,10 +34,10 @@ CREATE TABLE if NOT EXISTS store.product
 CREATE TABLE if NOT EXISTS store.product_stock (
     id SERIAL PRIMARY KEY NOT NULL,
     product_id integer NOT NULL,
-    is_stock boolean,
+    in_stock boolean,
+    stock_status text,
     quantity_stock integer NOT NULL
 );
-
 
 CREATE TABLE if NOT EXISTS store.product_info
 (
