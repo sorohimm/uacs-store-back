@@ -221,11 +221,7 @@ VALUES  ($1,$2,$3)
 		}
 	}
 
-	product := &Product{
-		ID:    id,
-		Name:  request.Name,
-		Price: request.Price,
-	}
+	product := NewProductFromRequest(request).SetID(id)
 
 	return product, nil
 }
