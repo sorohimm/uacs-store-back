@@ -2,6 +2,8 @@ package handler
 
 import (
 	"context"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"github.com/jackc/pgx/v4/pgxpool"
 
@@ -22,5 +24,14 @@ type StoreCommanderHandler struct {
 }
 
 func (o *StoreCommanderHandler) CreateProduct(ctx context.Context, req *api.CreateProductRequest) (*api.ProductResponse, error) {
-	return nil, nil
+	var (
+		prod *product.Product
+		err  error
+	)
+
+	if prod, err = o.productCommander.CreateProduct(ctx, req); err != nil {
+		return nil, status.Errorf(codes.Internal, err.Error())
+	}
+
+	return prod.ToAPIResponse(), nil
 }

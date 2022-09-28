@@ -193,7 +193,7 @@ price,
 brand_id,
 type_id
 )
-VALUES  ($1,$2,$3,$4,$5)
+VALUES  ($1,$2,$3,$4)
 RETURNING id;` // Todo: add img field
 
 	rows, err := o.pool.Query(ctx, sql, request.Name, request.Price, request.BrandId, request.TypeId)

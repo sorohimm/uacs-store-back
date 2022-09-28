@@ -26,10 +26,18 @@ CREATE TABLE if NOT EXISTS store.product
     id SERIAL PRIMARY KEY NOT NULL,
     name text unique NOT NULL,
     price real NOT NULL,
-    img text NOT NULL,
+    img text,
     type_id text NOT NULL,
     brand_id text NOT NULL
 );
+
+CREATE TABLE if NOT EXISTS store.product_stock (
+    id SERIAL PRIMARY KEY NOT NULL,
+    product_id integer NOT NULL,
+    is_stock boolean,
+    quantity_stock integer NOT NULL
+);
+
 
 CREATE TABLE if NOT EXISTS store.product_info
 (
