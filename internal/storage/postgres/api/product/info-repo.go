@@ -21,20 +21,20 @@ type InfoRepo struct {
 	pool   *pgxpool.Pool
 }
 
-func (o *InfoRepo) AddInfo(ctx context.Context, info *api.ProductInfo) error {
+func (o *InfoRepo) AddInfo(ctx context.Context, info []*api.ProductInfo, productID int64) error {
 	sql := `
 INSERT INTO ` + o.schema + `.` + postgres.ProductInfoTableName + `
 (
 product_id,
 title,
-description,
+description
 )
 VALUES  ($1,$2,$3)
-ON CONFLICT (id) DO NOTHING;
 `
-	_, err := o.pool.Exec(ctx, sql, info.ProductId, info.Title, info.Description)
-	if err != nil {
-		return err
+	for _, el := range info {
+		if _, err := o.pool.Exec(ctx, sql, productID, el.Title, el.Description); err != nil {
+			return err
+		}
 	}
 
 	return nil

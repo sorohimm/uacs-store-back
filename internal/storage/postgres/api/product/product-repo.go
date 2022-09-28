@@ -206,6 +206,21 @@ RETURNING id;` // Todo: add img field
 		return nil, err
 	}
 
+	infoSql := `
+INSERT INTO ` + o.schema + `.` + postgres.ProductInfoTableName + `
+(
+product_id,
+title,
+description
+)
+VALUES  ($1,$2,$3)
+`
+	for _, el := range request.Info {
+		if _, err := o.pool.Exec(ctx, infoSql, id, el.Title, el.Description); err != nil {
+			return nil, err
+		}
+	}
+
 	product := &Product{
 		ID:    id,
 		Name:  request.Name,

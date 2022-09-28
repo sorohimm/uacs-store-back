@@ -202,7 +202,8 @@
       "type": "object",
       "properties": {
         "productId": {
-          "type": "string"
+          "type": "string",
+          "format": "int64"
         },
         "title": {
           "type": "string"

@@ -21,5 +21,5 @@ type ProductCommander interface {
 }
 
 type InfoCommander interface {
-	AddInfo(ctx context.Context, info *api.ProductInfo) error
+	AddInfo(ctx context.Context, info []*api.ProductInfo, productID int64) error
 }

@@ -15,12 +15,14 @@ import (
 func NewStoreCommanderHandler(schema string, pool *pgxpool.Pool) *StoreCommanderHandler {
 	return &StoreCommanderHandler{
 		productCommander: product.NewProductRepo(schema, pool),
+		infoCommander:    product.NewInfoRepo(schema, pool),
 	}
 }
 
 type StoreCommanderHandler struct {
 	api.UnimplementedStoreServiceCommanderServer
 	productCommander storage.ProductCommander
+	infoCommander    storage.InfoCommander
 }
 
 func (o *StoreCommanderHandler) CreateProduct(ctx context.Context, req *api.CreateProductRequest) (*api.ProductResponse, error) {
@@ -30,6 +32,10 @@ func (o *StoreCommanderHandler) CreateProduct(ctx context.Context, req *api.Crea
 	)
 
 	if prod, err = o.productCommander.CreateProduct(ctx, req); err != nil {
+		return nil, status.Errorf(codes.Internal, err.Error())
+	}
+
+	if err = o.infoCommander.AddInfo(ctx, req.Info, prod.ID); err != nil {
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
