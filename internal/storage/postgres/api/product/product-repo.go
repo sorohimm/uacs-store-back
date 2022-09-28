@@ -199,10 +199,20 @@ type_id
 VALUES  ($1,$2,$3,$4)
 RETURNING id;` // Todo: add img field
 
-	row := o.pool.QueryRow(ctx, sql, request.Name, request.Price, request.BrandId, request.TypeId)
+	var (
+		tx  pgx.Tx
+		err error
+	)
+
+	if tx, err = o.pool.BeginTx(ctx, pgx.TxOptions{}); err != nil {
+		return nil, err
+	}
+	defer commitOrRollbackTx(ctx, tx, err)
+
+	row := tx.QueryRow(ctx, sql, request.Name, request.Price, request.BrandId, request.TypeId)
 
 	var id int64
-	if err := row.Scan(&id); err != nil {
+	if err = row.Scan(&id); err != nil {
 		return nil, err
 	}
 
@@ -216,7 +226,7 @@ description
 VALUES  ($1,$2,$3)
 `
 	for _, el := range request.Info {
-		if _, err := o.pool.Exec(ctx, infoSql, id, el.Title, el.Description); err != nil {
+		if _, err = tx.Exec(ctx, infoSql, id, el.Title, el.Description); err != nil {
 			return nil, err
 		}
 	}
@@ -224,4 +234,11 @@ VALUES  ($1,$2,$3)
 	product := NewProductFromRequest(request).SetID(id)
 
 	return product, nil
+}
+
+func commitOrRollbackTx(ctx context.Context, tx pgx.Tx, err error) error {
+	if err != nil {
+		return tx.Rollback(ctx)
+	}
+	return tx.Commit(ctx)
 }

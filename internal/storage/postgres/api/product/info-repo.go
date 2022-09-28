@@ -2,6 +2,7 @@ package product
 
 import (
 	"context"
+	"github.com/jackc/pgx/v4"
 
 	"github.com/jackc/pgx/v4/pgxpool"
 
@@ -37,5 +38,9 @@ VALUES  ($1,$2,$3)
 		}
 	}
 
+	return nil
+}
+
+func addInfo(ctx context.Context, tx pgx.Tx, info []*ProductInfo) error {
 	return nil
 }

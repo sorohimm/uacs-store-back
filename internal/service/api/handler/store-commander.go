@@ -35,9 +35,5 @@ func (o *StoreCommanderHandler) CreateProduct(ctx context.Context, req *api.Crea
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
-	if err = o.infoCommander.AddInfo(ctx, req.Info, prod.ID); err != nil {
-		return nil, status.Errorf(codes.Internal, err.Error())
-	}
-
 	return prod.ToAPIResponse(), nil
 }
