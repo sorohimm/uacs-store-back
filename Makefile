@@ -55,6 +55,21 @@ GOPRIVATE="github.com/*"
 tidy:
 	$(V)GOPRIVATE=$(GOPRIVATE) go mod tidy -v
 
+.PHONY: lint
+lint:
+	$(V)golangci-lint run --config scripts/.golangci.yml
+
+.PHONY: test
+test: GO_TEST_FLAGS += -race
+call testtest: GO_TEST_FLAGS += -count=1
+test:
+	$(V)go test $(GO_TEST_FLAGS) --tags=$(GO_TEST_TAGS) ./...
+
+
+.PHONY: fulltest
+fulltest: GO_TEST_TAGS += integration
+fulltest: test
+
 ##### go-migrate
 MIGRATE_PATH := scripts/migrate
 .PHONY: migrate-up
