@@ -18,5 +18,8 @@ type ProductRequester interface {
 
 type ProductCommander interface {
 	CreateProduct(ctx context.Context, request *api.CreateProductRequest) (*product.Product, error)
+}
+
+type InfoCommander interface {
 	AddInfo(ctx context.Context, info *api.ProductInfo) error
 }

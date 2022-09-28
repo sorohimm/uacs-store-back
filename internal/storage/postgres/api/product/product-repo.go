@@ -214,22 +214,3 @@ RETURNING id;` // Todo: add img field
 
 	return product, nil
 }
-
-func (o *ProductRepo) AddInfo(ctx context.Context, info *api.ProductInfo) error {
-	sql := `
-INSERT INTO ` + o.schema + `.` + postgres.ProductInfoTableName + `
-(
-product_id,
-title,
-description,
-)
-VALUES  ($1,$2,$3)
-ON CONFLICT (id) DO NOTHING;
-`
-	_, err := o.pool.Exec(ctx, sql, info.ProductId, info.Title, info.Description)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
