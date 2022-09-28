@@ -7,7 +7,7 @@ services:
     environment:
       TZ: 'GMT-3'
       PGTZ: 'GMT-3'
-      POSTGRES_DB: uacs_store
+      POSTGRES_DB: uacs
       POSTGRES_USER: pg
       POSTGRES_PASSWORD: test
     ports:

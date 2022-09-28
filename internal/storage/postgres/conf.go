@@ -9,7 +9,7 @@ import (
 
 // Config contains postgres configuration.
 type Config struct {
-	URI                   string `long:"uri" env:"URI" description:"PGX connection uri to the postgres" default:"postgresql://pg:test@localhost:5432/fer?sslmode=disable" required:"true"`
+	URI                   string `long:"uri" env:"URI" description:"PGX connection uri to the postgres" default:"postgresql://pg:test@localhost:5432/uacs?sslmode=disable" required:"true"`
 	DisableSimpleProtocol bool   `long:"simple.protocol"  description:"disable implicit prepared statement usage (if PreferSimpleProtocol == false wit bouncer usage it will produce errors in prepared statements)" `
 	SchemaName            string `long:"schema" required:"true" env:"SCHEMA" description:"the store schema where the data was saved" `
 }

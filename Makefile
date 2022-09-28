@@ -59,11 +59,11 @@ tidy:
 MIGRATE_PATH := scripts/migrate
 .PHONY: migrate-up
 migrate-up:
-	migrate -database 'postgresql://pg:test@localhost:5432/uacs_store?sslmode=disable' -path $(MIGRATE_PATH) -verbose up
+	migrate -database 'postgresql://pg:test@localhost:5432/uacs?sslmode=disable' -path $(MIGRATE_PATH) -verbose up
 
 .PHONY: migrate-down
 migrate-down:
-	migrate -database 'postgresql://pg:test@localhost:5432/uacs_store?sslmode=disable' -path $(MIGRATE_PATH) -verbose down
+	migrate -database 'postgresql://pg:test@localhost:5432/uacs?sslmode=disable' -path $(MIGRATE_PATH) -verbose down
 
 NAME:=@
 .PHONY: migrate-create
