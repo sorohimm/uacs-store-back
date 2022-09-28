@@ -177,7 +177,7 @@ func grpcGatewayOptions() []runtime.ServeMuxOption {
 		// runtime.WithMarshalerOption("application/octet-stream", new(runtime.ProtoMarshaller)),
 		// runtime.WithIncomingHeaderMatcher(func(key string) (string, bool) {
 		// 	switch key {
-		// 	case "X-Session", "X-Request-Id":
+		// 	case "X-Session", "X-Request-ID":
 		// 		return key, true
 		// 	default:
 		// 		return runtime.DefaultHeaderMatcher(key)

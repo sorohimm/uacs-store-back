@@ -3,22 +3,22 @@ package api
 import (
 	"context"
 	"errors"
+	stdl "log"
+	"os"
+
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/jackc/pgx/v4/pgxpool"
-	"github.com/sorohimm/shop/internal/service/api/handler"
-	"github.com/sorohimm/shop/internal/service/api/initial"
-	"github.com/sorohimm/shop/internal/storage/postgres"
-	"github.com/sorohimm/shop/pkg/api"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
-	"os"
 
 	"github.com/sorohimm/shop/internal"
 	"github.com/sorohimm/shop/internal/conf"
 	"github.com/sorohimm/shop/internal/log"
 	"github.com/sorohimm/shop/internal/service/api/config"
-
-	stdl "log"
+	"github.com/sorohimm/shop/internal/service/api/handler"
+	"github.com/sorohimm/shop/internal/service/api/initial"
+	"github.com/sorohimm/shop/internal/storage/postgres"
+	"github.com/sorohimm/shop/pkg/api"
 )
 
 func NewService() *Service {

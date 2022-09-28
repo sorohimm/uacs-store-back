@@ -26,7 +26,7 @@ type ProductRepo struct {
 	pool   *pgxpool.Pool
 }
 
-func (o *ProductRepo) GetProductById(ctx context.Context, id int64) (*Product, error) {
+func (o *ProductRepo) GetProductByID(ctx context.Context, id int64) (*Product, error) {
 	sql := `
 SELECT 
 id,
@@ -41,7 +41,7 @@ FROM ` + o.schema + `.` + postgres.ProductTableName + ` WHERE id=$1` // TODO: ad
 
 	var prod Product
 	if err := row.Scan(
-		&prod.Id,
+		&prod.ID,
 		&prod.Name,
 		&prod.Price,
 	); err != nil {
@@ -81,7 +81,7 @@ LIMIT $1 OFFSET $2;`
 	return products, nil
 }
 
-func (o *ProductRepo) GetAllProductsWithBrand(ctx context.Context, brandId int64, limit int64, offset int64) (*Products, error) {
+func (o *ProductRepo) GetAllProductsWithBrand(ctx context.Context, brandID int64, limit int64, offset int64) (*Products, error) {
 
 	sql := `
 SELECT 
@@ -97,7 +97,7 @@ LIMIT $2 OFFSET $3;`
 	logger := log.FromContext(ctx).Sugar()
 	logger.Debug(sql)
 
-	rows, err := o.pool.Query(ctx, sql, brandId, limit, offset)
+	rows, err := o.pool.Query(ctx, sql, brandID, limit, offset)
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +110,7 @@ LIMIT $2 OFFSET $3;`
 	return products, nil
 }
 
-func (o *ProductRepo) GetAllProductsWithType(ctx context.Context, typeId int64, limit int64, offset int64) (*Products, error) {
+func (o *ProductRepo) GetAllProductsWithType(ctx context.Context, typeID int64, limit int64, offset int64) (*Products, error) {
 	sql := `
 SELECT 
 id,
@@ -125,7 +125,7 @@ LIMIT $2 OFFSET $3;`
 	logger := log.FromContext(ctx).Sugar()
 	logger.Debug(sql)
 
-	rows, err := o.pool.Query(ctx, sql, typeId, limit, offset)
+	rows, err := o.pool.Query(ctx, sql, typeID, limit, offset)
 	if err != nil {
 		return nil, err
 	}
@@ -138,7 +138,7 @@ LIMIT $2 OFFSET $3;`
 	return products, nil
 }
 
-func (o *ProductRepo) GetAllProductsWithBrandAndType(ctx context.Context, typeId int64, brandId int64, limit int64, offset int64) (*Products, error) {
+func (o *ProductRepo) GetAllProductsWithBrandAndType(ctx context.Context, typeID int64, brandID int64, limit int64, offset int64) (*Products, error) {
 	sql := `
 SELECT 
 id,
@@ -153,7 +153,7 @@ LIMIT $3 OFFSET $4;`
 	logger := log.FromContext(ctx).Sugar()
 	logger.Debug(sql)
 
-	rows, err := o.pool.Query(ctx, sql, typeId, brandId, limit, offset)
+	rows, err := o.pool.Query(ctx, sql, typeID, brandID, limit, offset)
 	if err != nil {
 		return nil, err
 	}
@@ -171,7 +171,7 @@ func (o *ProductRepo) scanAllProducts(rows pgx.Rows) (*Products, error) {
 	for rows.Next() {
 		var prod Product
 		if err := rows.Scan(
-			&prod.Id,
+			&prod.ID,
 			&prod.Name,
 			&prod.Price,
 			&prod.Img,
@@ -207,7 +207,7 @@ RETURNING id;` // Todo: add img field
 	}
 
 	product := &Product{
-		Id:    id,
+		ID:    id,
 		Name:  request.Name,
 		Price: request.Price,
 	}

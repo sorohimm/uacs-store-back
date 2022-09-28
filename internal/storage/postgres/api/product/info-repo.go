@@ -2,6 +2,7 @@ package product
 
 import (
 	"context"
+
 	"github.com/jackc/pgx/v4/pgxpool"
 
 	"github.com/sorohimm/shop/internal/storage/postgres"

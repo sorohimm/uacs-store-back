@@ -3,13 +3,13 @@ package product
 import "github.com/sorohimm/shop/pkg/api"
 
 type ProductInfo struct {
-	ProductId   string
+	ProductID   string
 	Title       string
 	Description string
 }
 
 type Product struct {
-	Id    int64
+	ID    int64
 	Name  string
 	Price float32
 	Img   string
@@ -18,7 +18,7 @@ type Product struct {
 
 func (o *Product) ToAPIResponse() *api.ProductResponse {
 	return &api.ProductResponse{
-		Id:    o.Id,
+		Id:    o.ID,
 		Name:  o.Name,
 		Price: o.Price,
 		Img:   o.Img,

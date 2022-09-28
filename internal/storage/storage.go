@@ -9,11 +9,11 @@ import (
 )
 
 type ProductRequester interface {
-	GetProductById(ctx context.Context, id int64) (*product.Product, error)
+	GetProductByID(ctx context.Context, id int64) (*product.Product, error)
 	GetAllProducts(ctx context.Context, limit int64, offset int64) (*product.Products, error)
-	GetAllProductsWithBrand(ctx context.Context, brandId int64, limit int64, offset int64) (*product.Products, error)
-	GetAllProductsWithType(ctx context.Context, typeId int64, limit int64, offset int64) (*product.Products, error)
-	GetAllProductsWithBrandAndType(ctx context.Context, typeId int64, brandId int64, limit int64, offset int64) (*product.Products, error)
+	GetAllProductsWithBrand(ctx context.Context, brandID int64, limit int64, offset int64) (*product.Products, error)
+	GetAllProductsWithType(ctx context.Context, typeID int64, limit int64, offset int64) (*product.Products, error)
+	GetAllProductsWithBrandAndType(ctx context.Context, typeID int64, brandID int64, limit int64, offset int64) (*product.Products, error)
 }
 
 type ProductCommander interface {

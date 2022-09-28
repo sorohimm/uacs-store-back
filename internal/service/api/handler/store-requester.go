@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"errors"
+
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -25,7 +26,7 @@ type StoreRequesterHandler struct {
 }
 
 func (o *StoreRequesterHandler) GetProduct(ctx context.Context, req *api.ProductRequest) (*api.ProductResponse, error) {
-	prod, err := o.productRequester.GetProductById(ctx, req.GetId())
+	prod, err := o.productRequester.GetProductByID(ctx, req.GetId())
 	if err != nil {
 		if errors.Is(err, product.ErrNotFound) {
 			return nil, status.Errorf(codes.NotFound, err.Error())
