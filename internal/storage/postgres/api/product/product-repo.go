@@ -109,14 +109,14 @@ func (o *ProductRepo) GetAllProductsWithBrand(ctx context.Context, brandId int64
 
 func (o *ProductRepo) GetAllProductsWithType(ctx context.Context, typeId int64, limit int64, offset int64) (*Products, error) {
 	sql := `SELECT 
-		 id,
-		 name,
-		 price,
-		 img,
-		 FROM ` + o.schema + `.` + postgres.ProductTableName + ` 
- 		 WHERE type_id = $1
-		 ORDER BY id
-		 LIMIT $2 OFFSET $3;`
+			id,
+			name,
+			price,
+			img,
+			FROM ` + o.schema + `.` + postgres.ProductTableName + ` 
+			WHERE type_id = $1
+			ORDER BY id
+			LIMIT $2 OFFSET $3;`
 
 	logger := log.FromContext(ctx).Sugar()
 	logger.Debug(sql)
@@ -183,6 +183,18 @@ func (o *ProductRepo) scanAllProducts(rows pgx.Rows) (*Products, error) {
 }
 
 func (o *ProductRepo) CreateProduct(ctx context.Context, request *api.CreateProductRequest) (*Product, error) {
+	_ = `
+INSERT INTO ` + o.schema + `.` + postgres.ProductTableName + `
+(
+name,
+price,	
+img,
+brand_id,
+type_id
+)
+VALUES  ($1,$2,$3,$4,$5)
+ON CONFLICT (id) DO NOTHING`
+
 	return nil, nil
 }
 
