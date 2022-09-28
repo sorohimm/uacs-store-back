@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+
 	"github.com/sorohimm/shop/pkg/api"
 
 	"github.com/sorohimm/shop/internal/storage/postgres/api/product"
@@ -17,5 +18,5 @@ type ProductRequester interface {
 
 type ProductCommander interface {
 	CreateProduct(ctx context.Context, request *api.CreateProductRequest) (*product.Product, error)
-	AddInfo(ctx context.Context) error
+	AddInfo(ctx context.Context, info *api.ProductInfo) error
 }

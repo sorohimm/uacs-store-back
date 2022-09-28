@@ -3,8 +3,10 @@ package product
 import (
 	"context"
 	"errors"
+
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
+
 	"github.com/sorohimm/shop/internal/log"
 	"github.com/sorohimm/shop/internal/storage/postgres"
 	"github.com/sorohimm/shop/pkg/api"
@@ -213,6 +215,21 @@ RETURNING id;` // Todo: add img field
 	return product, nil
 }
 
-func (o *ProductRepo) AddInfo(ctx context.Context) error {
+func (o *ProductRepo) AddInfo(ctx context.Context, info *api.ProductInfo) error {
+	sql := `
+INSERT INTO ` + o.schema + `.` + postgres.ProductInfoTableName + `
+(
+product_id,
+title,
+description,
+)
+VALUES  ($1,$2,$3)
+ON CONFLICT (id) DO NOTHING;
+`
+	_, err := o.pool.Exec(ctx, sql, info.ProductId, info.Title, info.Description)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
