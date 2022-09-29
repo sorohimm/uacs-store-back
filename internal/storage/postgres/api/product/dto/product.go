@@ -1,33 +1,6 @@
-package product
+package dto
 
 import "github.com/sorohimm/shop/pkg/api"
-
-func NewProductInfoFromAPI(info *api.ProductInfo) *ProductInfo {
-	return &ProductInfo{
-		ProductID:   info.ProductId,
-		Title:       info.Title,
-		Description: info.Description,
-	}
-}
-
-type ProductInfo struct {
-	ProductID   int64
-	Title       string
-	Description string
-}
-
-func (o *ProductInfo) SetProductID(productID int64) *ProductInfo {
-	o.ProductID = productID
-	return o
-}
-
-func (o ProductInfo) ToAPI() *api.ProductInfo {
-	return &api.ProductInfo{
-		ProductId:   o.ProductID,
-		Title:       o.Title,
-		Description: o.Description,
-	}
-}
 
 func NewProductFromRequest(req *api.CreateProductRequest) *Product {
 	var info []*ProductInfo
@@ -60,11 +33,16 @@ func (o *Product) SetID(id int64) *Product {
 }
 
 func (o Product) ToAPIResponse() *api.ProductResponse {
+	var info []*api.ProductInfo
+	for _, el := range o.Info {
+		info = append(info, el.ToAPI())
+	}
 	return &api.ProductResponse{
 		Id:    o.ID,
 		Name:  o.Name,
 		Price: o.Price,
 		Img:   o.Img,
+		Info:  info,
 	}
 }
 

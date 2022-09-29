@@ -3,6 +3,7 @@ package product
 import (
 	"context"
 	"errors"
+	"github.com/sorohimm/shop/internal/storage/postgres/api/product/dto"
 
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -26,7 +27,7 @@ type ProductRepo struct {
 	pool   *pgxpool.Pool
 }
 
-func (o *ProductRepo) GetProductByID(ctx context.Context, id int64) (*Product, error) {
+func (o *ProductRepo) GetProductByID(ctx context.Context, id int64) (*dto.Product, error) {
 	sql := `
 SELECT 
 id,
@@ -34,13 +35,19 @@ name,
 price
 FROM ` + o.schema + `.` + postgres.ProductTableName + ` WHERE id=$1` // TODO: add image
 
-	logger := log.FromContext(ctx).Sugar()
-	logger.Debug(sql)
+	var (
+		tx  pgx.Tx
+		err error
+	)
+	if tx, err = o.pool.BeginTx(ctx, pgx.TxOptions{}); err != nil {
+		return nil, err
+	}
+	defer postgres.CommitOrRollbackTx(ctx, tx, err)
 
-	row := o.pool.QueryRow(ctx, sql, id)
+	row := tx.QueryRow(ctx, sql, id)
 
-	var prod Product
-	if err := row.Scan(
+	var prod dto.Product
+	if err = row.Scan(
 		&prod.ID,
 		&prod.Name,
 		&prod.Price,
@@ -51,10 +58,16 @@ FROM ` + o.schema + `.` + postgres.ProductTableName + ` WHERE id=$1` // TODO: ad
 		return nil, err
 	}
 
+	var info []*dto.ProductInfo
+	if info, err = getInfo(ctx, o.schema, tx, prod.ID); err != nil {
+		return nil, err
+	}
+	prod.Info = info
+
 	return &prod, nil
 }
 
-func (o *ProductRepo) GetAllProducts(ctx context.Context, limit int64, offset int64) (*Products, error) {
+func (o *ProductRepo) GetAllProducts(ctx context.Context, limit int64, offset int64) (*dto.Products, error) {
 	sql := `
 SELECT 
 id,
@@ -81,7 +94,7 @@ LIMIT $1 OFFSET $2;`
 	return products, nil
 }
 
-func (o *ProductRepo) GetAllProductsWithBrand(ctx context.Context, brandID int64, limit int64, offset int64) (*Products, error) {
+func (o *ProductRepo) GetAllProductsWithBrand(ctx context.Context, brandID int64, limit int64, offset int64) (*dto.Products, error) {
 
 	sql := `
 SELECT 
@@ -110,7 +123,7 @@ LIMIT $2 OFFSET $3;`
 	return products, nil
 }
 
-func (o *ProductRepo) GetAllProductsWithType(ctx context.Context, typeID int64, limit int64, offset int64) (*Products, error) {
+func (o *ProductRepo) GetAllProductsWithType(ctx context.Context, typeID int64, limit int64, offset int64) (*dto.Products, error) {
 	sql := `
 SELECT 
 id,
@@ -138,7 +151,7 @@ LIMIT $2 OFFSET $3;`
 	return products, nil
 }
 
-func (o *ProductRepo) GetAllProductsWithBrandAndType(ctx context.Context, typeID int64, brandID int64, limit int64, offset int64) (*Products, error) {
+func (o *ProductRepo) GetAllProductsWithBrandAndType(ctx context.Context, typeID int64, brandID int64, limit int64, offset int64) (*dto.Products, error) {
 	sql := `
 SELECT 
 id,
@@ -166,10 +179,10 @@ LIMIT $3 OFFSET $4;`
 	return products, nil
 }
 
-func (o *ProductRepo) scanAllProducts(rows pgx.Rows) (*Products, error) {
-	var products Products
+func (o *ProductRepo) scanAllProducts(rows pgx.Rows) (*dto.Products, error) {
+	var products dto.Products
 	for rows.Next() {
-		var prod Product
+		var prod dto.Product
 		if err := rows.Scan(
 			&prod.ID,
 			&prod.Name,
@@ -187,7 +200,7 @@ func (o *ProductRepo) scanAllProducts(rows pgx.Rows) (*Products, error) {
 	return &products, nil
 }
 
-func (o *ProductRepo) CreateProduct(ctx context.Context, request *api.CreateProductRequest) (*Product, error) {
+func (o *ProductRepo) CreateProduct(ctx context.Context, request *api.CreateProductRequest) (*dto.Product, error) {
 	sql := `
 INSERT INTO ` + o.schema + `.` + postgres.ProductTableName + `
 (
@@ -207,7 +220,7 @@ RETURNING id;` // Todo: add img field
 	if tx, err = o.pool.BeginTx(ctx, pgx.TxOptions{}); err != nil {
 		return nil, err
 	}
-	defer commitOrRollbackTx(ctx, tx, err)
+	defer postgres.CommitOrRollbackTx(ctx, tx, err)
 
 	row := tx.QueryRow(ctx, sql, request.Name, request.Price, request.BrandId, request.TypeId)
 
@@ -216,29 +229,11 @@ RETURNING id;` // Todo: add img field
 		return nil, err
 	}
 
-	infoSql := `
-INSERT INTO ` + o.schema + `.` + postgres.ProductInfoTableName + `
-(
-product_id,
-title,
-description
-)
-VALUES  ($1,$2,$3)
-`
-	for _, el := range request.Info {
-		if _, err = tx.Exec(ctx, infoSql, id, el.Title, el.Description); err != nil {
-			return nil, err
-		}
-	}
+	product := dto.NewProductFromRequest(request).SetID(id)
 
-	product := NewProductFromRequest(request).SetID(id)
+	if err = addInfo(ctx, o.schema, tx, product.Info, product.ID); err != nil {
+		return nil, err
+	}
 
 	return product, nil
-}
-
-func commitOrRollbackTx(ctx context.Context, tx pgx.Tx, err error) error {
-	if err != nil {
-		return tx.Rollback(ctx)
-	}
-	return tx.Commit(ctx)
 }

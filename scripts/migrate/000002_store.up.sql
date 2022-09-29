@@ -42,7 +42,7 @@ CREATE TABLE if NOT EXISTS store.product_stock (
 CREATE TABLE if NOT EXISTS store.product_info
 (
     id SERIAL PRIMARY KEY NOT NULL,
-    product_id text NOT NULL,
+    product_id integer NOT NULL,
     title text NOT NULL,
     description text NOT NULL
 );

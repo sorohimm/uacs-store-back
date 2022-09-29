@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"github.com/sorohimm/shop/internal/storage/postgres/api/product/dto"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -27,7 +28,7 @@ type StoreCommanderHandler struct {
 
 func (o *StoreCommanderHandler) CreateProduct(ctx context.Context, req *api.CreateProductRequest) (*api.ProductResponse, error) {
 	var (
-		prod *product.Product
+		prod *dto.Product
 		err  error
 	)
 

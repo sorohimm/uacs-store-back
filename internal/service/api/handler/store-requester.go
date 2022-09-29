@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"errors"
+	"github.com/sorohimm/shop/internal/storage/postgres/api/product/dto"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -42,7 +43,7 @@ func (o *StoreRequesterHandler) GetAllProducts(ctx context.Context, req *api.All
 	offset := req.GetPage()*limit - limit
 
 	var (
-		prod *product.Products
+		prod *dto.Products
 		err  error
 	)
 
