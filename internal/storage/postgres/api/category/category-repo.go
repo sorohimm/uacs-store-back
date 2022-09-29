@@ -21,7 +21,7 @@ type CategoryRepo struct {
 
 func (o *CategoryRepo) CreateCategory(ctx context.Context, request *api.CreateCategoryRequest) (*Category, error) {
 	sql := `
-INSERT INTO ` + o.schema + postgres.CategoryTableName + `
+INSERT INTO ` + o.schema + `.` + postgres.CategoryTableName + `
 (
 name
 )

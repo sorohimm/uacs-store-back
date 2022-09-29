@@ -21,7 +21,7 @@ type BrandRepo struct {
 
 func (o *BrandRepo) CreateBrand(ctx context.Context, request *api.CreateBrandRequest) (*Brand, error) {
 	sql := `
-INSERT INTO ` + o.schema + postgres.BrandTableName + `
+INSERT INTO ` + o.schema + `.` + postgres.BrandTableName + `
 (
 name
 )
