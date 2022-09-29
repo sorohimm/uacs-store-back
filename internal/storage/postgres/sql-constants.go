@@ -4,7 +4,7 @@ const (
 	ProductTableName       = "product"
 	ProductInfoTableName   = "product_info"
 	BrandTableName         = "brand"
-	TypeTableName          = "category"
+	CategoryTableName      = "category"
 	UserTableName          = "user"
 	BasketTableName        = "basket"
 	BasketProductTableName = "basket_product"

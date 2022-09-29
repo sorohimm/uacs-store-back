@@ -2,6 +2,8 @@ package storage
 
 import (
 	"context"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/brand"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/category"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
 
 	"github.com/sorohimm/uacs-store-back/pkg/api"
@@ -28,5 +30,9 @@ type InfoCommander interface {
 }
 
 type BrandCommander interface {
-	CreateBrand(ctx context.Context) error
+	CreateBrand(ctx context.Context, request *api.CreateBrandRequest) (*brand.Brand, error)
+}
+
+type CategoryCommander interface {
+	CreateCategory(ctx context.Context, request *api.CreateBrandRequest) (*category.Category, error)
 }
