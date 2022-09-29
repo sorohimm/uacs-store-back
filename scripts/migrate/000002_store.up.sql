@@ -47,7 +47,7 @@ CREATE TABLE if NOT EXISTS store.product_info
     description text NOT NULL
 );
 
-CREATE TABLE if NOT EXISTS store.type
+CREATE TABLE if NOT EXISTS store.category
 (
     id SERIAL PRIMARY KEY NOT NULL,
     name text NOT NULL

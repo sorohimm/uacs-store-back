@@ -26,3 +26,7 @@ type InfoRequester interface {
 type InfoCommander interface {
 	AddInfo(ctx context.Context, info []*api.ProductInfo, productID int64) error
 }
+
+type BrandCommander interface {
+	CreateBrand(ctx context.Context) error
+}

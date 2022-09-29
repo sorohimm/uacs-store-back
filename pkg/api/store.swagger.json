@@ -19,6 +19,70 @@
     "application/json"
   ],
   "paths": {
+    "/v1/brand": {
+      "post": {
+        "operationId": "StoreServiceCommander_CreateBrand",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/uacs_storeCreateBrandResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/uacs_storeCreateBrandRequest"
+            }
+          }
+        ],
+        "tags": [
+          "StoreServiceCommander"
+        ]
+      }
+    },
+    "/v1/category": {
+      "post": {
+        "operationId": "StoreServiceCommander_CreateCategory",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/uacs_storeCreateCategoryResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/uacs_storeCreateCategoryRequest"
+            }
+          }
+        ],
+        "tags": [
+          "StoreServiceCommander"
+        ]
+      }
+    },
     "/v1/product": {
       "get": {
         "operationId": "StoreServiceRequester_GetAllProducts",
@@ -169,6 +233,46 @@
           "items": {
             "$ref": "#/definitions/uacs_storeProductResponse"
           }
+        }
+      }
+    },
+    "uacs_storeCreateBrandRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "uacs_storeCreateBrandResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "uacs_storeCreateCategoryRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "uacs_storeCreateCategoryResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
         }
       }
     },

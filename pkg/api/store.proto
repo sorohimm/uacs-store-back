@@ -42,6 +42,24 @@ message AllProductsResponse {
   repeated ProductResponse products = 10;
 }
 
+message CreateBrandRequest {
+  string name = 20;
+}
+
+message BrandResponse {
+  int64 id = 10;
+  string name = 20;
+}
+
+message CreateCategoryRequest {
+  string name = 20;
+}
+
+message CategoryResponse {
+  int64 id = 10;
+  string name = 20;
+}
+
 service StoreServiceRequester {
   rpc GetProduct (ProductRequest) returns (ProductResponse) {
     option (google.api.http) = {
@@ -60,6 +78,20 @@ service StoreServiceCommander {
   rpc CreateProduct (CreateProductRequest) returns (ProductResponse) {
     option (google.api.http) = {
       post: "/v1/product"
+      body: "*"
+    };
+  };
+
+  rpc CreateBrand (CreateBrandRequest) returns (BrandResponse) {
+    option (google.api.http) = {
+      post: "/v1/brand"
+      body: "*"
+    };
+  };
+
+  rpc CreateCategory (CreateCategoryRequest) returns (CategoryResponse) {
+    option (google.api.http) = {
+      post: "/v1/category"
       body: "*"
     };
   };

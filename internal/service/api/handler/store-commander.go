@@ -16,7 +16,6 @@ import (
 func NewStoreCommanderHandler(schema string, pool *pgxpool.Pool) *StoreCommanderHandler {
 	return &StoreCommanderHandler{
 		productCommander: product.NewProductRepo(schema, pool),
-		infoCommander:    product.NewInfoRepo(schema, pool),
 	}
 }
 
@@ -37,4 +36,12 @@ func (o *StoreCommanderHandler) CreateProduct(ctx context.Context, req *api.Crea
 	}
 
 	return prod.ToAPIResponse(), nil
+}
+
+func (o *StoreCommanderHandler) CreateCategory(ctx context.Context, req *api.CreateCategoryRequest) (*api.CreateCategoryResponse, error) {
+	return nil, nil
+}
+
+func (o *StoreCommanderHandler) CreateBrand(ctx context.Context, req *api.CreateBrandRequest) (*api.CreateBrandResponse, error) {
+	return nil, nil
 }

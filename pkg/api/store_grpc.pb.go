@@ -145,6 +145,8 @@ var StoreServiceRequester_ServiceDesc = grpc.ServiceDesc{
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type StoreServiceCommanderClient interface {
 	CreateProduct(ctx context.Context, in *CreateProductRequest, opts ...grpc.CallOption) (*ProductResponse, error)
+	CreateBrand(ctx context.Context, in *CreateBrandRequest, opts ...grpc.CallOption) (*CreateBrandResponse, error)
+	CreateCategory(ctx context.Context, in *CreateCategoryRequest, opts ...grpc.CallOption) (*CreateCategoryResponse, error)
 }
 
 type storeServiceCommanderClient struct {
@@ -164,11 +166,31 @@ func (c *storeServiceCommanderClient) CreateProduct(ctx context.Context, in *Cre
 	return out, nil
 }
 
+func (c *storeServiceCommanderClient) CreateBrand(ctx context.Context, in *CreateBrandRequest, opts ...grpc.CallOption) (*CreateBrandResponse, error) {
+	out := new(CreateBrandResponse)
+	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.StoreServiceCommander/CreateBrand", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *storeServiceCommanderClient) CreateCategory(ctx context.Context, in *CreateCategoryRequest, opts ...grpc.CallOption) (*CreateCategoryResponse, error) {
+	out := new(CreateCategoryResponse)
+	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.StoreServiceCommander/CreateCategory", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // StoreServiceCommanderServer is the server API for StoreServiceCommander service.
 // All implementations must embed UnimplementedStoreServiceCommanderServer
 // for forward compatibility
 type StoreServiceCommanderServer interface {
 	CreateProduct(context.Context, *CreateProductRequest) (*ProductResponse, error)
+	CreateBrand(context.Context, *CreateBrandRequest) (*CreateBrandResponse, error)
+	CreateCategory(context.Context, *CreateCategoryRequest) (*CreateCategoryResponse, error)
 	mustEmbedUnimplementedStoreServiceCommanderServer()
 }
 
@@ -178,6 +200,12 @@ type UnimplementedStoreServiceCommanderServer struct {
 
 func (UnimplementedStoreServiceCommanderServer) CreateProduct(context.Context, *CreateProductRequest) (*ProductResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateProduct not implemented")
+}
+func (UnimplementedStoreServiceCommanderServer) CreateBrand(context.Context, *CreateBrandRequest) (*CreateBrandResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateBrand not implemented")
+}
+func (UnimplementedStoreServiceCommanderServer) CreateCategory(context.Context, *CreateCategoryRequest) (*CreateCategoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateCategory not implemented")
 }
 func (UnimplementedStoreServiceCommanderServer) mustEmbedUnimplementedStoreServiceCommanderServer() {}
 
@@ -210,6 +238,42 @@ func _StoreServiceCommander_CreateProduct_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
+func _StoreServiceCommander_CreateBrand_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateBrandRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StoreServiceCommanderServer).CreateBrand(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/github.com.sorohimm.uacs_store.StoreServiceCommander/CreateBrand",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StoreServiceCommanderServer).CreateBrand(ctx, req.(*CreateBrandRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StoreServiceCommander_CreateCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateCategoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StoreServiceCommanderServer).CreateCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/github.com.sorohimm.uacs_store.StoreServiceCommander/CreateCategory",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StoreServiceCommanderServer).CreateCategory(ctx, req.(*CreateCategoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // StoreServiceCommander_ServiceDesc is the grpc.ServiceDesc for StoreServiceCommander service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -220,6 +284,14 @@ var StoreServiceCommander_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateProduct",
 			Handler:    _StoreServiceCommander_CreateProduct_Handler,
+		},
+		{
+			MethodName: "CreateBrand",
+			Handler:    _StoreServiceCommander_CreateBrand_Handler,
+		},
+		{
+			MethodName: "CreateCategory",
+			Handler:    _StoreServiceCommander_CreateCategory_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

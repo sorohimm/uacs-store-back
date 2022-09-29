@@ -6,7 +6,7 @@ import (
 	"github.com/sorohimm/shop/pkg/api"
 )
 
-//go:generate mockgen -source=product.go -package=model -destination=product_mock.go
+//go:generate mockgen -source=product-handler.go -package=model -destination=product-handler_mock.go
 
 type ProductRequesterHandler interface {
 	GetProduct(ctx context.Context, req *api.ProductRequest) (*api.ProductResponse, error)
