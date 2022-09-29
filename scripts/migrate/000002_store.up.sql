@@ -1,26 +1,5 @@
 BEGIN;
 
-CREATE TABLE if NOT EXISTS store.user
-(
-    id SERIAL PRIMARY KEY NOT NULL,
-    email text unique NOT NULL,
-    password text  NOT NULL,
-    role text NOT NULL
-);
-
-CREATE TABLE if NOT EXISTS store.basket
-(
-    id SERIAL PRIMARY KEY NOT NULL,
-    user_id text NOT NULL
-);
-
-CREATE TABLE if NOT EXISTS store.basket_product
-(
-    id SERIAL PRIMARY KEY NOT NULL,
-    product_id text NOT NULL,
-    basket_id text NOT NULL
-);
-
 CREATE TABLE if NOT EXISTS store.product
 (
     id SERIAL PRIMARY KEY NOT NULL,
