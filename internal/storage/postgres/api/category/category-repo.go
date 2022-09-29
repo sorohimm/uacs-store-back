@@ -19,7 +19,7 @@ type CategoryRepo struct {
 	pool   *pgxpool.Pool
 }
 
-func (o *CategoryRepo) CreateCategory(ctx context.Context, request *api.CreateBrandRequest) (*Category, error) {
+func (o *CategoryRepo) CreateCategory(ctx context.Context, request *api.CreateCategoryRequest) (*Category, error) {
 	sql := `
 INSERT INTO ` + o.schema + postgres.CategoryTableName + `
 (

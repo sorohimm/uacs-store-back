@@ -34,5 +34,5 @@ type BrandCommander interface {
 }
 
 type CategoryCommander interface {
-	CreateCategory(ctx context.Context, request *api.CreateBrandRequest) (*category.Category, error)
+	CreateCategory(ctx context.Context, request *api.CreateCategoryRequest) (*category.Category, error)
 }
