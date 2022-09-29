@@ -26,7 +26,7 @@ store_linux: export GOOS := linux
 store_linux: export GOARCH := amd64
 store_linux: store
 
-#### gRPC generation
+#### gRPC store api generation
 SRC = "./pkg/api"
 DST = "."
 .PHONY: gen-api
@@ -36,7 +36,19 @@ gen-api:
 	protoc -I=. -I$(API_SRC) --go_out=$(API_DEST) --go_opt=paths=source_relative $(API_SRC)/store.proto
 	protoc -I=. -I$(API_SRC) --go-grpc_out=$(API_DEST) --go-grpc_opt paths=source_relative $(API_SRC)/store.proto
 	protoc -I=. -I$(API_SRC) --grpc-gateway_out=$(API_DEST)  --grpc-gateway_opt=logtostderr=true --grpc-gateway_opt=paths=source_relative $(API_SRC)/store.proto
-	protoc -I=. -I$(API_SRC) --openapiv2_out=$(API_DEST) --openapiv2_opt=logtostderr=true $(API_SRC)/store.proto
+	protoc -I=. -I$(API_SRC) --openapiv2_out=$(API_DEST) --openapiv2_opt=logtostderr=true $(API_SRC)/store.proto#### gRPC generation
+
+#### gRPC rbac generation
+SRC = "./pkg/rbac"
+DST = "."
+.PHONY: gen-rbac
+gen-rbac: RBAC_SRC:= "./pkg/rbac"
+gen-rbac: RBAC_DEST:= "."
+gen-rbac:
+	protoc -I=. -I$(RBAC_SRC) --go_out=$(RBAC_DEST) --go_opt=paths=source_relative $(RBAC_SRC)/rbac.proto
+	protoc -I=. -I$(RBAC_SRC) --go-grpc_out=$(RBAC_DEST) --go-grpc_opt paths=source_relative $(RBAC_SRC)/rbac.proto
+	protoc -I=. -I$(RBAC_SRC) --grpc-gateway_out=$(RBAC_DEST)  --grpc-gateway_opt=logtostderr=true --grpc-gateway_opt=paths=source_relative $(RBAC_SRC)/rbac.proto
+	protoc -I=. -I$(RBAC_SRC) --openapiv2_out=$(RBAC_DEST) --openapiv2_opt=logtostderr=true $(RBAC_SRC)/rbac.proto
 
 #### docker compose
 .PHONY: compose-up
