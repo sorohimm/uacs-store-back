@@ -1,4 +1,4 @@
-module github.com/sorohimm/shop
+module github.com/sorohimm/uacs-store-back
 
 go 1.18
 

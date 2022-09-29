@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 
-	"github.com/sorohimm/shop/internal/service/api"
+	"github.com/sorohimm/uacs-store-back/internal/service/api"
 )
 
 var version, buildTime string

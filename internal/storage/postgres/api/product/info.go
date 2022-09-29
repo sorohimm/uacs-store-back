@@ -5,8 +5,8 @@ import (
 
 	"github.com/jackc/pgx/v4"
 
-	"github.com/sorohimm/shop/internal/storage/postgres"
-	"github.com/sorohimm/shop/internal/storage/postgres/api/product/dto"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
 )
 
 func addInfo(ctx context.Context, schema string, tx pgx.Tx, info []*dto.ProductInfo, productID int64) error {

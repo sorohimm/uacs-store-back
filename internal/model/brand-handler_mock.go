@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	api "github.com/sorohimm/shop/pkg/api"
+	api "github.com/sorohimm/uacs-store-back/pkg/api"
 )
 
 // MockBrandCommanderHandler is a mock of BrandCommanderHandler interface.

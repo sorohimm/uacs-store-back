@@ -2,15 +2,15 @@ package handler
 
 import (
 	"context"
-	"github.com/sorohimm/shop/internal/storage/postgres/api/product/dto"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
 	"github.com/jackc/pgx/v4/pgxpool"
 
-	"github.com/sorohimm/shop/internal/storage"
-	"github.com/sorohimm/shop/internal/storage/postgres/api/product"
-	"github.com/sorohimm/shop/pkg/api"
+	"github.com/sorohimm/uacs-store-back/internal/storage"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product"
+	"github.com/sorohimm/uacs-store-back/pkg/api"
 )
 
 func NewStoreCommanderHandler(schema string, pool *pgxpool.Pool) *StoreCommanderHandler {

@@ -2,9 +2,9 @@ package storage
 
 import (
 	"context"
-	"github.com/sorohimm/shop/internal/storage/postgres/api/product/dto"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
 
-	"github.com/sorohimm/shop/pkg/api"
+	"github.com/sorohimm/uacs-store-back/pkg/api"
 )
 
 type ProductRequester interface {

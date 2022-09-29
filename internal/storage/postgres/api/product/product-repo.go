@@ -3,14 +3,14 @@ package product
 import (
 	"context"
 	"errors"
-	"github.com/sorohimm/shop/internal/storage/postgres/api/product/dto"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
 
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 
-	"github.com/sorohimm/shop/internal/log"
-	"github.com/sorohimm/shop/internal/storage/postgres"
-	"github.com/sorohimm/shop/pkg/api"
+	"github.com/sorohimm/uacs-store-back/internal/log"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
+	"github.com/sorohimm/uacs-store-back/pkg/api"
 )
 
 var ErrNotFound = errors.New("not found")

@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/sorohimm/shop/internal/storage/postgres"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
 )
 
 type GRPCConf struct {

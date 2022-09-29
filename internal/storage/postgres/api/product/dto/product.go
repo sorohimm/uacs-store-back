@@ -1,6 +1,6 @@
 package dto
 
-import "github.com/sorohimm/shop/pkg/api"
+import "github.com/sorohimm/uacs-store-back/pkg/api"
 
 func NewProductFromRequest(req *api.CreateProductRequest) *Product {
 	var info []*ProductInfo

@@ -11,14 +11,14 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 
-	"github.com/sorohimm/shop/internal"
-	"github.com/sorohimm/shop/internal/conf"
-	"github.com/sorohimm/shop/internal/log"
-	"github.com/sorohimm/shop/internal/service/api/config"
-	"github.com/sorohimm/shop/internal/service/api/handler"
-	"github.com/sorohimm/shop/internal/service/api/initial"
-	"github.com/sorohimm/shop/internal/storage/postgres"
-	"github.com/sorohimm/shop/pkg/api"
+	"github.com/sorohimm/uacs-store-back/internal"
+	"github.com/sorohimm/uacs-store-back/internal/conf"
+	"github.com/sorohimm/uacs-store-back/internal/log"
+	"github.com/sorohimm/uacs-store-back/internal/service/api/config"
+	"github.com/sorohimm/uacs-store-back/internal/service/api/handler"
+	"github.com/sorohimm/uacs-store-back/internal/service/api/initial"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
+	"github.com/sorohimm/uacs-store-back/pkg/api"
 )
 
 func NewService() *Service {

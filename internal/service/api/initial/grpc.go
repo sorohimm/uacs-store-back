@@ -13,8 +13,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/sorohimm/shop/internal/log"
-	"github.com/sorohimm/shop/internal/service/api/config"
+	"github.com/sorohimm/uacs-store-back/internal/log"
+	"github.com/sorohimm/uacs-store-back/internal/service/api/config"
 )
 
 func Grpc(ctx context.Context, registrar func(s *grpc.Server)) (func() error, func(error)) {

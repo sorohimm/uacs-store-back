@@ -3,7 +3,7 @@ package model
 import (
 	"context"
 
-	"github.com/sorohimm/shop/pkg/api"
+	"github.com/sorohimm/uacs-store-back/pkg/api"
 )
 
 //go:generate mockgen -source=brand-handler.go -package=model -destination=brand-handler_mock.go

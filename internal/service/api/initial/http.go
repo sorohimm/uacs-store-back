@@ -13,14 +13,14 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/sorohimm/shop/internal/log"
+	"github.com/sorohimm/uacs-store-back/internal/log"
 
 	"golang.org/x/net/http2"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/protobuf/encoding/protojson"
 
-	"github.com/sorohimm/shop/internal/service/api/config"
+	"github.com/sorohimm/uacs-store-back/internal/service/api/config"
 )
 
 type HTTPRegistrar func(ctx context.Context, mux *runtime.ServeMux, grpcAddr string, opts []grpc.DialOption) error
