@@ -7,18 +7,16 @@ import (
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
 )
 
-func NewAuthRepo(schema string, pool *pgxpool.Pool, salt string) *AuthRepo {
+func NewAuthRepo(schema string, pool *pgxpool.Pool) *AuthRepo {
 	return &AuthRepo{
-		schema:   schema,
-		pool:     pool,
-		hashSalt: salt,
+		schema: schema,
+		pool:   pool,
 	}
 }
 
 type AuthRepo struct {
-	schema   string
-	pool     *pgxpool.Pool
-	hashSalt string
+	schema string
+	pool   *pgxpool.Pool
 }
 
 func (o *AuthRepo) CreateUser(ctx context.Context, req *CreateUserRequest) (*User, error) {

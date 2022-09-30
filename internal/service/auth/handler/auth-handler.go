@@ -6,6 +6,7 @@ import (
 
 	"github.com/dgrijalva/jwt-go/v4"
 	"github.com/golang/protobuf/ptypes/empty"
+	"github.com/gorilla/sessions"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -21,8 +22,8 @@ import (
 
 func NewAuthHandler(schema string, pool *pgxpool.Pool) *AuthHandler {
 	return &AuthHandler{
-		authRepoCommander: repo.NewAuthRepo(schema, pool, ""),
-		authRepoRequester: repo.NewAuthRepo(schema, pool, ""),
+		authRepoCommander: repo.NewAuthRepo(schema, pool),
+		authRepoRequester: repo.NewAuthRepo(schema, pool),
 	}
 }
 
@@ -32,6 +33,7 @@ type AuthHandler struct {
 	authRepoRequester storage.UserRequester
 	expireDuration    time.Duration
 	signingKey        []byte
+	sessionStore      *sessions.CookieStore
 }
 
 func (o *AuthHandler) SetSigningKey(signingKey []byte) *AuthHandler {
@@ -41,6 +43,11 @@ func (o *AuthHandler) SetSigningKey(signingKey []byte) *AuthHandler {
 
 func (o *AuthHandler) SetExpireDuration(expireDuration time.Duration) *AuthHandler {
 	o.expireDuration = expireDuration
+	return o
+}
+
+func (o *AuthHandler) SetSessionStore(store *sessions.CookieStore) *AuthHandler {
+	o.sessionStore = store
 	return o
 }
 
@@ -90,17 +97,20 @@ func (o *AuthHandler) Login(ctx context.Context, req *protoAuth.LoginRequest) (*
 	saltedReqPwd := security.SaltPassword(req.Password, credentials.PwdSalt)
 	hashReqPwd, err := security.HashPassword(saltedReqPwd)
 	if err != nil {
-		return nil, err
+		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
 	if !security.DoPasswordsMatch(hashReqPwd, credentials.Password) {
-		return nil, status.Errorf(codes.PermissionDenied, err.Error())
+		return nil, status.Errorf(codes.Unauthenticated, err.Error())
 	}
 
 	token := o.genToken(credentials.UserID)
-	stringToken, _ := token.SignedString(o.signingKey)
+	ss, err := token.SignedString(o.signingKey)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, err.Error())
+	}
 
-	if err = SetTokenInContext(ctx, stringToken); err != nil {
+	if err = SetTokenInContext(ctx, ss); err != nil {
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
