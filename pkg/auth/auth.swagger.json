@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "pkg/rbac/rbac.proto",
+    "title": "pkg/auth/auth.proto",
     "version": "version not set"
   },
   "tags": [
@@ -16,6 +16,29 @@
     "application/json"
   ],
   "paths": {
+    "/v1/auth/is-authorized": {
+      "post": {
+        "operationId": "AuthService_IsAuthorized",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "AuthService"
+        ]
+      }
+    },
     "/v1/auth/login": {
       "post": {
         "operationId": "AuthService_Login",

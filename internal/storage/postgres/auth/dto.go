@@ -1,4 +1,4 @@
-package rbac
+package auth
 
 type Credentials struct {
 	Username string

@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package github.com.sorohimm.uacs_store;
-option go_package = "github.com/sorohimm/shop/pkg/api";
+option go_package = "github.com/sorohimm/shop/pkg/auth";
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
@@ -35,6 +35,12 @@ service AuthService {
   rpc Logout (google.protobuf.Empty) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v1/auth/logout"
+    };
+  };
+
+  rpc IsAuthorized (google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1/auth/is-authorized"
     };
   };
 }

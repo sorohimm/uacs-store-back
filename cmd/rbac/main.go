@@ -2,12 +2,12 @@ package main
 
 import (
 	"context"
-	"github.com/sorohimm/uacs-store-back/internal/service/rbac"
+	"github.com/sorohimm/uacs-store-back/internal/service/auth"
 )
 
 var version, buildTime string
 
 func main() {
-	app := rbac.NewService()
-	app.Init(context.Background(), "uacs-auth-service", version, buildTime)
+	app := auth.NewService()
+	app.Init(context.Background(), "uacs-jwt-service", version, buildTime)
 }

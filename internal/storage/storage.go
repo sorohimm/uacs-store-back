@@ -5,8 +5,8 @@ import (
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/brand"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/category"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
-	rbacRepo "github.com/sorohimm/uacs-store-back/internal/storage/postgres/rbac"
-	rbac "github.com/sorohimm/uacs-store-back/pkg/rbac"
+	rbacRepo "github.com/sorohimm/uacs-store-back/internal/storage/postgres/auth"
+	rbac "github.com/sorohimm/uacs-store-back/pkg/auth"
 
 	"google.golang.org/protobuf/types/known/emptypb"
 

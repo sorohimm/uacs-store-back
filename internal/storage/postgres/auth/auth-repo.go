@@ -1,4 +1,4 @@
-package rbac
+package auth
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	rbac "github.com/sorohimm/uacs-store-back/pkg/rbac"
+	rbac "github.com/sorohimm/uacs-store-back/pkg/auth"
 )
 
 func NewAuthRepo(schema string, pool *pgxpool.Pool, salt string) *AuthRepo {

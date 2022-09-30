@@ -57,16 +57,16 @@ gen-api:
 	protoc -I=. -I$(API_SRC) --openapiv2_out=$(API_DEST) --openapiv2_opt=logtostderr=true $(API_SRC)/store.proto#### gRPC generation
 
 #### gRPC auth api generation
-SRC = "./pkg/rbac"
+SRC = "./pkg/auth"
 DST = "."
 .PHONY: gen-auth
-gen-auth: RBAC_SRC:= "./pkg/rbac"
-gen-auth: RBAC_DEST:= "."
+gen-auth: AUTH_SRC:= "./pkg/auth"
+gen-auth: AUTH_DEST:= "."
 gen-auth:
-	protoc -I=. -I$(RBAC_SRC) --go_out=$(RBAC_DEST) --go_opt=paths=source_relative $(RBAC_SRC)/rbac.proto
-	protoc -I=. -I$(RBAC_SRC) --go-grpc_out=$(RBAC_DEST) --go-grpc_opt paths=source_relative $(RBAC_SRC)/rbac.proto
-	protoc -I=. -I$(RBAC_SRC) --grpc-gateway_out=$(RBAC_DEST)  --grpc-gateway_opt=logtostderr=true --grpc-gateway_opt=paths=source_relative $(RBAC_SRC)/rbac.proto
-	protoc -I=. -I$(RBAC_SRC) --openapiv2_out=$(RBAC_DEST) --openapiv2_opt=logtostderr=true $(RBAC_SRC)/rbac.proto
+	protoc -I=. -I$(AUTH_SRC) --go_out=$(AUTH_DEST) --go_opt=paths=source_relative $(AUTH_SRC)/auth.proto
+	protoc -I=. -I$(AUTH_SRC) --go-grpc_out=$(AUTH_DEST) --go-grpc_opt paths=source_relative $(AUTH_SRC)/auth.proto
+	protoc -I=. -I$(AUTH_SRC) --grpc-gateway_out=$(AUTH_DEST)  --grpc-gateway_opt=logtostderr=true --grpc-gateway_opt=paths=source_relative $(AUTH_SRC)/auth.proto
+	protoc -I=. -I$(AUTH_SRC) --openapiv2_out=$(AUTH_DEST) --openapiv2_opt=logtostderr=true $(AUTH_SRC)/auth.proto
 
 #### docker compose up
 .PHONY: compose-up
