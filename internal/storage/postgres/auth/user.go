@@ -3,12 +3,10 @@ package auth
 import (
 	"context"
 	"errors"
-
+	"github.com/jackc/pgconn"
 	"github.com/jackc/pgx/v4"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
 )
-
-var ErrNotFound = errors.New("not found")
 
 func getCredentialsByUserID(ctx context.Context, schema string, tx pgx.Tx, userID int64) (*Credentials, error) {
 	var (
@@ -94,6 +92,11 @@ RETURNING id;
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, ErrNotFound
 		}
+
+		if err.(*pgconn.PgError).Code == "23505" {
+			return nil, ErrUserAlreadyExists
+		}
+
 		return nil, err
 	}
 

@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"errors"
 	jwt2 "github.com/sorohimm/uacs-store-back/internal/jwt"
 	"time"
 
@@ -60,10 +61,9 @@ func (o *AuthHandler) Registration(ctx context.Context, req *proto.RegistrationR
 
 	salt := security.GenerateSalt(req.Password)
 	saltedPwd := security.SaltPassword(req.Password, salt)
-
 	hashPwd, err := security.HashPassword(saltedPwd)
 	if err != nil {
-		return nil, err
+		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
 	repoReq := repo.CreateUserRequest{
@@ -77,10 +77,13 @@ func (o *AuthHandler) Registration(ctx context.Context, req *proto.RegistrationR
 	}
 
 	if _, err = o.authRepoCommander.CreateUser(ctx, &repoReq); err != nil {
+		if errors.Is(err, repo.ErrUserAlreadyExists) {
+			return nil, status.Errorf(codes.AlreadyExists, err.Error())
+		}
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
-	return &empty.Empty{}, status.Error(codes.OK, "success")
+	return &empty.Empty{}, nil
 }
 
 func (o *AuthHandler) Login(ctx context.Context, req *proto.LoginRequest) (*empty.Empty, error) {
@@ -92,13 +95,16 @@ func (o *AuthHandler) Login(ctx context.Context, req *proto.LoginRequest) (*empt
 		err         error
 	)
 	if credentials, err = o.authRepoRequester.GetUserCredentialByUsername(ctx, req.Username); err != nil {
+		if errors.Is(err, repo.ErrNotFound) {
+			return nil, status.Errorf(codes.NotFound, err.Error())
+		}
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
 	saltedReqPwd := security.SaltPassword(req.Password, credentials.PwdSalt)
 
 	if ok := security.DoPasswordsMatch(credentials.Password, saltedReqPwd); !ok {
-		return nil, status.Errorf(codes.Unauthenticated, err.Error())
+		return nil, status.Errorf(codes.Unauthenticated, "invalid credentials")
 	}
 
 	pair, err := jwt2.GenerateTokenPair(o.accessExpireDuration, o.refreshExpireDuration, o.signingKey, credentials.UserID, "")

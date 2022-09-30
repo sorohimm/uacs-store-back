@@ -49,11 +49,6 @@ func Base64(n int) string {
 	return String(n, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+/")
 }
 
-// Base62 generates a random base62 string with length of n
-func Base62(s int) string {
-	return String(s, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-}
-
 // list of default letters that can be used to make a random string when calling String
 // function with no letters provided
 var defLetters = []rune("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
