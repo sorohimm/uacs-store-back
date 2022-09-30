@@ -87,7 +87,7 @@ role
 VALUES ($1,$2,$3,$4)
 RETURNING id;
 `
-	row := tx.QueryRow(ctx, sql, user.Username, user.ID, user.Email, user.Password, user.Role)
+	row := tx.QueryRow(ctx, sql, user.Username, user.Email, user.Password, user.Role)
 
 	var id int64
 	if err := row.Scan(&id); err != nil {

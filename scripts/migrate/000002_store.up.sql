@@ -10,7 +10,8 @@ CREATE TABLE if NOT EXISTS store.product
     brand_id text NOT NULL
 );
 
-CREATE TABLE if NOT EXISTS store.product_stock (
+CREATE TABLE if NOT EXISTS store.product_stock
+(
     id SERIAL PRIMARY KEY NOT NULL,
     product_id integer NOT NULL,
     in_stock boolean,

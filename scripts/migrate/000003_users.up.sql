@@ -3,8 +3,8 @@ BEGIN;
 CREATE TABLE if NOT EXISTS users.user
 (
     id SERIAL PRIMARY KEY NOT NULL,
-    email varchar(64) UNIQUE NOT NULL,
-    username varchar(64) UNIQUE NOT NULL,
+    email text UNIQUE NOT NULL,
+    username text UNIQUE NOT NULL,
     password text NOT NULL,
     role text NOT NULL
 );
@@ -13,13 +13,14 @@ CREATE TABLE if NOT EXISTS users.salt
 (
     id SERIAL PRIMARY KEY NOT NULL,
     user_id integer UNIQUE NOT NULL,
-    salt text NOT NULL,
+    salt text NOT NULL
 );
 
-CREATE TABLE if NOT EXISTS users.persistent_logins (
-    email varchar(64) NOT NULL,
-    series varchar(64) PRIMARY KEY,
-    token varchar(64) NOT NULL,
+CREATE TABLE if NOT EXISTS users.persistent_logins
+(
+    email text NOT NULL,
+    series text PRIMARY KEY,
+    token text NOT NULL,
     last_used timestamp NOT NULL
 );
 
