@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/golang/protobuf/ptypes/empty"
-	"github.com/gorilla/sessions"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -33,7 +32,6 @@ type AuthHandler struct {
 	accessExpireDuration  time.Duration
 	refreshExpireDuration time.Duration
 	signingKey            string
-	sessionStore          *sessions.CookieStore
 }
 
 func (o *AuthHandler) SetSigningKey(signingKey string) *AuthHandler {
@@ -48,11 +46,6 @@ func (o *AuthHandler) SetAccessExpireDuration(expireDuration time.Duration) *Aut
 
 func (o *AuthHandler) SetRefreshExpireDuration(expireDuration time.Duration) *AuthHandler {
 	o.refreshExpireDuration = expireDuration
-	return o
-}
-
-func (o *AuthHandler) SetSessionStore(store *sessions.CookieStore) *AuthHandler {
-	o.sessionStore = store
 	return o
 }
 

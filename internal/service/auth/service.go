@@ -72,7 +72,11 @@ func (o *Service) Init(ctx context.Context, appName, version, built string) {
 
 	cfg := config.FromContext(ctx)
 
-	storeReqHandler := handler.NewAuthHandler(cfg.Postgres.SchemaName, pool)
+	storeReqHandler := handler.NewAuthHandler(cfg.Postgres.SchemaName, pool).
+		SetSigningKey(cfg.JWT.Secret).
+		SetAccessExpireDuration(cfg.JWT.AccessTokenExpireDuration).
+		SetRefreshExpireDuration(cfg.JWT.RefreshTokenExpireDuration)
+
 	o.Add(initial.Grpc(ctx, func(s *grpc.Server) {
 		api.RegisterAuthServiceServer(s, storeReqHandler)
 	}))
