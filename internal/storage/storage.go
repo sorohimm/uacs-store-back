@@ -5,11 +5,7 @@ import (
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/brand"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/category"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
-	rbacRepo "github.com/sorohimm/uacs-store-back/internal/storage/postgres/auth"
-	rbac "github.com/sorohimm/uacs-store-back/pkg/auth"
-
-	"google.golang.org/protobuf/types/known/emptypb"
-
+	auth "github.com/sorohimm/uacs-store-back/internal/storage/postgres/auth"
 	"github.com/sorohimm/uacs-store-back/pkg/api"
 )
 
@@ -41,8 +37,12 @@ type CategoryCommander interface {
 	CreateCategory(ctx context.Context, request *api.CreateCategoryRequest) (*category.Category, error)
 }
 
-type AuthCommander interface {
-	Registration(ctx context.Context, req *rbac.RegistrationRequest) (*rbacRepo.User, error)
-	Login(ctx context.Context, req *rbac.LoginRequest) error
-	Logout(ctx context.Context, req *emptypb.Empty) error
+type UserCommander interface {
+	CreateUser(ctx context.Context, req *auth.CreateUserRequest) (*auth.User, error)
+}
+
+type UserRequester interface {
+	GetUserByID(ctx context.Context, userID int64) (*auth.User, error)
+	GetUserByUsername(ctx context.Context, username string) (*auth.User, error)
+	GetUserCredentialByUsername(ctx context.Context, username string) (*auth.Credentials, error)
 }

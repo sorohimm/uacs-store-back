@@ -2,14 +2,9 @@ package auth
 
 import (
 	"context"
-	"crypto/sha1"
-	"fmt"
 	"github.com/jackc/pgx/v4"
-
 	"github.com/jackc/pgx/v4/pgxpool"
-	"google.golang.org/protobuf/types/known/emptypb"
-
-	rbac "github.com/sorohimm/uacs-store-back/pkg/auth"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
 )
 
 func NewAuthRepo(schema string, pool *pgxpool.Pool, salt string) *AuthRepo {
@@ -26,8 +21,7 @@ type AuthRepo struct {
 	hashSalt string
 }
 
-func (o *AuthRepo) Registration(ctx context.Context, req *rbac.RegistrationRequest) (*User, error) {
-	pwd := o.saltPassword(req.Password)
+func (o *AuthRepo) CreateUser(ctx context.Context, req *CreateUserRequest) (*User, error) {
 	var (
 		tx  pgx.Tx
 		err error
@@ -36,22 +30,73 @@ func (o *AuthRepo) Registration(ctx context.Context, req *rbac.RegistrationReque
 	if tx, err = o.pool.BeginTx(ctx, pgx.TxOptions{}); err != nil {
 		return nil, err
 	}
+	defer postgres.CommitOrRollbackTx(ctx, tx, err)
 
-	return saveUser(ctx, o.schema, tx, User{Username: req.Username, Email: req.Email, Password: pwd, Role: req.Role})
+	var user = &User{Username: req.User.Username, Email: req.User.Email, Password: req.User.Password, Role: req.User.Role}
+	if user, err = saveUser(ctx, o.schema, tx, *user); err != nil {
+		return nil, err
+	}
+
+	if err = saveSalt(ctx, o.schema, tx, user.ID, req.PwdSalt); err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
 
-func (o *AuthRepo) saltPassword(password string) string {
-	pwd := sha1.New()
-	pwd.Write([]byte(password))
-	pwd.Write([]byte(o.hashSalt))
-	return fmt.Sprintf("%x", pwd.Sum(nil))
+func (o *AuthRepo) GetUserByID(ctx context.Context, userID int64) (*User, error) {
+	var (
+		tx  pgx.Tx
+		err error
+	)
+
+	if tx, err = o.pool.BeginTx(ctx, pgx.TxOptions{}); err != nil {
+		return nil, err
+	}
+	defer postgres.CommitOrRollbackTx(ctx, tx, err)
+
+	var user *User
+	if user, err = getUserByID(ctx, o.schema, tx, userID); err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
 
-func (o *AuthRepo) Login(ctx context.Context, req *rbac.LoginRequest) error {
+func (o *AuthRepo) GetUserByUsername(ctx context.Context, username string) (*User, error) {
+	var (
+		tx  pgx.Tx
+		err error
+	)
 
-	return nil
+	if tx, err = o.pool.BeginTx(ctx, pgx.TxOptions{}); err != nil {
+		return nil, err
+	}
+	defer postgres.CommitOrRollbackTx(ctx, tx, err)
+
+	var user *User
+	if user, err = getUserByUsername(ctx, o.schema, tx, username); err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
 
-func (o *AuthRepo) Logout(ctx context.Context, req *emptypb.Empty) error {
-	return nil
+func (o *AuthRepo) GetUserCredentialByUsername(ctx context.Context, username string) (*Credentials, error) {
+	var (
+		tx  pgx.Tx
+		err error
+	)
+
+	if tx, err = o.pool.BeginTx(ctx, pgx.TxOptions{}); err != nil {
+		return nil, err
+	}
+	defer postgres.CommitOrRollbackTx(ctx, tx, err)
+
+	var credentials *Credentials
+	if credentials, err = getCredentialsByUsername(ctx, o.schema, tx, username); err != nil {
+		return nil, err
+	}
+
+	return credentials, nil
 }

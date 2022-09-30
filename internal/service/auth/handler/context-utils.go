@@ -8,11 +8,11 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-// SetSessionInContext sets the user's session into the context.  This has the effect of logging the user
+// SetTokenInContext sets the user's session into the context.  This has the effect of logging the user
 // in as that userId.  The grpc json gateway will set the UID in the user's session in this case
-func SetSessionInContext(ctx context.Context, userID int64) error {
+func SetTokenInContext(ctx context.Context, token string) error {
 	// create a header that the gateway will watch for
-	header := metadata.Pairs("session", strconv.Itoa(int(userID)))
+	header := metadata.Pairs("session", token)
 	// send the header back to the gateway
 	return grpc.SendHeader(ctx, header)
 }
