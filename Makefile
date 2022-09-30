@@ -16,7 +16,7 @@ all:auth
 
 #### store API service build
 .PHONY: store
-store: UACS_STORE_OUT := $(OUT_DIR)/uacs_store
+store: UACS_STORE_OUT := $(OUT_DIR)/uacs-store
 store: UACS_STORE_MAIN := ./cmd/api
 store:
 	@echo BUILDING $(RULESRVOUT)
@@ -31,8 +31,8 @@ store-linux: store
 
 #### auth service build
 .PHONY: auth
-auth: UACS_AUTH_OUT := $(OUT_DIR)/uacs_store
-auth: UACS_AUTH_MAIN := ./cmd/api
+auth: UACS_AUTH_OUT := $(OUT_DIR)/uacs-auth
+auth: UACS_AUTH_MAIN := ./cmd/rbac
 auth:
 	@echo BUILDING $(RULESRVOUT)
 	$(V)go build  -ldflags "-s -w -X main.version=${RELEASE} -X main.buildTime=${BUILD_TIME}" -o $(UACS_AUTH_OUT) $(UACS_AUTH_MAIN)

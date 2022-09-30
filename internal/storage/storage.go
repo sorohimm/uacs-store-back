@@ -5,7 +5,9 @@ import (
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/brand"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/category"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
+	rbacRepo "github.com/sorohimm/uacs-store-back/internal/storage/postgres/rbac"
 	rbac "github.com/sorohimm/uacs-store-back/pkg/rbac"
+
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	"github.com/sorohimm/uacs-store-back/pkg/api"
@@ -40,7 +42,7 @@ type CategoryCommander interface {
 }
 
 type AuthCommander interface {
-	Registration(ctx context.Context, req *rbac.RegistrationRequest) error
+	Registration(ctx context.Context, req *rbac.RegistrationRequest) (*rbacRepo.User, error)
 	Login(ctx context.Context, req *rbac.LoginRequest) error
 	Logout(ctx context.Context, req *emptypb.Empty) error
 }

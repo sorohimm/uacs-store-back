@@ -34,7 +34,11 @@ func (o *AuthHandler) Registration(ctx context.Context, req *rbac.RegistrationRe
 	logger := log.FromContext(ctx).Sugar()
 	logger.Debug("AuthHandler.Registration was called")
 
-	if err := o.authRepo.Registration(ctx, req); err != nil {
+	var (
+		err error
+		_   *rbacRepo.User
+	)
+	if _, err = o.authRepo.Registration(ctx, req); err != nil {
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
