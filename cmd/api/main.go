@@ -10,5 +10,5 @@ var version, buildTime string
 
 func main() {
 	app := api.NewService()
-	app.Init(context.Background(), "uacs_store", version, buildTime)
+	app.Init(context.Background(), "uacs-store", version, buildTime)
 }
