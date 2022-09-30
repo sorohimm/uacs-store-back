@@ -12,13 +12,21 @@ import (
 	rbac "github.com/sorohimm/uacs-store-back/pkg/rbac"
 )
 
+func NewAuthRepo(schema string, pool *pgxpool.Pool, salt string) *AuthRepo {
+	return &AuthRepo{
+		schema:   schema,
+		pool:     pool,
+		hashSalt: salt,
+	}
+}
+
 type AuthRepo struct {
 	schema   string
 	pool     *pgxpool.Pool
 	hashSalt string
 }
 
-func (o *AuthRepo) Registration(ctx context.Context, req *rbac.RegistrationRequest) error {
+func (o *AuthRepo) Registration(ctx context.Context, req *rbac.RegistrationRequest) (*User, error) {
 	pwd := o.saltPassword(req.Password)
 	var (
 		tx  pgx.Tx
@@ -26,10 +34,10 @@ func (o *AuthRepo) Registration(ctx context.Context, req *rbac.RegistrationReque
 	)
 
 	if tx, err = o.pool.BeginTx(ctx, pgx.TxOptions{}); err != nil {
-		return err
+		return nil, err
 	}
 
-	return saveUser(ctx, o.schema, tx, User{Email: req.Email, Password: pwd, Role: req.Role})
+	return saveUser(ctx, o.schema, tx, User{Username: req.Username, Email: req.Email, Password: pwd, Role: req.Role})
 }
 
 func (o *AuthRepo) saltPassword(password string) string {
@@ -40,6 +48,7 @@ func (o *AuthRepo) saltPassword(password string) string {
 }
 
 func (o *AuthRepo) Login(ctx context.Context, req *rbac.LoginRequest) error {
+
 	return nil
 }
 

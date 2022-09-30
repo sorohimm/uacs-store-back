@@ -59,10 +59,10 @@ gen-api:
 #### gRPC auth api generation
 SRC = "./pkg/rbac"
 DST = "."
-.PHONY: gen-rbac
-gen-rbac: RBAC_SRC:= "./pkg/rbac"
-gen-rbac: RBAC_DEST:= "."
-gen-rbac:
+.PHONY: gen-auth
+gen-auth: RBAC_SRC:= "./pkg/rbac"
+gen-auth: RBAC_DEST:= "."
+gen-auth:
 	protoc -I=. -I$(RBAC_SRC) --go_out=$(RBAC_DEST) --go_opt=paths=source_relative $(RBAC_SRC)/rbac.proto
 	protoc -I=. -I$(RBAC_SRC) --go-grpc_out=$(RBAC_DEST) --go-grpc_opt paths=source_relative $(RBAC_SRC)/rbac.proto
 	protoc -I=. -I$(RBAC_SRC) --grpc-gateway_out=$(RBAC_DEST)  --grpc-gateway_opt=logtostderr=true --grpc-gateway_opt=paths=source_relative $(RBAC_SRC)/rbac.proto

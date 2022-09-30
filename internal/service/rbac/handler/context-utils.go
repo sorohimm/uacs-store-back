@@ -8,11 +8,11 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-// SetUserIDInContext sets the user ID into the context.  This has the effect of logging the user
+// SetSessionInContext sets the user's session into the context.  This has the effect of logging the user
 // in as that userId.  The grpc json gateway will set the UID in the user's session in this case
-func SetUserIDInContext(ctx context.Context, userID int) error {
+func SetSessionInContext(ctx context.Context, userID int64) error {
 	// create a header that the gateway will watch for
-	header := metadata.Pairs("gateway-session-userId", strconv.Itoa(userID))
+	header := metadata.Pairs("session", strconv.Itoa(int(userID)))
 	// send the header back to the gateway
 	return grpc.SendHeader(ctx, header)
 }
@@ -20,7 +20,7 @@ func SetUserIDInContext(ctx context.Context, userID int) error {
 // SetDeleteSessionFlagInContext sets a flag telling the gateway to delete the session, if any
 func SetDeleteSessionFlagInContext(ctx context.Context) error {
 	// create a header that the gateway will watch for
-	header := metadata.Pairs("gateway-session-delete", "true")
+	header := metadata.Pairs("session-delete", "true")
 	// send the header back to the gateway
 	return grpc.SendHeader(ctx, header)
 }

@@ -12,7 +12,7 @@ var ErrNotFound = errors.New("not found")
 
 func getCredentials(ctx context.Context, schema string, tx pgx.Tx, userID int64) (*Credentials, error) {
 	sql := `
-SELECT email, password
+SELECT username, email, password
 FROM ` + schema + `.` + postgres.UserTableName + `
 WHERE id=$1
 `
@@ -33,21 +33,31 @@ WHERE id=$1
 	return &cred, nil
 }
 
-func saveUser(ctx context.Context, schema string, tx pgx.Tx, user User) error {
+func saveUser(ctx context.Context, schema string, tx pgx.Tx, user User) (*User, error) {
 	sql := `
 INSERT INTO email, password ` + schema + `.` + postgres.UserTableName + `
 (
-user_id,
+username,
 email,
 password
 role
 )
 VALUES  ($1,$2,$3,$4)
+RETURNING id;
 `
+	row := tx.QueryRow(ctx, sql, user.Username, user.ID, user.Email, user.Password, user.Role)
 
-	if _, err := tx.Exec(ctx, sql, user.ID, user.Email, user.Password, user.Role); err != nil {
-		return err
+	var id int64
+	if err := row.Scan(&id); err != nil {
+		return nil, err
 	}
 
-	return nil
+	return &User{
+			ID:       id,
+			Username: user.Username,
+			Email:    user.Email,
+			Password: user.Password,
+			Role:     user.Role,
+		},
+		nil
 }
