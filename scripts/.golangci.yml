@@ -16,6 +16,8 @@ run:
         - vendor$
         - sandbox
         - _sandbox
+        - playground
+        - _playground
         - libs/monkey
 
     # which files to skip: they will be analyzed, but issues from them

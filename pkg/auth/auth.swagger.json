@@ -16,29 +16,6 @@
     "application/json"
   ],
   "paths": {
-    "/v1/auth/is-authorized": {
-      "post": {
-        "operationId": "AuthService_IsAuthorized",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "type": "object",
-              "properties": {}
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "AuthService"
-        ]
-      }
-    },
     "/v1/auth/login": {
       "post": {
         "operationId": "AuthService_Login",
@@ -79,6 +56,29 @@
     "/v1/auth/logout": {
       "post": {
         "operationId": "AuthService_Logout",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "AuthService"
+        ]
+      }
+    },
+    "/v1/auth/refresh": {
+      "post": {
+        "operationId": "AuthService_RefreshToken",
         "responses": {
           "200": {
             "description": "A successful response.",

@@ -38,9 +38,9 @@ service AuthService {
     };
   };
 
-  rpc IsAuthorized (google.protobuf.Empty) returns (google.protobuf.Empty) {
+  rpc RefreshToken (google.protobuf.Empty) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/v1/auth/is-authorized"
+      post: "/v1/auth/refresh"
     };
   };
 }

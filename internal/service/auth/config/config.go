@@ -17,6 +17,12 @@ type LoggerConf struct {
 	EncType string `long:"enctype" env:"ENCTYPE" description:"log as json or not (console|json)" default:"json" `
 }
 
+type JwtConf struct {
+	Secret                     string        `long:"secret" env:"SECRET" description:"jwt secret encryption key"`
+	AccessTokenExpireDuration  time.Duration `long:"host" env:"ACCESS_EXPIRE_DURATION" default:"24h" description:"access token expire duration"`
+	RefreshTokenExpireDuration time.Duration `long:"host" env:"REFRESH_EXPIRE_DURATION" default:"96h" description:"refresh token expire duration"`
+}
+
 type HTTPConfig struct {
 	Host    string `long:"host" env:"HOST" default:"127.0.0.1" description:"host to listen to"`
 	Port    int    `long:"port" env:"PORT" default:"2104" description:"port to listen to"`
@@ -37,6 +43,7 @@ type Config struct {
 	Log      *LoggerConf      `group:"logger option" namespace:"log" env-namespace:"LOG"`
 	HTTP     *HTTPConfig      `group:"http grpc gateway option" namespace:"http" env-namespace:"HTTP"`
 	GRPC     *GRPCConf        `group:"grpc option" namespace:"grpc" env-namespace:"GRPC"`
+	JWT      *JwtConf         `group:"jwt option" namespace:"jwt" env-namespace:"JWT"`
 	Postgres *postgres.Config `group:"pg" namespace:"pg" env-namespace:"PG"`
 }
 

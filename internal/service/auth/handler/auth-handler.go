@@ -2,9 +2,9 @@ package handler
 
 import (
 	"context"
+	jwt2 "github.com/sorohimm/uacs-store-back/internal/jwt"
 	"time"
 
-	"github.com/dgrijalva/jwt-go/v4"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/gorilla/sessions"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -14,10 +14,9 @@ import (
 
 	"github.com/sorohimm/uacs-store-back/internal/log"
 	"github.com/sorohimm/uacs-store-back/internal/security"
-	jwt2 "github.com/sorohimm/uacs-store-back/internal/service/auth/jwt"
 	"github.com/sorohimm/uacs-store-back/internal/storage"
 	repo "github.com/sorohimm/uacs-store-back/internal/storage/postgres/auth"
-	protoAuth "github.com/sorohimm/uacs-store-back/pkg/auth"
+	proto "github.com/sorohimm/uacs-store-back/pkg/auth"
 )
 
 func NewAuthHandler(schema string, pool *pgxpool.Pool) *AuthHandler {
@@ -28,21 +27,27 @@ func NewAuthHandler(schema string, pool *pgxpool.Pool) *AuthHandler {
 }
 
 type AuthHandler struct {
-	protoAuth.UnimplementedAuthServiceServer
-	authRepoCommander storage.UserCommander
-	authRepoRequester storage.UserRequester
-	expireDuration    time.Duration
-	signingKey        []byte
-	sessionStore      *sessions.CookieStore
+	proto.UnimplementedAuthServiceServer
+	authRepoCommander     storage.UserCommander
+	authRepoRequester     storage.UserRequester
+	accessExpireDuration  time.Duration
+	refreshExpireDuration time.Duration
+	signingKey            string
+	sessionStore          *sessions.CookieStore
 }
 
-func (o *AuthHandler) SetSigningKey(signingKey []byte) *AuthHandler {
+func (o *AuthHandler) SetSigningKey(signingKey string) *AuthHandler {
 	o.signingKey = signingKey
 	return o
 }
 
-func (o *AuthHandler) SetExpireDuration(expireDuration time.Duration) *AuthHandler {
-	o.expireDuration = expireDuration
+func (o *AuthHandler) SetAccessExpireDuration(expireDuration time.Duration) *AuthHandler {
+	o.accessExpireDuration = expireDuration
+	return o
+}
+
+func (o *AuthHandler) SetRefreshExpireDuration(expireDuration time.Duration) *AuthHandler {
+	o.refreshExpireDuration = expireDuration
 	return o
 }
 
@@ -51,7 +56,7 @@ func (o *AuthHandler) SetSessionStore(store *sessions.CookieStore) *AuthHandler 
 	return o
 }
 
-func (o *AuthHandler) Registration(ctx context.Context, req *protoAuth.RegistrationRequest) (*empty.Empty, error) {
+func (o *AuthHandler) Registration(ctx context.Context, req *proto.RegistrationRequest) (*empty.Empty, error) {
 	logger := log.FromContext(ctx).Sugar()
 	logger.Debug("AuthHandler.Registration was called")
 
@@ -85,7 +90,7 @@ func (o *AuthHandler) Registration(ctx context.Context, req *protoAuth.Registrat
 	return &empty.Empty{}, status.Error(codes.OK, "success")
 }
 
-func (o *AuthHandler) Login(ctx context.Context, req *protoAuth.LoginRequest) (*empty.Empty, error) {
+func (o *AuthHandler) Login(ctx context.Context, req *proto.LoginRequest) (*empty.Empty, error) {
 	var (
 		credentials *repo.Credentials
 		err         error
@@ -100,39 +105,29 @@ func (o *AuthHandler) Login(ctx context.Context, req *protoAuth.LoginRequest) (*
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
-	if !security.DoPasswordsMatch(hashReqPwd, credentials.Password) {
+	if ok := security.DoPasswordsMatch(hashReqPwd, credentials.Password); !ok {
 		return nil, status.Errorf(codes.Unauthenticated, err.Error())
 	}
 
-	token := o.genToken(credentials.UserID)
-	ss, err := token.SignedString(o.signingKey)
+	pair, err := jwt2.GenerateTokenPair(o.accessExpireDuration, o.refreshExpireDuration, o.signingKey, credentials.UserID, "")
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
-	if err = SetTokenInContext(ctx, ss); err != nil {
+	if err = SetAccessTokenInContext(ctx, pair[jwt2.AccessTokenKey]); err != nil {
+		return nil, status.Errorf(codes.Internal, err.Error())
+	}
+	if err = SetRefreshTokenInContext(ctx, pair[jwt2.RefreshTokenKey]); err != nil {
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
 	return &empty.Empty{}, nil
 }
 
-func (o *AuthHandler) Logout(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
+func (o *AuthHandler) Logout(ctx context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
 	return &empty.Empty{}, nil
 }
 
-func (o *AuthHandler) IsAuthorized(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
+func (o *AuthHandler) RefreshToken(ctx context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
 	return &empty.Empty{}, nil
-}
-
-func (o *AuthHandler) genToken(id int64) *jwt.Token {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &jwt2.Claims{
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: jwt.At(time.Now().Add(o.expireDuration)),
-			IssuedAt:  jwt.At(time.Now()),
-		},
-		UserID: id,
-	})
-
-	return token
 }
