@@ -14,7 +14,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/sorohimm/uacs-store-back/internal/log"
-	"github.com/sorohimm/uacs-store-back/internal/service/api/config"
+	"github.com/sorohimm/uacs-store-back/internal/service/auth/config"
 )
 
 func Grpc(ctx context.Context, registrar func(s *grpc.Server)) (func() error, func(error)) {

@@ -32,7 +32,7 @@ store-linux: store
 #### auth service build
 .PHONY: auth
 auth: UACS_AUTH_OUT := $(OUT_DIR)/uacs-auth
-auth: UACS_AUTH_MAIN := ./cmd/rbac
+auth: UACS_AUTH_MAIN := ./cmd/auth
 auth:
 	@echo BUILDING $(RULESRVOUT)
 	$(V)go build  -ldflags "-s -w -X main.version=${RELEASE} -X main.buildTime=${BUILD_TIME}" -o $(UACS_AUTH_OUT) $(UACS_AUTH_MAIN)
