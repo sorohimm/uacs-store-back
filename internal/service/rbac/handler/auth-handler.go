@@ -3,11 +3,12 @@ package handler
 import (
 	"context"
 	"github.com/golang/protobuf/ptypes/empty"
+	"github.com/jackc/pgx/v4/pgxpool"
 	rbac "github.com/sorohimm/uacs-store-back/pkg/rbac"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-func NewAuthHandler(schema string) *AuthHandler {
+func NewAuthHandler(schema string, pool *pgxpool.Pool) *AuthHandler {
 	return &AuthHandler{}
 }
 
