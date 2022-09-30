@@ -19,8 +19,8 @@ type LoggerConf struct {
 
 type JwtConf struct {
 	Secret                     string        `long:"secret" env:"SECRET" description:"jwt secret encryption key"`
-	AccessTokenExpireDuration  time.Duration `long:"host" env:"ACCESS_EXPIRE_DURATION" default:"24h" description:"access token expire duration"`
-	RefreshTokenExpireDuration time.Duration `long:"host" env:"REFRESH_EXPIRE_DURATION" default:"96h" description:"refresh token expire duration"`
+	AccessTokenExpireDuration  time.Duration `long:"access-duration" env:"ACCESS_EXPIRE_DURATION" default:"24h" description:"access token expire duration"`
+	RefreshTokenExpireDuration time.Duration `long:"refresh-duration" env:"REFRESH_EXPIRE_DURATION" default:"96h" description:"refresh token expire duration"`
 }
 
 type HTTPConfig struct {
