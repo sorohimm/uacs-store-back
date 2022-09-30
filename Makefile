@@ -12,7 +12,9 @@ default: all
 .PHIONY: all
 all:tidy
 all:store
+all:auth
 
+#### store API service build
 .PHONY: store
 store: UACS_STORE_OUT := $(OUT_DIR)/uacs_store
 store: UACS_STORE_MAIN := ./cmd/api
@@ -21,10 +23,26 @@ store:
 	$(V)go build  -ldflags "-s -w -X main.version=${RELEASE} -X main.buildTime=${BUILD_TIME}" -o $(UACS_STORE_OUT) $(UACS_STORE_MAIN)
 	@echo DONE
 
-.PHONY: store_linux
-store_linux: export GOOS := linux
-store_linux: export GOARCH := amd64
-store_linux: store
+#### store API service build for linux
+.PHONY: store-linux
+store-linux: export GOOS := linux
+store-linux: export GOARCH := amd64
+store-linux: store
+
+#### auth service build
+.PHONY: auth
+auth: UACS_AUTH_OUT := $(OUT_DIR)/uacs_store
+auth: UACS_AUTH_MAIN := ./cmd/api
+auth:
+	@echo BUILDING $(RULESRVOUT)
+	$(V)go build  -ldflags "-s -w -X main.version=${RELEASE} -X main.buildTime=${BUILD_TIME}" -o $(UACS_AUTH_OUT) $(UACS_AUTH_MAIN)
+	@echo DONE
+
+#### auth service build for linux
+.PHONY: auth-linux
+auth-linux: export GOOS := linux
+auth-linux: export GOARCH := amd64
+auth-linux: auth
 
 #### gRPC store api generation
 SRC = "./pkg/api"
@@ -38,7 +56,7 @@ gen-api:
 	protoc -I=. -I$(API_SRC) --grpc-gateway_out=$(API_DEST)  --grpc-gateway_opt=logtostderr=true --grpc-gateway_opt=paths=source_relative $(API_SRC)/store.proto
 	protoc -I=. -I$(API_SRC) --openapiv2_out=$(API_DEST) --openapiv2_opt=logtostderr=true $(API_SRC)/store.proto#### gRPC generation
 
-#### gRPC rbac generation
+#### gRPC auth api generation
 SRC = "./pkg/rbac"
 DST = "."
 .PHONY: gen-rbac
@@ -50,18 +68,18 @@ gen-rbac:
 	protoc -I=. -I$(RBAC_SRC) --grpc-gateway_out=$(RBAC_DEST)  --grpc-gateway_opt=logtostderr=true --grpc-gateway_opt=paths=source_relative $(RBAC_SRC)/rbac.proto
 	protoc -I=. -I$(RBAC_SRC) --openapiv2_out=$(RBAC_DEST) --openapiv2_opt=logtostderr=true $(RBAC_SRC)/rbac.proto
 
-#### docker compose
+#### docker compose up
 .PHONY: compose-up
 compose-up:
 	docker compose -f scripts/deploy/local/docker-compose.yml up -d
 
-
+#### docker compose down
 .PHONY: compose-down
 compose-down:
 	docker compose -f scripts/deploy/local/docker-compose.yml down
 
 
-## Настройка GOPRIVATE https://gist.github.com/MicahParks/1ba2b19c39d1e5fccc3e892837b10e21
+#### Настройка GOPRIVATE https://gist.github.com/MicahParks/1ba2b19c39d1e5fccc3e892837b10e21
 GOPRIVATE="github.com/*"
 .PHONY: tidy
 tidy:
