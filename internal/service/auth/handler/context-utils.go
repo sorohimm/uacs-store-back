@@ -14,15 +14,6 @@ var ErrNoToken = errors.New("no token in context")
 type contextKey int
 
 const (
-	// name of session we're setting
-	defaultSessionID = "cookies-session"
-
-	// secret key used to encrypt session
-	cookieStorageKey = "asdflkjasflkjasldfkjs"
-
-	// How long our profile session can last, in seconds, unless renewed.
-	sessionLength = 60 * 60 * 4
-
 	// our unique key used for storing the request in the context
 	requestContextKey contextKey = 0
 )
@@ -33,14 +24,14 @@ func SetAccessTokenInContext(ctx context.Context, token string) error {
 	// create a header that the gateway will watch for
 	header := metadata.Pairs("cookie-access-token", token)
 	// send the header back to the gateway
-	return grpc.SendHeader(ctx, header)
+	return grpc.SetHeader(ctx, header)
 }
 
 func SetRefreshTokenInContext(ctx context.Context, token string) error {
 	// create a header that the gateway will watch for
 	header := metadata.Pairs("cookie-refresh-token", token)
 	// send the header back to the gateway
-	return grpc.SendHeader(ctx, header)
+	return grpc.SetHeader(ctx, header)
 }
 
 // SetDeleteSessionFlagInContext sets a flag telling the gateway to delete the session, if any
@@ -48,7 +39,7 @@ func SetDeleteSessionFlagInContext(ctx context.Context) error {
 	// create a header that the gateway will watch for
 	header := metadata.Pairs("session-delete", "true")
 	// send the header back to the gateway
-	return grpc.SendHeader(ctx, header)
+	return grpc.SetHeader(ctx, header)
 }
 
 // get the first metadata value with the given name

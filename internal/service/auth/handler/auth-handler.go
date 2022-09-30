@@ -84,6 +84,9 @@ func (o *AuthHandler) Registration(ctx context.Context, req *proto.RegistrationR
 }
 
 func (o *AuthHandler) Login(ctx context.Context, req *proto.LoginRequest) (*empty.Empty, error) {
+	logger := log.FromContext(ctx).Sugar()
+	logger.Debug("AuthHandler.Login was called")
+
 	var (
 		credentials *repo.Credentials
 		err         error
@@ -93,12 +96,8 @@ func (o *AuthHandler) Login(ctx context.Context, req *proto.LoginRequest) (*empt
 	}
 
 	saltedReqPwd := security.SaltPassword(req.Password, credentials.PwdSalt)
-	hashReqPwd, err := security.HashPassword(saltedReqPwd)
-	if err != nil {
-		return nil, status.Errorf(codes.Internal, err.Error())
-	}
 
-	if ok := security.DoPasswordsMatch(hashReqPwd, credentials.Password); !ok {
+	if ok := security.DoPasswordsMatch(credentials.Password, saltedReqPwd); !ok {
 		return nil, status.Errorf(codes.Unauthenticated, err.Error())
 	}
 

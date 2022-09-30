@@ -64,7 +64,7 @@ func getSalt(ctx context.Context, schema string, tx pgx.Tx, userID int64) (strin
 SELECT salt FROM ` + schema + `.` + postgres.SaltTableName + `
 WHERE user_id=$1
 `
-	row := tx.QueryRow(ctx, sql, userID, userID)
+	row := tx.QueryRow(ctx, sql, userID)
 	var salt string
 	if err := row.Scan(&salt); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {

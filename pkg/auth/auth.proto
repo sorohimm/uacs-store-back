@@ -29,6 +29,7 @@ service AuthService {
   rpc Login (LoginRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v1/auth/login"
+      body: "*"
     };
   };
 
