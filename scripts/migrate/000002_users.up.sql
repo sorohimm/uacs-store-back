@@ -4,6 +4,7 @@ CREATE TABLE if NOT EXISTS users.user
 (
     id SERIAL PRIMARY KEY NOT NULL,
     email varchar(64) UNIQUE NOT NULL,
+    username varchar(64) UNIQUE NOT NULL,
     password text NOT NULL,
     role text NOT NULL
 );

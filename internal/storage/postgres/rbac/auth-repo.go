@@ -2,6 +2,8 @@ package rbac
 
 import (
 	"context"
+	"crypto/sha1"
+	"fmt"
 	"github.com/jackc/pgx/v4"
 
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -11,11 +13,13 @@ import (
 )
 
 type AuthRepo struct {
-	schema string
-	pool   *pgxpool.Pool
+	schema   string
+	pool     *pgxpool.Pool
+	hashSalt string
 }
 
 func (o *AuthRepo) Registration(ctx context.Context, req *rbac.RegistrationRequest) error {
+	pwd := o.saltPassword(req.Password)
 	var (
 		tx  pgx.Tx
 		err error
@@ -25,7 +29,14 @@ func (o *AuthRepo) Registration(ctx context.Context, req *rbac.RegistrationReque
 		return err
 	}
 
-	return saveUser(ctx, o.schema, tx, User{Email: req.Email, Password: req.Password, Role: req.Role})
+	return saveUser(ctx, o.schema, tx, User{Email: req.Email, Password: pwd, Role: req.Role})
+}
+
+func (o *AuthRepo) saltPassword(password string) string {
+	pwd := sha1.New()
+	pwd.Write([]byte(password))
+	pwd.Write([]byte(o.hashSalt))
+	return fmt.Sprintf("%x", pwd.Sum(nil))
 }
 
 func (o *AuthRepo) Login(ctx context.Context, req *rbac.LoginRequest) error {
