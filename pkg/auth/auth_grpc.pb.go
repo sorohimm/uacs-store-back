@@ -26,7 +26,7 @@ type AuthServiceClient interface {
 	Registration(ctx context.Context, in *RegistrationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	RefreshAccessToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type authServiceClient struct {
@@ -64,9 +64,9 @@ func (c *authServiceClient) Logout(ctx context.Context, in *emptypb.Empty, opts 
 	return out, nil
 }
 
-func (c *authServiceClient) RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *authServiceClient) RefreshAccessToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.AuthService/RefreshToken", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.AuthService/RefreshAccessToken", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +80,7 @@ type AuthServiceServer interface {
 	Registration(context.Context, *RegistrationRequest) (*emptypb.Empty, error)
 	Login(context.Context, *LoginRequest) (*emptypb.Empty, error)
 	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
-	RefreshToken(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	RefreshAccessToken(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -97,8 +97,8 @@ func (UnimplementedAuthServiceServer) Login(context.Context, *LoginRequest) (*em
 func (UnimplementedAuthServiceServer) Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
 }
-func (UnimplementedAuthServiceServer) RefreshToken(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
+func (UnimplementedAuthServiceServer) RefreshAccessToken(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshAccessToken not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -167,20 +167,20 @@ func _AuthService_Logout_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AuthService_RefreshAccessToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).RefreshToken(ctx, in)
+		return srv.(AuthServiceServer).RefreshAccessToken(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/github.com.sorohimm.uacs_store.AuthService/RefreshToken",
+		FullMethod: "/github.com.sorohimm.uacs_store.AuthService/RefreshAccessToken",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).RefreshToken(ctx, req.(*emptypb.Empty))
+		return srv.(AuthServiceServer).RefreshAccessToken(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -205,8 +205,8 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AuthService_Logout_Handler,
 		},
 		{
-			MethodName: "RefreshToken",
-			Handler:    _AuthService_RefreshToken_Handler,
+			MethodName: "RefreshAccessToken",
+			Handler:    _AuthService_RefreshAccessToken_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

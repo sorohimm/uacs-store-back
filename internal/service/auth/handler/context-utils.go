@@ -14,22 +14,24 @@ var ErrNoToken = errors.New("no token in context")
 type contextKey int
 
 const (
-	// our unique key used for storing the request in the context
-	requestContextKey contextKey = 0
+	// unique key used for storing the request in the context
+	accessTokenMetadataKey             = "md-access-token"
+	refreshTokenMetadataKey            = "md-refresh-token"
+	requestContextKey       contextKey = 0
 )
 
 // SetAccessTokenInContext sets the user's session into the context.  This has the effect of logging the user
 // in as that userId.  The grpc json gateway will set the UID in the user's session in this case
 func SetAccessTokenInContext(ctx context.Context, token string) error {
 	// create a header that the gateway will watch for
-	header := metadata.Pairs("cookie-access-token", token)
+	header := metadata.Pairs(accessTokenMetadataKey, token)
 	// send the header back to the gateway
 	return grpc.SetHeader(ctx, header)
 }
 
 func SetRefreshTokenInContext(ctx context.Context, token string) error {
 	// create a header that the gateway will watch for
-	header := metadata.Pairs("cookie-refresh-token", token)
+	header := metadata.Pairs(refreshTokenMetadataKey, token)
 	// send the header back to the gateway
 	return grpc.SetHeader(ctx, header)
 }
@@ -51,16 +53,29 @@ func firstMetadataWithName(md metadata.MD, name string) string {
 	return values[0]
 }
 
-// GetTokenFromContext returns the userId that has been stored in Context, if available.
+// GetAccessTokenFromContext returns the userId that has been stored in Context, if available.
 // This will return 0 if the user has not logged in.  If there is an error attempting to return
 // the userId it will be returned.  It's valid for this function to return 0 with no
 // error, which indicates the user has not logged in.
-func GetTokenFromContext(ctx context.Context) (string, error) {
+func GetAccessTokenFromContext(ctx context.Context) (string, error) {
 	// retrieve incoming metadata
 	md, ok := metadata.FromIncomingContext(ctx)
 	if ok {
 		// get the first (and presumably only) user ID from the request metadata
-		token := firstMetadataWithName(md, "session-token")
+		token := firstMetadataWithName(md, accessTokenMetadataKey)
+		if token != "" {
+			return token, nil
+		}
+	}
+	return "", ErrNoToken
+}
+
+func GetRefreshTokenFromContext(ctx context.Context) (string, error) {
+	// retrieve incoming metadata
+	md, ok := metadata.FromIncomingContext(ctx)
+	if ok {
+		// get the first (and presumably only) user ID from the request metadata
+		token := firstMetadataWithName(md, refreshTokenMetadataKey)
 		if token != "" {
 			return token, nil
 		}

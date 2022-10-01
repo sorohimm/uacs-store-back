@@ -74,7 +74,7 @@
     },
     "/v1/auth/refresh": {
       "post": {
-        "operationId": "AuthService_RefreshToken",
+        "operationId": "AuthService_RefreshAccessToken",
         "responses": {
           "200": {
             "description": "A successful response.",

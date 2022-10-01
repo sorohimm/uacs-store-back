@@ -39,7 +39,7 @@ service AuthService {
     };
   };
 
-  rpc RefreshToken (google.protobuf.Empty) returns (google.protobuf.Empty) {
+  rpc RefreshAccessToken (google.protobuf.Empty) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v1/auth/refresh"
     };

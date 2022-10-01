@@ -2,37 +2,66 @@ package jwt
 
 import (
 	"fmt"
-	"time"
-
 	"github.com/dgrijalva/jwt-go/v4"
+	"time"
 )
 
-var (
-	AccessTokenKey  = "access_token"
-	RefreshTokenKey = "refresh_token"
-)
+type TokenPair struct {
+	AccessToken  string
+	RefreshToken string
+}
 
-// ParseToken returns user's username from jwt token
-func ParseToken(accessToken string, signingKey []byte) (string, error) {
-	token, err := jwt.ParseWithClaims(accessToken, &Claims{}, func(token *jwt.Token) (interface{}, error) {
+// ParseToken returns user's id from jwt token
+func ParseToken(tokenString string, signingKey []byte) (int64, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 		return signingKey, nil
 	})
-
 	if err != nil {
-		return "", err
+		return 0, err
 	}
 
 	if claims, ok := token.Claims.(*Claims); ok && token.Valid {
-		return claims.ID, nil
+		return claims.UserID, nil
 	}
 
-	return "", ErrInvalidAccessToken
+	return 0, ErrInvalidAccessToken
 }
 
-func GenerateTokenPair(accessExpireDuration, refreshExpireDuration time.Duration, secret string, id int64, role string) (map[string]string, error) {
+func IsValidToken(tokenString string, signingKey []byte) bool {
+	_, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return signingKey, nil
+	})
+	if err != nil {
+		return false
+	}
+
+	return true
+}
+
+func GenerateTokenPair(accessExpireDuration, refreshExpireDuration time.Duration, secret string, id int64, role string) (*TokenPair, error) {
+
+	token, err := GenerateAccessToken(accessExpireDuration, secret, id, role)
+	if err != nil {
+		return nil, err
+	}
+	rt, err := GenerateRefreshToken(refreshExpireDuration, secret)
+	if err != nil {
+		return nil, err
+	}
+
+	return &TokenPair{
+		AccessToken:  token,
+		RefreshToken: rt,
+	}, nil
+}
+
+func GenerateAccessToken(expireDuration time.Duration, secret string, id int64, role string) (string, error) {
 	// Create token
 	token := jwt.New(jwt.SigningMethodHS256)
 
@@ -43,27 +72,28 @@ func GenerateTokenPair(accessExpireDuration, refreshExpireDuration time.Duration
 	claims["sub"] = 1
 	claims["id"] = id
 	claims["role"] = role
-	claims["exp"] = time.Now().Add(accessExpireDuration).Unix()
+	claims["exp"] = time.Now().Add(expireDuration).Unix()
 
 	// Generate encoded token and send it as response.
 	// The signing string should be secret (a generated UUID works too)
 	t, err := token.SignedString([]byte(secret))
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
+	return t, nil
+}
+
+func GenerateRefreshToken(expireDuration time.Duration, secret string) (string, error) {
 	refreshToken := jwt.New(jwt.SigningMethodHS256)
 	rtClaims := refreshToken.Claims.(jwt.MapClaims)
 	rtClaims["sub"] = 1
-	rtClaims["exp"] = time.Now().Add(refreshExpireDuration).Unix()
+	rtClaims["exp"] = time.Now().Add(expireDuration).Unix()
 
 	rt, err := refreshToken.SignedString([]byte(secret))
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
-	return map[string]string{
-		AccessTokenKey:  t,
-		RefreshTokenKey: rt,
-	}, nil
+	return rt, nil
 }

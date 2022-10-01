@@ -112,10 +112,10 @@ func (o *AuthHandler) Login(ctx context.Context, req *proto.LoginRequest) (*empt
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
-	if err = SetAccessTokenInContext(ctx, pair[jwt2.AccessTokenKey]); err != nil {
+	if err = SetAccessTokenInContext(ctx, pair.AccessToken); err != nil {
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
-	if err = SetRefreshTokenInContext(ctx, pair[jwt2.RefreshTokenKey]); err != nil {
+	if err = SetRefreshTokenInContext(ctx, pair.RefreshToken); err != nil {
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
@@ -126,6 +126,15 @@ func (o *AuthHandler) Logout(ctx context.Context, _ *emptypb.Empty) (*emptypb.Em
 	return &empty.Empty{}, nil
 }
 
-func (o *AuthHandler) RefreshToken(ctx context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
+func (o *AuthHandler) RefreshAccessToken(ctx context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
+	rt, err := GetRefreshTokenFromContext(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, err.Error())
+	}
+
+	if ok := jwt2.IsValidToken(rt, []byte(o.signingKey)); !ok {
+		return nil, status.Errorf(codes.Unauthenticated, err.Error())
+	}
+
 	return &empty.Empty{}, nil
 }
