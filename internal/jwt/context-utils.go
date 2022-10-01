@@ -15,23 +15,23 @@ type contextKey int
 
 const (
 	// unique key used for storing the request in the context
-	accessTokenMetadataKey             = "access-token"
-	refreshTokenMetadataKey            = "refresh-token"
-	requestContextKey       contextKey = 0
+	AccessTokenMetadataKey             = "access-token"
+	RefreshTokenMetadataKey            = "refresh-token"
+	RequestContextKey       contextKey = 0
 )
 
 // SetAccessTokenInContext sets the user's session into the context.  This has the effect of logging the user
 // in as that userId.  The grpc json gateway will set the UID in the user's session in this case
 func SetAccessTokenInContext(ctx context.Context, token string) error {
 	// create a header that the gateway will watch for
-	header := metadata.Pairs(accessTokenMetadataKey, token)
+	header := metadata.Pairs(AccessTokenMetadataKey, token)
 	// send the header back to the gateway
 	return grpc.SetHeader(ctx, header)
 }
 
 func SetRefreshTokenInContext(ctx context.Context, token string) error {
 	// create a header that the gateway will watch for
-	header := metadata.Pairs(refreshTokenMetadataKey, token)
+	header := metadata.Pairs(RefreshTokenMetadataKey, token)
 	// send the header back to the gateway
 	return grpc.SetHeader(ctx, header)
 }
@@ -62,7 +62,7 @@ func GetAccessTokenFromContext(ctx context.Context) (string, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if ok {
 		// get the first (and presumably only) user ID from the request metadata
-		token := firstMetadataWithName(md, accessTokenMetadataKey)
+		token := firstMetadataWithName(md, AccessTokenMetadataKey)
 		if token != "" {
 			return token, nil
 		}
@@ -75,7 +75,7 @@ func GetRefreshTokenFromContext(ctx context.Context) (string, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if ok {
 		// get the first (and presumably only) user ID from the request metadata
-		token := firstMetadataWithName(md, refreshTokenMetadataKey)
+		token := firstMetadataWithName(md, RefreshTokenMetadataKey)
 		if token != "" {
 			return token, nil
 		}
@@ -85,5 +85,5 @@ func GetRefreshTokenFromContext(ctx context.Context) (string, error) {
 
 // pull the request from context (set in middleware above)
 func getRequestFromContext(ctx context.Context) *http.Request {
-	return ctx.Value(requestContextKey).(*http.Request)
+	return ctx.Value(RequestContextKey).(*http.Request)
 }
