@@ -1,4 +1,4 @@
-package handler
+package jwt
 
 import (
 	"errors"
@@ -15,8 +15,8 @@ type contextKey int
 
 const (
 	// unique key used for storing the request in the context
-	accessTokenMetadataKey             = "md-access-token"
-	refreshTokenMetadataKey            = "md-refresh-token"
+	accessTokenMetadataKey             = "access-token"
+	refreshTokenMetadataKey            = "refresh-token"
 	requestContextKey       contextKey = 0
 )
 

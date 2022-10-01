@@ -12,7 +12,7 @@ type TokenPair struct {
 }
 
 // ParseToken returns user's id from jwt token
-func ParseToken(tokenString string, signingKey []byte) (int64, error) {
+func ParseToken(tokenString string, signingKey []byte) (*Claims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -20,28 +20,28 @@ func ParseToken(tokenString string, signingKey []byte) (int64, error) {
 		return signingKey, nil
 	})
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 
 	if claims, ok := token.Claims.(*Claims); ok && token.Valid {
-		return claims.UserID, nil
+		return claims, nil
 	}
 
-	return 0, ErrInvalidAccessToken
+	return nil, ErrInvalidAccessToken
 }
 
 func IsValidToken(tokenString string, signingKey []byte) bool {
-	_, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 		return signingKey, nil
 	})
-	if err != nil {
-		return false
+	if err == nil && token.Valid {
+		return true
 	}
 
-	return true
+	return false
 }
 
 func GenerateTokenPair(accessExpireDuration, refreshExpireDuration time.Duration, secret string, id int64, role string) (*TokenPair, error) {
@@ -63,16 +63,14 @@ func GenerateTokenPair(accessExpireDuration, refreshExpireDuration time.Duration
 
 func GenerateAccessToken(expireDuration time.Duration, secret string, id int64, role string) (string, error) {
 	// Create token
-	token := jwt.New(jwt.SigningMethodHS256)
-
-	// Set claims
-	// This is the information which frontend can use
-	// The backend can also decode the token and get admin etc.
-	claims := token.Claims.(jwt.MapClaims)
-	claims["sub"] = 1
-	claims["id"] = id
-	claims["role"] = role
-	claims["exp"] = time.Now().Add(expireDuration).Unix()
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &Claims{
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: jwt.At(time.Now().Add(expireDuration)),
+			IssuedAt:  jwt.At(time.Now()),
+		},
+		UserID:   id,
+		UserRole: role,
+	})
 
 	// Generate encoded token and send it as response.
 	// The signing string should be secret (a generated UUID works too)
@@ -85,12 +83,15 @@ func GenerateAccessToken(expireDuration time.Duration, secret string, id int64, 
 }
 
 func GenerateRefreshToken(expireDuration time.Duration, secret string) (string, error) {
-	refreshToken := jwt.New(jwt.SigningMethodHS256)
-	rtClaims := refreshToken.Claims.(jwt.MapClaims)
-	rtClaims["sub"] = 1
-	rtClaims["exp"] = time.Now().Add(expireDuration).Unix()
+	// Create token
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
+		jwt.StandardClaims{
+			ExpiresAt: jwt.At(time.Now().Add(expireDuration)),
+			IssuedAt:  jwt.At(time.Now()),
+		},
+	)
 
-	rt, err := refreshToken.SignedString([]byte(secret))
+	rt, err := token.SignedString([]byte(secret))
 	if err != nil {
 		return "", err
 	}

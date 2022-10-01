@@ -112,10 +112,10 @@ func (o *AuthHandler) Login(ctx context.Context, req *proto.LoginRequest) (*empt
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
-	if err = SetAccessTokenInContext(ctx, pair.AccessToken); err != nil {
+	if err = jwt2.SetAccessTokenInContext(ctx, pair.AccessToken); err != nil {
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
-	if err = SetRefreshTokenInContext(ctx, pair.RefreshToken); err != nil {
+	if err = jwt2.SetRefreshTokenInContext(ctx, pair.RefreshToken); err != nil {
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
@@ -127,13 +127,36 @@ func (o *AuthHandler) Logout(ctx context.Context, _ *emptypb.Empty) (*emptypb.Em
 }
 
 func (o *AuthHandler) RefreshAccessToken(ctx context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
-	rt, err := GetRefreshTokenFromContext(ctx)
+	rt, err := jwt2.GetRefreshTokenFromContext(ctx)
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, err.Error())
 	}
 
 	if ok := jwt2.IsValidToken(rt, []byte(o.signingKey)); !ok {
 		return nil, status.Errorf(codes.Unauthenticated, err.Error())
+	}
+
+	t, err := jwt2.GetAccessTokenFromContext(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, err.Error())
+	}
+
+	claims, err := jwt2.ParseToken(t, []byte(o.signingKey))
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, err.Error())
+	}
+
+	newT, err := jwt2.GenerateAccessToken(o.accessExpireDuration, o.signingKey, claims.UserID, claims.UserRole)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, err.Error())
+	}
+
+	if err = jwt2.SetAccessTokenInContext(ctx, newT); err != nil {
+		return nil, status.Errorf(codes.Internal, err.Error())
+	}
+
+	if err = jwt2.SetRefreshTokenInContext(ctx, rt); err != nil {
+		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
 	return &empty.Empty{}, nil
