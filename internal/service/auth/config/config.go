@@ -2,6 +2,7 @@ package config
 
 import (
 	"context"
+	"github.com/sorohimm/uacs-store-back/internal/jwt"
 	"time"
 
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
@@ -15,12 +16,6 @@ type GRPCConf struct {
 type LoggerConf struct {
 	Level   string `short:"l" long:"level" env:"LEVEL" description:"logging level" default:"DEBUG"`
 	EncType string `long:"enctype" env:"ENCTYPE" description:"log as json or not (console|json)" default:"json" `
-}
-
-type JwtConf struct {
-	Secret                     string        `long:"secret" env:"SECRET" description:"jwt secret encryption key"`
-	AccessTokenExpireDuration  time.Duration `long:"access-duration" env:"ACCESS_EXPIRE_DURATION" default:"24h" description:"access token expire duration"`
-	RefreshTokenExpireDuration time.Duration `long:"refresh-duration" env:"REFRESH_EXPIRE_DURATION" default:"96h" description:"refresh token expire duration"`
 }
 
 type HTTPConfig struct {
@@ -43,7 +38,7 @@ type Config struct {
 	Log      *LoggerConf      `group:"logger option" namespace:"log" env-namespace:"LOG"`
 	HTTP     *HTTPConfig      `group:"http grpc gateway option" namespace:"http" env-namespace:"HTTP"`
 	GRPC     *GRPCConf        `group:"grpc option" namespace:"grpc" env-namespace:"GRPC"`
-	JWT      *JwtConf         `group:"jwt option" namespace:"jwt" env-namespace:"JWT"`
+	JWT      *jwt.Config      `group:"jwt option" namespace:"jwt" env-namespace:"JWT"`
 	Postgres *postgres.Config `group:"pg" namespace:"pg" env-namespace:"PG"`
 }
 
