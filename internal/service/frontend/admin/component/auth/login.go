@@ -2,43 +2,59 @@ package auth
 
 import (
 	"github.com/maxence-charriere/go-app/v9/pkg/app"
+	"github.com/sorohimm/uacs-store-back/internal/service/frontend/request"
 )
 
-func NewLoginPage() *LoginPage {
-	return &LoginPage{}
+func NewLoginPage(requester *request.Requester) *LoginPage {
+	return &LoginPage{
+		requester: requester,
+	}
 }
 
 type LoginPage struct {
 	app.Compo
-	username string
-	password string
+	username  string
+	password  string
+	requester *request.Requester
 }
 
 func (o *LoginPage) Render() app.UI {
 	return app.Div().Body(
-		app.P().
-			Class("sign").
+		app.H1().
+			Class("login-text").
 			Text("Вход"),
-		app.Form().
-			Class("form1"),
+
 		app.Input().
-			Class("un").Type("text").
+			Class("login-username-input").
+			Type("text").
 			Placeholder("Username").
 			OnChange(func(ctx app.Context, e app.Event) {
 				o.username = ctx.JSSrc().Get("value").String()
 			}),
+
 		app.Input().
-			Class("pass").
-			Type("text").
+			Class("login-password-input").
+			Type("password").
 			Placeholder("Password").
 			OnChange(func(ctx app.Context, e app.Event) {
 				o.password = ctx.JSSrc().Get("value").String()
 			}),
+
+		app.A().Class("login-forgot-password-link").Href("").Body(
+			app.Span().Text("Забыли пароль?"),
+		),
+
 		app.Button().
-			Class("submit").
-			Text("Войти"),
-		app.P().
-			Class("forgot").
-			Text("Забыли пароль?"),
-	)
+			Class("login-signin-button").
+			Text("Войти").
+			OnClick(o.onClickLoginButton),
+	).Class("login-container")
+}
+
+func (o *LoginPage) onClickLoginButton(ctx app.Context, e app.Event) {
+	req := request.NewLoginRequest().SetUsername(o.username).SetPassword(o.password)
+
+	if err := o.requester.Login(req); err == nil {
+		ctx.Navigate("/admin")
+	}
 }
