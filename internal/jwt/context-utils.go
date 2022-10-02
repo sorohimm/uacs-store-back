@@ -25,6 +25,8 @@ const (
 func SetAccessTokenInContext(ctx context.Context, token string) error {
 	// create a header that the gateway will watch for
 	header := metadata.Pairs(AccessTokenMetadataKey, token)
+	//header := metadata.Pairs("Access-Control-Allow-Origin", "*")
+
 	// send the header back to the gateway
 	return grpc.SetHeader(ctx, header)
 }
