@@ -459,7 +459,7 @@ type CreateBrandResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id   int64  `protobuf:"varint,10,opt,name=id,proto3" json:"id,omitempty"`
+	ID   int64  `protobuf:"varint,10,opt,name=id,proto3" json:"id,omitempty"`
 	Name string `protobuf:"bytes,20,opt,name=name,proto3" json:"name,omitempty"`
 }
 
@@ -497,7 +497,7 @@ func (*CreateBrandResponse) Descriptor() ([]byte, []int) {
 
 func (x *CreateBrandResponse) GetId() int64 {
 	if x != nil {
-		return x.Id
+		return x.ID
 	}
 	return 0
 }

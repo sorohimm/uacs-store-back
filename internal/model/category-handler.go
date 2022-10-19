@@ -2,12 +2,13 @@ package model
 
 import (
 	"context"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/category"
 
 	"github.com/sorohimm/uacs-store-back/pkg/api"
 )
 
-//go:generate mockgen -source=brand-handler.go -package=model -destination=brand-handler_mock.go
+//go:generate mockgen -source=category-handler.go -package=model -destination=category-handler_mock.go
 
 type CategoryRequesterHandler interface {
-	CreateCategory(ctx context.Context, req *api.CreateCategoryRequest) (*api.CreateCategoryResponse, error)
+	CreateCategory(ctx context.Context, req *api.CreateCategoryRequest) (*category.Category, error)
 }

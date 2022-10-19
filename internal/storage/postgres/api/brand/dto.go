@@ -9,7 +9,7 @@ type Brand struct {
 
 func (o Brand) ToAPIResponse() *api.CreateBrandResponse {
 	return &api.CreateBrandResponse{
-		Id:   o.ID,
+		ID:   o.ID,
 		Name: o.Name,
 	}
 }
