@@ -44,15 +44,15 @@ auth-linux: export GOOS := linux
 auth-linux: export GOARCH := amd64
 auth-linux: auth
 
-.PHONY: wasm
-wasm: WASM_OUT := $(OUT_DIR)/frontend
-wasm: WASM_MAIN := ./cmd/frontend
-wasm: export GOARCH := wasm
-wasm: export GOOS := js go build -o ./build/web/app.wasm ./cmd/frontend
-wasm:
-	@echo BUILDING $(WASM_OUT)
-	$(V)go build -ldflags "-s -w -X main.version=${RELEASE} -X main.buildTime=${BUILD_TIME}" -o $(WASM_OUT) $(WASM_MAIN)
-	@echo DONE
+#.PHONY: wasm
+#wasm: WASM_OUT := $(OUT_DIR)/frontend
+#wasm: WASM_MAIN := ./cmd/frontend
+#wasm: export GOARCH := wasm
+#wasm: export GOOS := js go build -o ./build/web/app.wasm ./cmd/frontend
+#wasm:
+#	@echo BUILDING $(WASM_OUT)
+#	$(V)go build -ldflags "-s -w -X main.version=${RELEASE} -X main.buildTime=${BUILD_TIME}" -o $(WASM_OUT) $(WASM_MAIN)
+#	@echo DONE
 
 build:
 	GOARCH=wasm GOOS=js go build -o ./build/web/app.wasm ./cmd/frontend
@@ -93,7 +93,7 @@ compose-down:
 	docker compose -f scripts/deploy/local/docker-compose.yml down
 
 
-#### Настройка GOPRIVATE https://gist.github.com/MicahParks/1ba2b19c39d1e5fccc3e892837b10e21
+#### GOPRIVATE setup https://gist.github.com/MicahParks/1ba2b19c39d1e5fccc3e892837b10e21
 GOPRIVATE="github.com/*"
 .PHONY: tidy
 tidy:
