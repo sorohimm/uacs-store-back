@@ -9,6 +9,6 @@ import (
 
 //go:generate mockgen -source=category-handler.go -package=model -destination=category-handler_mock.go
 
-type CategoryRequesterHandler interface {
+type CategoryCommanderHandler interface {
 	CreateCategory(ctx context.Context, req *api.CreateCategoryRequest) (*category.Category, error)
 }

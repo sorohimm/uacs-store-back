@@ -13,31 +13,31 @@ import (
 	api "github.com/sorohimm/uacs-store-back/pkg/api"
 )
 
-// MockCategoryRequesterHandler is a mock of CategoryRequesterHandler interface.
-type MockCategoryRequesterHandler struct {
+// MockCategoryCommanderHandler is a mock of CategoryCommanderHandler interface.
+type MockCategoryCommanderHandler struct {
 	ctrl     *gomock.Controller
-	recorder *MockCategoryRequesterHandlerMockRecorder
+	recorder *MockCategoryCommanderHandlerMockRecorder
 }
 
-// MockCategoryRequesterHandlerMockRecorder is the mock recorder for MockCategoryRequesterHandler.
-type MockCategoryRequesterHandlerMockRecorder struct {
-	mock *MockCategoryRequesterHandler
+// MockCategoryCommanderHandlerMockRecorder is the mock recorder for MockCategoryCommanderHandler.
+type MockCategoryCommanderHandlerMockRecorder struct {
+	mock *MockCategoryCommanderHandler
 }
 
-// NewMockCategoryRequesterHandler creates a new mock instance.
-func NewMockCategoryRequesterHandler(ctrl *gomock.Controller) *MockCategoryRequesterHandler {
-	mock := &MockCategoryRequesterHandler{ctrl: ctrl}
-	mock.recorder = &MockCategoryRequesterHandlerMockRecorder{mock}
+// NewMockCategoryCommanderHandler creates a new mock instance.
+func NewMockCategoryCommanderHandler(ctrl *gomock.Controller) *MockCategoryCommanderHandler {
+	mock := &MockCategoryCommanderHandler{ctrl: ctrl}
+	mock.recorder = &MockCategoryCommanderHandlerMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockCategoryRequesterHandler) EXPECT() *MockCategoryRequesterHandlerMockRecorder {
+func (m *MockCategoryCommanderHandler) EXPECT() *MockCategoryCommanderHandlerMockRecorder {
 	return m.recorder
 }
 
 // CreateCategory mocks base method.
-func (m *MockCategoryRequesterHandler) CreateCategory(ctx context.Context, req *api.CreateCategoryRequest) (*category.Category, error) {
+func (m *MockCategoryCommanderHandler) CreateCategory(ctx context.Context, req *api.CreateCategoryRequest) (*category.Category, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateCategory", ctx, req)
 	ret0, _ := ret[0].(*category.Category)
@@ -46,7 +46,7 @@ func (m *MockCategoryRequesterHandler) CreateCategory(ctx context.Context, req *
 }
 
 // CreateCategory indicates an expected call of CreateCategory.
-func (mr *MockCategoryRequesterHandlerMockRecorder) CreateCategory(ctx, req interface{}) *gomock.Call {
+func (mr *MockCategoryCommanderHandlerMockRecorder) CreateCategory(ctx, req interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCategory", reflect.TypeOf((*MockCategoryRequesterHandler)(nil).CreateCategory), ctx, req)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCategory", reflect.TypeOf((*MockCategoryCommanderHandler)(nil).CreateCategory), ctx, req)
 }
