@@ -19,7 +19,7 @@ all:auth
 store: UACS_STORE_OUT := $(OUT_DIR)/uacs-store
 store: UACS_STORE_MAIN := ./cmd/api
 store:
-	@echo BUILDING $(RULESRVOUT)
+	@echo BUILDING $(UACS_STORE_OUT)
 	$(V)go build  -ldflags "-s -w -X main.version=${RELEASE} -X main.buildTime=${BUILD_TIME}" -o $(UACS_STORE_OUT) $(UACS_STORE_MAIN)
 	@echo DONE
 
@@ -34,7 +34,7 @@ store-linux: store
 auth: UACS_AUTH_OUT := $(OUT_DIR)/uacs-auth
 auth: UACS_AUTH_MAIN := ./cmd/auth
 auth:
-	@echo BUILDING $(RULESRVOUT)
+	@echo BUILDING $(UACS_AUTH_OUT)
 	$(V)go build  -ldflags "-s -w -X main.version=${RELEASE} -X main.buildTime=${BUILD_TIME}" -o $(UACS_AUTH_OUT) $(UACS_AUTH_MAIN)
 	@echo DONE
 
@@ -43,6 +43,20 @@ auth:
 auth-linux: export GOOS := linux
 auth-linux: export GOARCH := amd64
 auth-linux: auth
+
+#.PHONY: wasm
+#wasm: WASM_OUT := $(OUT_DIR)/frontend
+#wasm: WASM_MAIN := ./cmd/frontend
+#wasm: export GOARCH := wasm
+#wasm: export GOOS := js go build -o ./build/web/app.wasm ./cmd/frontend
+#wasm:
+#	@echo BUILDING $(WASM_OUT)
+#	$(V)go build -ldflags "-s -w -X main.version=${RELEASE} -X main.buildTime=${BUILD_TIME}" -o $(WASM_OUT) $(WASM_MAIN)
+#	@echo DONE
+
+build:
+	GOARCH=wasm GOOS=js go build -o ./build/web/app.wasm ./cmd/frontend
+	go build -o ./build/frontend ./cmd/frontend
 
 #### gRPC store api generation
 SRC = "./pkg/api"
@@ -79,7 +93,7 @@ compose-down:
 	docker compose -f scripts/deploy/local/docker-compose.yml down
 
 
-#### Настройка GOPRIVATE https://gist.github.com/MicahParks/1ba2b19c39d1e5fccc3e892837b10e21
+#### GOPRIVATE setup https://gist.github.com/MicahParks/1ba2b19c39d1e5fccc3e892837b10e21
 GOPRIVATE="github.com/*"
 .PHONY: tidy
 tidy:

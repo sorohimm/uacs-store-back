@@ -9,6 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	brand "github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/brand"
 	api "github.com/sorohimm/uacs-store-back/pkg/api"
 )
 
@@ -36,10 +37,10 @@ func (m *MockBrandCommanderHandler) EXPECT() *MockBrandCommanderHandlerMockRecor
 }
 
 // CreateBrand mocks base method.
-func (m *MockBrandCommanderHandler) CreateBrand(ctx context.Context, req *api.CreateBrandRequest) (*api.CreateBrandResponse, error) {
+func (m *MockBrandCommanderHandler) CreateBrand(ctx context.Context, req *api.CreateBrandRequest) (*brand.Brand, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateBrand", ctx, req)
-	ret0, _ := ret[0].(*api.CreateBrandResponse)
+	ret0, _ := ret[0].(*brand.Brand)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -96,7 +96,7 @@ func (o *AuthHandler) Login(ctx context.Context, req *proto.LoginRequest) (*empt
 	)
 	if credentials, err = o.authRepoRequester.GetUserCredentialByUsername(ctx, req.Username); err != nil {
 		if errors.Is(err, repo.ErrNotFound) {
-			return nil, status.Errorf(codes.NotFound, err.Error())
+			return nil, status.Errorf(codes.Unauthenticated, err.Error())
 		}
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
