@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/category"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -98,7 +99,7 @@ func TestStoreCommanderHandler_CreateCategory(t *testing.T) {
 		require.Equal(t, expResp.Name, resp.Name)
 	})
 
-	t.Run("create category no err", func(t *testing.T) {
+	t.Run("create category internal err", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &api.CreateCategoryRequest{Name: "someTestCategory"}
@@ -107,6 +108,69 @@ func TestStoreCommanderHandler_CreateCategory(t *testing.T) {
 		mockCategoryCmdr.EXPECT().CreateCategory(ctx, req).Return(nil, err)
 
 		resp, err := c.CreateCategory(ctx, req)
+		require.Error(t, err)
+		require.Nil(t, resp)
+		require.Equal(t, codes.Internal, status.Code(err))
+	})
+
+}
+
+func TestStoreCommanderHandler_CreateProduct(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	t.Cleanup(ctrl.Finish)
+
+	mockCategoryCmdr := model.NewMockProductCommanderHandler(ctrl)
+	c := &StoreCommanderHandler{
+		productCommander: mockCategoryCmdr,
+	}
+
+	t.Run("create product no err", func(t *testing.T) {
+		ctx := context.Background()
+
+		req := &api.CreateProductRequest{
+			Name:    "test product name",
+			Price:   100,
+			BrandId: 10,
+			TypeId:  1,
+			Info:    nil,
+		}
+		expResp := &dto.Product{
+			ID:      1,
+			Name:    "test product name",
+			Price:   100,
+			BrandID: 10,
+			TypeID:  1,
+			Info:    nil,
+		}
+
+		mockCategoryCmdr.EXPECT().CreateProduct(ctx, req).Return(expResp, nil)
+
+		resp, err := c.CreateProduct(ctx, req)
+		require.NoError(t, err)
+		require.NotNil(t, resp)
+		require.Equal(t, codes.OK, status.Code(err))
+
+		require.Equal(t, expResp.ID, resp.Id)
+		require.Equal(t, expResp.Name, resp.Name)
+		require.Equal(t, expResp.Price, resp.Price)
+		// todo: add info, img compare
+	})
+
+	t.Run("create product internal err", func(t *testing.T) {
+		ctx := context.Background()
+
+		req := &api.CreateProductRequest{
+			Name:    "test product name",
+			Price:   100,
+			BrandId: 10,
+			TypeId:  1,
+			Info:    nil,
+		}
+
+		expErr := errors.New("some internal err")
+		mockCategoryCmdr.EXPECT().CreateProduct(ctx, req).Return(nil, expErr)
+
+		resp, err := c.CreateProduct(ctx, req)
 		require.Error(t, err)
 		require.Nil(t, resp)
 		require.Equal(t, codes.Internal, status.Code(err))
