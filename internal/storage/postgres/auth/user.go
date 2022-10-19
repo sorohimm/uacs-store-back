@@ -1,29 +1,14 @@
+// Package auth TODO
 package auth
 
 import (
 	"context"
 	"errors"
+
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgx/v4"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
 )
-
-func getCredentialsByUserID(ctx context.Context, schema string, tx pgx.Tx, userID int64) (*Credentials, error) {
-	var (
-		user *User
-		salt string
-		err  error
-	)
-
-	if user, err = getUserByID(ctx, schema, tx, userID); err != nil {
-		return nil, err
-	}
-	if salt, err = getSalt(ctx, schema, tx, userID); err != nil {
-		return nil, err
-	}
-
-	return &Credentials{PwdSalt: salt, UserID: user.ID, Email: user.Email, Username: user.Username, Password: user.Password}, nil
-}
 
 func getCredentialsByUsername(ctx context.Context, schema string, tx pgx.Tx, username string) (*Credentials, error) {
 	var (
@@ -93,8 +78,12 @@ RETURNING id;
 			return nil, ErrNotFound
 		}
 
-		if err.(*pgconn.PgError).Code == "23505" {
-			return nil, ErrUserAlreadyExists
+		switch v := err.(type) {
+		case *pgconn.PgError:
+			if v.Code == "23505" {
+				return nil, ErrUserAlreadyExists
+			}
+		default:
 		}
 
 		return nil, err
@@ -121,7 +110,7 @@ FROM ` + schema + `.` + postgres.UserTableName + `
 WHERE id=$1
 `
 	row := tx.QueryRow(ctx, sql, userID)
-	var user = User{ID: userID}
+	user := User{ID: userID}
 	if err := row.Scan(&user.Username, &user.Email, &user.Password, &user.Role); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, ErrNotFound
@@ -143,7 +132,7 @@ FROM ` + schema + `.` + postgres.UserTableName + `
 WHERE username=$1
 `
 	row := tx.QueryRow(ctx, sql, username)
-	var user = User{Username: username}
+	user := User{Username: username}
 	if err := row.Scan(&user.ID, &user.Email, &user.Password, &user.Role); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, ErrNotFound

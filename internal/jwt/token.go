@@ -1,9 +1,11 @@
+// Package jwt TODO
 package jwt
 
 import (
 	"fmt"
-	"github.com/dgrijalva/jwt-go/v4"
 	"time"
+
+	"github.com/dgrijalva/jwt-go/v4"
 )
 
 type TokenPair struct {
@@ -45,7 +47,6 @@ func IsValidToken(tokenString string, signingKey []byte) bool {
 }
 
 func GenerateTokenPair(accessExpireDuration, refreshExpireDuration time.Duration, secret string, id int64, role string) (*TokenPair, error) {
-
 	token, err := GenerateAccessToken(accessExpireDuration, secret, id, role)
 	if err != nil {
 		return nil, err

@@ -1,8 +1,10 @@
+// Package product TODO
 package product
 
 import (
 	"context"
 	"errors"
+
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
 
 	"github.com/jackc/pgx/v4"
@@ -36,13 +38,18 @@ price
 FROM ` + o.schema + `.` + postgres.ProductTableName + ` WHERE id=$1` // TODO: add image
 
 	var (
-		tx  pgx.Tx
-		err error
+		tx     pgx.Tx
+		err    error
+		logger = log.FromContext(ctx).Sugar()
 	)
 	if tx, err = o.pool.BeginTx(ctx, pgx.TxOptions{}); err != nil {
 		return nil, err
 	}
-	defer postgres.CommitOrRollbackTx(ctx, tx, err)
+	defer func() {
+		if err = postgres.CommitOrRollbackTx(ctx, tx, err); err != nil {
+			logger.Errorf("tx: %s", err)
+		}
+	}()
 
 	row := tx.QueryRow(ctx, sql, id)
 
@@ -95,7 +102,6 @@ LIMIT $1 OFFSET $2;`
 }
 
 func (o *ProductRepo) GetAllProductsWithBrand(ctx context.Context, brandID int64, limit int64, offset int64) (*dto.Products, error) {
-
 	sql := `
 SELECT 
 id,
@@ -213,14 +219,19 @@ VALUES  ($1,$2,$3,$4)
 RETURNING id;` // Todo: add img field
 
 	var (
-		tx  pgx.Tx
-		err error
+		tx     pgx.Tx
+		err    error
+		logger = log.FromContext(ctx).Sugar()
 	)
 
 	if tx, err = o.pool.BeginTx(ctx, pgx.TxOptions{}); err != nil {
 		return nil, err
 	}
-	defer postgres.CommitOrRollbackTx(ctx, tx, err)
+	defer func() {
+		if err = postgres.CommitOrRollbackTx(ctx, tx, err); err != nil {
+			logger.Errorf("tx: %s", err)
+		}
+	}()
 
 	row := tx.QueryRow(ctx, sql, request.Name, request.Price, request.BrandId, request.TypeId)
 

@@ -3,6 +3,8 @@ package auth
 import (
 	"context"
 
+	"github.com/sorohimm/uacs-store-back/internal/log"
+
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 
@@ -23,16 +25,21 @@ type AuthRepo struct {
 
 func (o *AuthRepo) CreateUser(ctx context.Context, req *CreateUserRequest) (*User, error) {
 	var (
-		tx  pgx.Tx
-		err error
+		tx     pgx.Tx
+		err    error
+		logger = log.FromContext(ctx).Sugar()
 	)
 
 	if tx, err = o.pool.BeginTx(ctx, pgx.TxOptions{}); err != nil {
 		return nil, err
 	}
-	defer postgres.CommitOrRollbackTx(ctx, tx, err)
+	defer func() {
+		if err = postgres.CommitOrRollbackTx(ctx, tx, err); err != nil {
+			logger.Errorf("tx: %s", err)
+		}
+	}()
 
-	var user = &User{Username: req.User.Username, Email: req.User.Email, Password: req.User.Password, Role: req.User.Role}
+	user := &User{Username: req.User.Username, Email: req.User.Email, Password: req.User.Password, Role: req.User.Role}
 	if user, err = saveUser(ctx, o.schema, tx, *user); err != nil {
 		return nil, err
 	}
@@ -46,14 +53,19 @@ func (o *AuthRepo) CreateUser(ctx context.Context, req *CreateUserRequest) (*Use
 
 func (o *AuthRepo) GetUserByID(ctx context.Context, userID int64) (*User, error) {
 	var (
-		tx  pgx.Tx
-		err error
+		tx     pgx.Tx
+		err    error
+		logger = log.FromContext(ctx).Sugar()
 	)
 
 	if tx, err = o.pool.BeginTx(ctx, pgx.TxOptions{}); err != nil {
 		return nil, err
 	}
-	defer postgres.CommitOrRollbackTx(ctx, tx, err)
+	defer func() {
+		if err = postgres.CommitOrRollbackTx(ctx, tx, err); err != nil {
+			logger.Errorf("tx: %s", err)
+		}
+	}()
 
 	var user *User
 	if user, err = getUserByID(ctx, o.schema, tx, userID); err != nil {
@@ -65,14 +77,19 @@ func (o *AuthRepo) GetUserByID(ctx context.Context, userID int64) (*User, error)
 
 func (o *AuthRepo) GetUserByUsername(ctx context.Context, username string) (*User, error) {
 	var (
-		tx  pgx.Tx
-		err error
+		tx     pgx.Tx
+		err    error
+		logger = log.FromContext(ctx).Sugar()
 	)
 
 	if tx, err = o.pool.BeginTx(ctx, pgx.TxOptions{}); err != nil {
 		return nil, err
 	}
-	defer postgres.CommitOrRollbackTx(ctx, tx, err)
+	defer func() {
+		if err = postgres.CommitOrRollbackTx(ctx, tx, err); err != nil {
+			logger.Errorf("tx: %s", err)
+		}
+	}()
 
 	var user *User
 	if user, err = getUserByUsername(ctx, o.schema, tx, username); err != nil {
@@ -84,14 +101,19 @@ func (o *AuthRepo) GetUserByUsername(ctx context.Context, username string) (*Use
 
 func (o *AuthRepo) GetUserCredentialByUsername(ctx context.Context, username string) (*Credentials, error) {
 	var (
-		tx  pgx.Tx
-		err error
+		tx     pgx.Tx
+		err    error
+		logger = log.FromContext(ctx).Sugar()
 	)
 
 	if tx, err = o.pool.BeginTx(ctx, pgx.TxOptions{}); err != nil {
 		return nil, err
 	}
-	defer postgres.CommitOrRollbackTx(ctx, tx, err)
+	defer func() {
+		if err = postgres.CommitOrRollbackTx(ctx, tx, err); err != nil {
+			logger.Errorf("tx: %s", err)
+		}
+	}()
 
 	var credentials *Credentials
 	if credentials, err = getCredentialsByUsername(ctx, o.schema, tx, username); err != nil {

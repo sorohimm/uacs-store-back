@@ -92,6 +92,9 @@ compose-up:
 compose-down:
 	docker compose -f scripts/deploy/local/docker-compose.yml down
 
+.PHONY: fmt
+fmt:
+	$(V)gofumpt -l -w .
 
 #### GOPRIVATE setup https://gist.github.com/MicahParks/1ba2b19c39d1e5fccc3e892837b10e21
 GOPRIVATE="github.com/*"

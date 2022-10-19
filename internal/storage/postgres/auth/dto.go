@@ -1,3 +1,4 @@
+// Package auth TODO
 package auth
 
 type Credentials struct {

@@ -1,9 +1,11 @@
+// Package config TODO
 package config
 
 import (
 	"context"
-	"github.com/sorohimm/uacs-store-back/internal/jwt"
 	"time"
+
+	"github.com/sorohimm/uacs-store-back/internal/jwt"
 
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
 )

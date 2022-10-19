@@ -1,10 +1,12 @@
+// Package handler TODO
 package handler
 
 import (
 	"context"
 	"errors"
-	jwt2 "github.com/sorohimm/uacs-store-back/internal/jwt"
 	"time"
+
+	jwt2 "github.com/sorohimm/uacs-store-back/internal/jwt"
 
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/jackc/pgx/v4/pgxpool"

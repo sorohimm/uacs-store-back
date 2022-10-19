@@ -1,9 +1,11 @@
+// Package security TODO
 package security
 
 import (
 	"bytes"
 	"crypto/rand"
 	"encoding/binary"
+
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -18,7 +20,7 @@ func SaltPassword(password, salt string) string {
 // HashPassword hash password
 func HashPassword(password string) (string, error) {
 	// Convert password string to byte slice
-	var passwordBytes = []byte(password)
+	passwordBytes := []byte(password)
 
 	// Hash password with Bcrypt's min cost
 	hashedPasswordBytes, err := bcrypt.GenerateFromPassword(passwordBytes, bcrypt.MinCost)
@@ -37,8 +39,7 @@ func DoPasswordsMatch(hashedPassword, currPassword string) bool {
 // Bytes generates n random bytes
 func Bytes(n int) []byte {
 	b := make([]byte, n)
-	_, err := rand.Read(b)
-	if err != nil {
+	if _, err := rand.Read(b); err != nil {
 		panic(err)
 	}
 	return b

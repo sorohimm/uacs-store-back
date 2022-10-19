@@ -3,9 +3,10 @@ package handler
 import (
 	"context"
 	"errors"
+	"testing"
+
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/category"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
-	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/sorohimm/uacs-store-back/internal/model"
@@ -112,7 +113,6 @@ func TestStoreCommanderHandler_CreateCategory(t *testing.T) {
 		require.Nil(t, resp)
 		require.Equal(t, codes.Internal, status.Code(err))
 	})
-
 }
 
 func TestStoreCommanderHandler_CreateProduct(t *testing.T) {
@@ -175,5 +175,4 @@ func TestStoreCommanderHandler_CreateProduct(t *testing.T) {
 		require.Nil(t, resp)
 		require.Equal(t, codes.Internal, status.Code(err))
 	})
-
 }

@@ -1,11 +1,12 @@
+// Package jwt TODO
 package jwt
 
 import (
 	"errors"
+
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
-	"net/http"
 )
 
 var ErrNoToken = errors.New("no token in context")
@@ -25,7 +26,6 @@ const (
 func SetAccessTokenInContext(ctx context.Context, token string) error {
 	// create a header that the gateway will watch for
 	header := metadata.Pairs(AccessTokenMetadataKey, token)
-	//header := metadata.Pairs("Access-Control-Allow-Origin", "*")
 
 	// send the header back to the gateway
 	return grpc.SetHeader(ctx, header)
@@ -83,9 +83,4 @@ func GetRefreshTokenFromContext(ctx context.Context) (string, error) {
 		}
 	}
 	return "", ErrNoToken
-}
-
-// pull the request from context (set in middleware above)
-func getRequestFromContext(ctx context.Context) *http.Request {
-	return ctx.Value(RequestContextKey).(*http.Request)
 }
