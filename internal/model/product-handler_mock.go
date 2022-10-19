@@ -9,6 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	dto "github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
 	api "github.com/sorohimm/uacs-store-back/pkg/api"
 )
 
@@ -36,10 +37,10 @@ func (m *MockProductRequesterHandler) EXPECT() *MockProductRequesterHandlerMockR
 }
 
 // GetAllProducts mocks base method.
-func (m *MockProductRequesterHandler) GetAllProducts(ctx context.Context, req *api.AllProductsRequest) (*api.AllProductsResponse, error) {
+func (m *MockProductRequesterHandler) GetAllProducts(ctx context.Context, req *api.AllProductsRequest) (*dto.Products, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAllProducts", ctx, req)
-	ret0, _ := ret[0].(*api.AllProductsResponse)
+	ret0, _ := ret[0].(*dto.Products)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -51,10 +52,10 @@ func (mr *MockProductRequesterHandlerMockRecorder) GetAllProducts(ctx, req inter
 }
 
 // GetProduct mocks base method.
-func (m *MockProductRequesterHandler) GetProduct(ctx context.Context, req *api.ProductRequest) (*api.ProductResponse, error) {
+func (m *MockProductRequesterHandler) GetProduct(ctx context.Context, req *api.ProductRequest) (*dto.Product, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetProduct", ctx, req)
-	ret0, _ := ret[0].(*api.ProductResponse)
+	ret0, _ := ret[0].(*dto.Product)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -89,10 +90,10 @@ func (m *MockProductCommanderHandler) EXPECT() *MockProductCommanderHandlerMockR
 }
 
 // CreateProduct mocks base method.
-func (m *MockProductCommanderHandler) CreateProduct(ctx context.Context, req *api.CreateProductRequest) (*api.ProductResponse, error) {
+func (m *MockProductCommanderHandler) CreateProduct(ctx context.Context, req *api.CreateProductRequest) (*dto.Product, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateProduct", ctx, req)
-	ret0, _ := ret[0].(*api.ProductResponse)
+	ret0, _ := ret[0].(*dto.Product)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
