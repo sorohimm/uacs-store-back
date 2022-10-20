@@ -37,33 +37,78 @@ func (m *MockProductRequesterHandler) EXPECT() *MockProductRequesterHandlerMockR
 }
 
 // GetAllProducts mocks base method.
-func (m *MockProductRequesterHandler) GetAllProducts(ctx context.Context, req *api.AllProductsRequest) (*dto.Products, error) {
+func (m *MockProductRequesterHandler) GetAllProducts(ctx context.Context, limit, offset int64) (*dto.Products, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAllProducts", ctx, req)
+	ret := m.ctrl.Call(m, "GetAllProducts", ctx, limit, offset)
 	ret0, _ := ret[0].(*dto.Products)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetAllProducts indicates an expected call of GetAllProducts.
-func (mr *MockProductRequesterHandlerMockRecorder) GetAllProducts(ctx, req interface{}) *gomock.Call {
+func (mr *MockProductRequesterHandlerMockRecorder) GetAllProducts(ctx, limit, offset interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllProducts", reflect.TypeOf((*MockProductRequesterHandler)(nil).GetAllProducts), ctx, req)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllProducts", reflect.TypeOf((*MockProductRequesterHandler)(nil).GetAllProducts), ctx, limit, offset)
 }
 
-// GetProduct mocks base method.
-func (m *MockProductRequesterHandler) GetProduct(ctx context.Context, req *api.ProductRequest) (*dto.Product, error) {
+// GetAllProductsWithBrand mocks base method.
+func (m *MockProductRequesterHandler) GetAllProductsWithBrand(ctx context.Context, brandID, limit, offset int64) (*dto.Products, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetProduct", ctx, req)
+	ret := m.ctrl.Call(m, "GetAllProductsWithBrand", ctx, brandID, limit, offset)
+	ret0, _ := ret[0].(*dto.Products)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllProductsWithBrand indicates an expected call of GetAllProductsWithBrand.
+func (mr *MockProductRequesterHandlerMockRecorder) GetAllProductsWithBrand(ctx, brandID, limit, offset interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllProductsWithBrand", reflect.TypeOf((*MockProductRequesterHandler)(nil).GetAllProductsWithBrand), ctx, brandID, limit, offset)
+}
+
+// GetAllProductsWithBrandAndType mocks base method.
+func (m *MockProductRequesterHandler) GetAllProductsWithBrandAndType(ctx context.Context, typeID, brandID, limit, offset int64) (*dto.Products, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllProductsWithBrandAndType", ctx, typeID, brandID, limit, offset)
+	ret0, _ := ret[0].(*dto.Products)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllProductsWithBrandAndType indicates an expected call of GetAllProductsWithBrandAndType.
+func (mr *MockProductRequesterHandlerMockRecorder) GetAllProductsWithBrandAndType(ctx, typeID, brandID, limit, offset interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllProductsWithBrandAndType", reflect.TypeOf((*MockProductRequesterHandler)(nil).GetAllProductsWithBrandAndType), ctx, typeID, brandID, limit, offset)
+}
+
+// GetAllProductsWithType mocks base method.
+func (m *MockProductRequesterHandler) GetAllProductsWithType(ctx context.Context, typeID, limit, offset int64) (*dto.Products, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllProductsWithType", ctx, typeID, limit, offset)
+	ret0, _ := ret[0].(*dto.Products)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllProductsWithType indicates an expected call of GetAllProductsWithType.
+func (mr *MockProductRequesterHandlerMockRecorder) GetAllProductsWithType(ctx, typeID, limit, offset interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllProductsWithType", reflect.TypeOf((*MockProductRequesterHandler)(nil).GetAllProductsWithType), ctx, typeID, limit, offset)
+}
+
+// GetProductByID mocks base method.
+func (m *MockProductRequesterHandler) GetProductByID(ctx context.Context, id int64) (*dto.Product, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetProductByID", ctx, id)
 	ret0, _ := ret[0].(*dto.Product)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetProduct indicates an expected call of GetProduct.
-func (mr *MockProductRequesterHandlerMockRecorder) GetProduct(ctx, req interface{}) *gomock.Call {
+// GetProductByID indicates an expected call of GetProductByID.
+func (mr *MockProductRequesterHandlerMockRecorder) GetProductByID(ctx, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProduct", reflect.TypeOf((*MockProductRequesterHandler)(nil).GetProduct), ctx, req)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProductByID", reflect.TypeOf((*MockProductRequesterHandler)(nil).GetProductByID), ctx, id)
 }
 
 // MockProductCommanderHandler is a mock of ProductCommanderHandler interface.

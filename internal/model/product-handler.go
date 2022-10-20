@@ -11,8 +11,11 @@ import (
 //go:generate mockgen -source=product-handler.go -package=model -destination=product-handler_mock.go
 
 type ProductRequesterHandler interface {
-	GetProduct(ctx context.Context, req *api.ProductRequest) (*dto.Product, error)
-	GetAllProducts(ctx context.Context, req *api.AllProductsRequest) (*dto.Products, error)
+	GetProductByID(ctx context.Context, id int64) (*dto.Product, error)
+	GetAllProducts(ctx context.Context, limit int64, offset int64) (*dto.Products, error)
+	GetAllProductsWithBrand(ctx context.Context, brandID int64, limit int64, offset int64) (*dto.Products, error)
+	GetAllProductsWithType(ctx context.Context, typeID int64, limit int64, offset int64) (*dto.Products, error)
+	GetAllProductsWithBrandAndType(ctx context.Context, typeID int64, brandID int64, limit int64, offset int64) (*dto.Products, error)
 }
 
 type ProductCommanderHandler interface {
