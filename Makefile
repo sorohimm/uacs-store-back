@@ -14,6 +14,11 @@ all:tidy
 all:store
 all:auth
 
+.PHONY: linux
+linux: export GOOS := linux
+linux: export GOARCH := amd64
+linux:all
+
 #### store API service build
 .PHONY: store
 store: UACS_STORE_OUT := $(OUT_DIR)/uacs-store
@@ -81,6 +86,15 @@ gen-auth:
 	protoc -I=. -I$(AUTH_SRC) --go-grpc_out=$(AUTH_DEST) --go-grpc_opt paths=source_relative $(AUTH_SRC)/auth.proto
 	protoc -I=. -I$(AUTH_SRC) --grpc-gateway_out=$(AUTH_DEST)  --grpc-gateway_opt=logtostderr=true --grpc-gateway_opt=paths=source_relative $(AUTH_SRC)/auth.proto
 	protoc -I=. -I$(AUTH_SRC) --openapiv2_out=$(AUTH_DEST) --openapiv2_opt=logtostderr=true $(AUTH_SRC)/auth.proto
+
+REPO := "sorohimm"
+AUTH := "uacs-auth"
+STORE:= "uacs-store-api"
+.PHONY: images
+images: linux
+images:
+	docker image build -t ${REPO}/${AUTH}:${RELEASE} -t ${REPO}/${AUTH}:latest -f scripts/auth-server.Dockerfile .
+	docker image build -t ${REPO}/${STORE}:${RELEASE} -t ${REPO}/${STORE}:latest -f scripts/store-server.Dockerfile .
 
 #### docker compose up
 .PHONY: compose-up
