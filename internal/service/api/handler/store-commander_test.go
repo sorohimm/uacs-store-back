@@ -17,18 +17,6 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func TestNewStoreCommanderHandler(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	t.Cleanup(ctrl.Finish)
-
-	mockBrandCmdr := model.NewMockBrandCommanderHandler(ctrl)
-	c := &StoreCommanderHandler{
-		brandCommander: mockBrandCmdr,
-	}
-
-	require.Equal(t, c.brandCommander, mockBrandCmdr)
-}
-
 func TestStoreCommanderHandler_CreateBrand(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	t.Cleanup(ctrl.Finish)
