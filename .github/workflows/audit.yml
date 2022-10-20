@@ -22,7 +22,7 @@ jobs:
           version: v1.48.0
           args: --verbose
 
-  audit:
+  build:
     needs: lint
     runs-on: ubuntu-latest
     steps:
@@ -42,5 +42,9 @@ jobs:
       - name: Run go vet
         run: go vet ./...
 
+  test:
+    needs: lint
+      runs-on: ubuntu-latest
+    steps:
       - name: Run tests
-        run: go test -race -vet=off ./...
+          run: go test -race -vet=off ./...

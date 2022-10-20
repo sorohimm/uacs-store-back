@@ -1,5 +1,7 @@
 # E-commerce backend template with JWT Auth
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/sorohimm/uacs-store-back)](https://goreportcard.com/report/github.com/sorohimm/uacs-store-back)
+
 Backend part for an online store written in Golang. Supports HTTP and RPC requests.
 
 [API-Reference (Swagger)](https://app.swaggerhub.com/apis/sorohimm3/UACS/v1)
