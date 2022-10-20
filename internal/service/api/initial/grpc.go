@@ -2,6 +2,7 @@ package initial
 
 import (
 	"context"
+	"github.com/sorohimm/uacs-store-back/pkg/log"
 	"net"
 	"strconv"
 
@@ -13,7 +14,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/sorohimm/uacs-store-back/internal/log"
 	"github.com/sorohimm/uacs-store-back/internal/service/api/config"
 )
 

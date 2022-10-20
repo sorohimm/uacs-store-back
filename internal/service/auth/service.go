@@ -4,6 +4,8 @@ package auth
 import (
 	"context"
 	"errors"
+	"github.com/sorohimm/uacs-store-back/pkg/conf"
+	"github.com/sorohimm/uacs-store-back/pkg/log"
 	stdl "log"
 	"os"
 
@@ -13,8 +15,6 @@ import (
 	"google.golang.org/grpc"
 
 	"github.com/sorohimm/uacs-store-back/internal"
-	"github.com/sorohimm/uacs-store-back/internal/conf"
-	"github.com/sorohimm/uacs-store-back/internal/log"
 	"github.com/sorohimm/uacs-store-back/internal/service/auth/config"
 	"github.com/sorohimm/uacs-store-back/internal/service/auth/handler"
 	"github.com/sorohimm/uacs-store-back/internal/service/auth/initial"

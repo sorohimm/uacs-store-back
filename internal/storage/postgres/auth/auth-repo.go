@@ -2,8 +2,7 @@ package auth
 
 import (
 	"context"
-
-	"github.com/sorohimm/uacs-store-back/internal/log"
+	"github.com/sorohimm/uacs-store-back/pkg/log"
 
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"

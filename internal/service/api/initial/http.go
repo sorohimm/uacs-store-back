@@ -4,6 +4,7 @@ package initial
 import (
 	"context"
 	"fmt"
+	"github.com/sorohimm/uacs-store-back/pkg/log"
 	"math"
 	"net"
 	"net/http"
@@ -12,8 +13,6 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-
-	"github.com/sorohimm/uacs-store-back/internal/log"
 
 	"golang.org/x/net/http2"
 

@@ -4,6 +4,7 @@ package handler
 import (
 	"context"
 	"errors"
+	"github.com/sorohimm/uacs-store-back/pkg/log"
 	"time"
 
 	jwt2 "github.com/sorohimm/uacs-store-back/internal/jwt"
@@ -14,7 +15,6 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	"github.com/sorohimm/uacs-store-back/internal/log"
 	"github.com/sorohimm/uacs-store-back/internal/security"
 	"github.com/sorohimm/uacs-store-back/internal/storage"
 	repo "github.com/sorohimm/uacs-store-back/internal/storage/postgres/auth"
