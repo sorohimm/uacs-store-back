@@ -48,7 +48,7 @@ func (o *StoreRequesterHandler) GetAllProducts(ctx context.Context, req *api.All
 		err  error
 	)
 
-	if req.GetBrandId() != 0 && req.GetTypeId() == 0 {
+	if req.GetBrandId() == 0 && req.GetTypeId() == 0 {
 		prod, err = o.productRequester.GetAllProducts(ctx, limit, offset)
 	}
 	if req.GetBrandId() != 0 && req.GetTypeId() != 0 {

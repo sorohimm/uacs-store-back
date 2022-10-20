@@ -1,6 +1,6 @@
 # E-commerce backend template with JWT Auth
 
-Backend part for an online store written in Golang
+Backend part for an online store written in Golang. Supports HTTP and RPC.
 
 [API-Reference (Swagger)](https://app.swaggerhub.com/apis/sorohimm3/UACS/v1)
 
