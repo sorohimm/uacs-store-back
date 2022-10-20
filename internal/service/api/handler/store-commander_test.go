@@ -5,16 +5,16 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/category"
-	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
-
 	"github.com/golang/mock/gomock"
-	"github.com/sorohimm/uacs-store-back/internal/model"
-	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/brand"
-	"github.com/sorohimm/uacs-store-back/pkg/api"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"github.com/sorohimm/uacs-store-back/internal/model"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/brand"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/category"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
+	"github.com/sorohimm/uacs-store-back/pkg/api"
 )
 
 func TestStoreCommanderHandler_CreateBrand(t *testing.T) {

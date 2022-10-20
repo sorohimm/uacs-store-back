@@ -1,4 +1,4 @@
-// Package handler TODO
+// Package handler handles incoming queries
 package handler
 
 import (

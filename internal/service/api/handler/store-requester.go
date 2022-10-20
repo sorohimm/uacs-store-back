@@ -1,3 +1,4 @@
+// Package handler handles incoming queries
 package handler
 
 import (
