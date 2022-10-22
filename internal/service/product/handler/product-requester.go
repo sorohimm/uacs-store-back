@@ -17,18 +17,18 @@ import (
 	"github.com/sorohimm/uacs-store-back/pkg/api"
 )
 
-func NewStoreRequesterHandler(schema string, pool *pgxpool.Pool) *StoreRequesterHandler {
-	return &StoreRequesterHandler{
+func NewProductRequesterHandler(schema string, pool *pgxpool.Pool) *ProductRequesterHandler {
+	return &ProductRequesterHandler{
 		productRequester: product.NewProductRepo(schema, pool),
 	}
 }
 
-type StoreRequesterHandler struct {
+type ProductRequesterHandler struct {
 	api.UnimplementedStoreServiceRequesterServer
 	productRequester storage.ProductRequester
 }
 
-func (o *StoreRequesterHandler) GetProduct(ctx context.Context, req *api.ProductRequest) (*api.ProductResponse, error) {
+func (o *ProductRequesterHandler) GetProduct(ctx context.Context, req *api.ProductRequest) (*api.ProductResponse, error) {
 	prod, err := o.productRequester.GetProductByID(ctx, req.GetId())
 	if err != nil {
 		if errors.Is(err, product.ErrNotFound) {
@@ -40,7 +40,7 @@ func (o *StoreRequesterHandler) GetProduct(ctx context.Context, req *api.Product
 	return prod.ToAPIResponse(), nil
 }
 
-func (o *StoreRequesterHandler) GetAllProducts(ctx context.Context, req *api.AllProductsRequest) (*api.AllProductsResponse, error) {
+func (o *ProductRequesterHandler) GetAllProducts(ctx context.Context, req *api.AllProductsRequest) (*api.AllProductsResponse, error) {
 	limit := req.GetLimit()
 	offset := req.GetPage()*limit - limit
 

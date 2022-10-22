@@ -1,5 +1,5 @@
-// Package api TODO
-package api
+// Package product TODO
+package product
 
 import (
 	"context"
@@ -15,9 +15,9 @@ import (
 	"google.golang.org/grpc"
 
 	"github.com/sorohimm/uacs-store-back/internal"
-	"github.com/sorohimm/uacs-store-back/internal/service/api/config"
-	"github.com/sorohimm/uacs-store-back/internal/service/api/handler"
-	"github.com/sorohimm/uacs-store-back/internal/service/api/initial"
+	"github.com/sorohimm/uacs-store-back/internal/service/product/config"
+	"github.com/sorohimm/uacs-store-back/internal/service/product/handler"
+	"github.com/sorohimm/uacs-store-back/internal/service/product/initial"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
 	"github.com/sorohimm/uacs-store-back/pkg/api"
 )
@@ -73,8 +73,8 @@ func (o *Service) Init(ctx context.Context, appName, version, built string) {
 
 	cfg := config.FromContext(ctx)
 
-	storeReqHandler := handler.NewStoreRequesterHandler(cfg.Postgres.SchemaName, pool)
-	storeCommandHandler := handler.NewStoreCommanderHandler(cfg.Postgres.SchemaName, pool)
+	storeReqHandler := handler.NewProductRequesterHandler(cfg.Postgres.SchemaName, pool)
+	storeCommandHandler := handler.NewProductCommanderHandler(cfg.Postgres.SchemaName, pool)
 	o.Add(initial.Grpc(ctx, func(s *grpc.Server) {
 		api.RegisterStoreServiceRequesterServer(s, storeReqHandler)
 		api.RegisterStoreServiceCommanderServer(s, storeCommandHandler)

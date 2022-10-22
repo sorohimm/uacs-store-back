@@ -8,7 +8,7 @@ COPY /build/uacs-store /usr/local/bin/uacs-store
 # http gateway
 EXPOSE 2604/tcp
 
-# grpc api
+# grpc product
 EXPOSE 9000/tcp
 
 WORKDIR /uacs

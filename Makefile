@@ -63,7 +63,7 @@ build:
 	GOARCH=wasm GOOS=js go build -o ./build/web/app.wasm ./cmd/frontend
 	go build -o ./build/frontend ./cmd/frontend
 
-#### gRPC store api generation
+#### gRPC store product generation
 SRC = "./pkg/api"
 DST = "."
 .PHONY: gen-api
@@ -75,7 +75,7 @@ gen-api:
 	protoc -I=. -I$(API_SRC) --grpc-gateway_out=$(API_DEST)  --grpc-gateway_opt=logtostderr=true --grpc-gateway_opt=paths=source_relative $(API_SRC)/store.proto
 	protoc -I=. -I$(API_SRC) --openapiv2_out=$(API_DEST) --openapiv2_opt=logtostderr=true $(API_SRC)/store.proto#### gRPC generation
 
-#### gRPC auth api generation
+#### gRPC auth product generation
 SRC = "./pkg/auth"
 DST = "."
 .PHONY: gen-auth

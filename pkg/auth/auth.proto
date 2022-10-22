@@ -3,7 +3,7 @@ syntax = "proto3";
 package github.com.sorohimm.uacs_store;
 option go_package = "github.com/sorohimm/shop/pkg/auth";
 
-import "google/api/annotations.proto";
+import "google/product/annotations.proto";
 import "google/protobuf/empty.proto";
 
 message RegistrationRequest {

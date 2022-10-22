@@ -19,7 +19,7 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/protobuf/encoding/protojson"
 
-	"github.com/sorohimm/uacs-store-back/internal/service/api/config"
+	"github.com/sorohimm/uacs-store-back/internal/service/product/config"
 )
 
 type HTTPRegistrar func(ctx context.Context, mux *runtime.ServeMux, grpcAddr string, opts []grpc.DialOption) error

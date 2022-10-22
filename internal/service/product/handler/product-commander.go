@@ -17,22 +17,22 @@ import (
 	"github.com/sorohimm/uacs-store-back/pkg/api"
 )
 
-func NewStoreCommanderHandler(schema string, pool *pgxpool.Pool) *StoreCommanderHandler {
-	return &StoreCommanderHandler{
+func NewProductCommanderHandler(schema string, pool *pgxpool.Pool) *ProductCommanderHandler {
+	return &ProductCommanderHandler{
 		productCommander:  product.NewProductRepo(schema, pool),
 		brandCommander:    brand.NewBrandRepo(schema, pool),
 		categoryCommander: category.NewCategoryRepo(schema, pool),
 	}
 }
 
-type StoreCommanderHandler struct {
+type ProductCommanderHandler struct {
 	api.UnimplementedStoreServiceCommanderServer
 	productCommander  storage.ProductCommander
 	brandCommander    storage.BrandCommander
 	categoryCommander storage.CategoryCommander
 }
 
-func (o *StoreCommanderHandler) CreateProduct(ctx context.Context, req *api.CreateProductRequest) (*api.ProductResponse, error) {
+func (o *ProductCommanderHandler) CreateProduct(ctx context.Context, req *api.CreateProductRequest) (*api.ProductResponse, error) {
 	var (
 		prod *dto.Product
 		err  error
@@ -45,7 +45,7 @@ func (o *StoreCommanderHandler) CreateProduct(ctx context.Context, req *api.Crea
 	return prod.ToAPIResponse(), nil
 }
 
-func (o *StoreCommanderHandler) CreateCategory(ctx context.Context, req *api.CreateCategoryRequest) (*api.CreateCategoryResponse, error) {
+func (o *ProductCommanderHandler) CreateCategory(ctx context.Context, req *api.CreateCategoryRequest) (*api.CreateCategoryResponse, error) {
 	var (
 		newCategory *category.Category
 		err         error
@@ -58,7 +58,7 @@ func (o *StoreCommanderHandler) CreateCategory(ctx context.Context, req *api.Cre
 	return newCategory.ToAPIResponse(), nil
 }
 
-func (o *StoreCommanderHandler) CreateBrand(ctx context.Context, req *api.CreateBrandRequest) (*api.CreateBrandResponse, error) {
+func (o *ProductCommanderHandler) CreateBrand(ctx context.Context, req *api.CreateBrandRequest) (*api.CreateBrandResponse, error) {
 	var (
 		newBrand *brand.Brand
 		err      error

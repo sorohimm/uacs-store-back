@@ -16,13 +16,13 @@ import (
 	"github.com/sorohimm/uacs-store-back/pkg/api"
 )
 
-func TestStoreRequesterHandler_GetProduct(t *testing.T) {
+func TestProductRequesterHandler_GetProduct(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	t.Cleanup(ctrl.Finish)
 
 	mockProdReq := model.NewMockProductRequesterHandler(ctrl)
 
-	requester := StoreRequesterHandler{
+	requester := ProductRequesterHandler{
 		productRequester: mockProdReq,
 	}
 
@@ -88,13 +88,13 @@ func TestStoreRequesterHandler_GetProduct(t *testing.T) {
 	})
 }
 
-func TestStoreRequesterHandler_GetAllProducts(t *testing.T) {
+func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	t.Cleanup(ctrl.Finish)
 
 	mockProdReq := model.NewMockProductRequesterHandler(ctrl)
 
-	requester := StoreRequesterHandler{
+	requester := ProductRequesterHandler{
 		productRequester: mockProdReq,
 	}
 

@@ -17,12 +17,12 @@ import (
 	"github.com/sorohimm/uacs-store-back/pkg/api"
 )
 
-func TestStoreCommanderHandler_CreateBrand(t *testing.T) {
+func TestProductCommanderHandler_CreateBrand(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	t.Cleanup(ctrl.Finish)
 
 	mockBrandCmdr := model.NewMockBrandCommanderHandler(ctrl)
-	c := &StoreCommanderHandler{
+	c := &ProductCommanderHandler{
 		brandCommander: mockBrandCmdr,
 	}
 
@@ -59,12 +59,12 @@ func TestStoreCommanderHandler_CreateBrand(t *testing.T) {
 	})
 }
 
-func TestStoreCommanderHandler_CreateCategory(t *testing.T) {
+func TestProductCommanderHandler_CreateCategory(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	t.Cleanup(ctrl.Finish)
 
 	mockCategoryCmdr := model.NewMockCategoryCommanderHandler(ctrl)
-	c := &StoreCommanderHandler{
+	c := &ProductCommanderHandler{
 		categoryCommander: mockCategoryCmdr,
 	}
 
@@ -103,12 +103,12 @@ func TestStoreCommanderHandler_CreateCategory(t *testing.T) {
 	})
 }
 
-func TestStoreCommanderHandler_CreateProduct(t *testing.T) {
+func TestProductCommanderHandler_CreateProduct(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	t.Cleanup(ctrl.Finish)
 
 	mockCategoryCmdr := model.NewMockProductCommanderHandler(ctrl)
-	c := &StoreCommanderHandler{
+	c := &ProductCommanderHandler{
 		productCommander: mockCategoryCmdr,
 	}
 
