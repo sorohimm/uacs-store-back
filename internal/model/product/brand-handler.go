@@ -2,10 +2,7 @@ package product
 
 import (
 	"context"
-
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/brand"
-
-	"github.com/sorohimm/uacs-store-back/pkg/product"
 )
 
 //go:generate mockgen -source=brand-handler.go -package=model -destination=brand-handler_mock.go

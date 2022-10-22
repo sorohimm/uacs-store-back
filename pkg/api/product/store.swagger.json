@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "pkg/api/store.proto",
+    "title": "pkg/api/product/store.proto",
     "version": "version not set"
   },
   "tags": [
@@ -19,71 +19,7 @@
     "application/json"
   ],
   "paths": {
-    "/v1/brand": {
-      "post": {
-        "operationId": "StoreServiceCommander_CreateBrand",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/uacs_storeCreateBrandResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/uacs_storeCreateBrandRequest"
-            }
-          }
-        ],
-        "tags": [
-          "StoreServiceCommander"
-        ]
-      }
-    },
-    "/v1/category": {
-      "post": {
-        "operationId": "StoreServiceCommander_CreateCategory",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/uacs_storeCreateCategoryResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/uacs_storeCreateCategoryRequest"
-            }
-          }
-        ],
-        "tags": [
-          "StoreServiceCommander"
-        ]
-      }
-    },
-    "/v1/product": {
+    "/v1/api": {
       "get": {
         "operationId": "StoreServiceRequester_GetAllProducts",
         "responses": {
@@ -165,7 +101,7 @@
         ]
       }
     },
-    "/v1/product/{id}": {
+    "/v1/api/{id}": {
       "get": {
         "operationId": "StoreServiceRequester_GetProduct",
         "responses": {
@@ -193,6 +129,70 @@
         ],
         "tags": [
           "StoreServiceRequester"
+        ]
+      }
+    },
+    "/v1/brand": {
+      "post": {
+        "operationId": "StoreServiceCommander_CreateBrand",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/uacs_storeBrandResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/uacs_storeCreateBrandRequest"
+            }
+          }
+        ],
+        "tags": [
+          "StoreServiceCommander"
+        ]
+      }
+    },
+    "/v1/category": {
+      "post": {
+        "operationId": "StoreServiceCommander_CreateCategory",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/uacs_storeCategoryResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/uacs_storeCreateCategoryRequest"
+            }
+          }
+        ],
+        "tags": [
+          "StoreServiceCommander"
         ]
       }
     }
@@ -236,6 +236,30 @@
         }
       }
     },
+    "uacs_storeBrandResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "uacs_storeCategoryResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
     "uacs_storeCreateBrandRequest": {
       "type": "object",
       "properties": {
@@ -244,33 +268,9 @@
         }
       }
     },
-    "uacs_storeCreateBrandResponse": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "int64"
-        },
-        "name": {
-          "type": "string"
-        }
-      }
-    },
     "uacs_storeCreateCategoryRequest": {
       "type": "object",
       "properties": {
-        "name": {
-          "type": "string"
-        }
-      }
-    },
-    "uacs_storeCreateCategoryResponse": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "int64"
-        },
         "name": {
           "type": "string"
         }

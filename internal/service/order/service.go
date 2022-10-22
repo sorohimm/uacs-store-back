@@ -3,6 +3,7 @@ package order
 import (
 	"context"
 	"errors"
+	api "github.com/sorohimm/uacs-store-back/pkg/api/auth"
 
 	stdl "log"
 	"os"
@@ -16,7 +17,6 @@ import (
 	"github.com/sorohimm/uacs-store-back/internal/service/order/config"
 	"github.com/sorohimm/uacs-store-back/internal/service/order/initial"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
-	api "github.com/sorohimm/uacs-store-back/pkg/auth"
 	"github.com/sorohimm/uacs-store-back/pkg/conf"
 	"github.com/sorohimm/uacs-store-back/pkg/log"
 )

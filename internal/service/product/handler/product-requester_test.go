@@ -13,7 +13,6 @@ import (
 
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
-	"github.com/sorohimm/uacs-store-back/pkg/product"
 )
 
 func TestProductRequesterHandler_GetProduct(t *testing.T) {
@@ -26,7 +25,7 @@ func TestProductRequesterHandler_GetProduct(t *testing.T) {
 		productRequester: mockProdReq,
 	}
 
-	t.Run("get product no err", func(t *testing.T) {
+	t.Run("get api no err", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &product.ProductRequest{
@@ -53,7 +52,7 @@ func TestProductRequesterHandler_GetProduct(t *testing.T) {
 		require.Equal(t, resp, mockResp.ToAPIResponse())
 	})
 
-	t.Run("get product err not found", func(t *testing.T) {
+	t.Run("get api err not found", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &product.ProductRequest{
@@ -70,7 +69,7 @@ func TestProductRequesterHandler_GetProduct(t *testing.T) {
 		require.Equal(t, codes.NotFound, status.Code(err))
 	})
 
-	t.Run("get product err internal", func(t *testing.T) {
+	t.Run("get api err internal", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &product.ProductRequest{
@@ -98,7 +97,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		productRequester: mockProdReq,
 	}
 
-	t.Run("request products without specific type and brand (no err)", func(t *testing.T) {
+	t.Run("request product without specific type and brand (no err)", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &product.AllProductsRequest{
@@ -139,7 +138,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		require.Equal(t, resp, mockResp.ToAPIResponse())
 	})
 
-	t.Run("request products without specific type and brand (Internal err)", func(t *testing.T) {
+	t.Run("request product without specific type and brand (Internal err)", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &product.AllProductsRequest{
@@ -160,7 +159,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		require.Equal(t, codes.Internal, status.Code(err))
 	})
 
-	t.Run("request products without specific type and brand (NotFound err)", func(t *testing.T) {
+	t.Run("request product without specific type and brand (NotFound err)", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &product.AllProductsRequest{
@@ -181,7 +180,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		require.Equal(t, codes.NotFound, status.Code(err))
 	})
 
-	t.Run("request products with brandId and with typeId (no err)", func(t *testing.T) {
+	t.Run("request product with brandId and with typeId (no err)", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &product.AllProductsRequest{
@@ -193,7 +192,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		mockResp := &dto.Products{
 			{
 				ID:      1,
-				Name:    "some TOYOTA Brand product",
+				Name:    "some TOYOTA Brand api",
 				Price:   100,
 				BrandID: 115,
 				TypeID:  200,
@@ -201,7 +200,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 				Info:    nil,
 			}, {
 				ID:      2,
-				Name:    "another TOYOTA Brand product",
+				Name:    "another TOYOTA Brand api",
 				Price:   213,
 				BrandID: 115,
 				TypeID:  200,
@@ -224,7 +223,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		require.Equal(t, resp, mockResp.ToAPIResponse())
 	})
 
-	t.Run("request products with brandId and with typeId (Internal err)", func(t *testing.T) {
+	t.Run("request product with brandId and with typeId (Internal err)", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &product.AllProductsRequest{
@@ -247,7 +246,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		require.Equal(t, codes.Internal, status.Code(err))
 	})
 
-	t.Run("request products with brandId and with typeId (Internal err)", func(t *testing.T) {
+	t.Run("request product with brandId and with typeId (Internal err)", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &product.AllProductsRequest{
@@ -270,7 +269,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		require.Equal(t, codes.NotFound, status.Code(err))
 	})
 
-	t.Run("request products with brandId and without typeId (no err)", func(t *testing.T) {
+	t.Run("request product with brandId and without typeId (no err)", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &product.AllProductsRequest{
@@ -281,7 +280,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		mockResp := &dto.Products{
 			{
 				ID:      1,
-				Name:    "some TOYOTA Brand product",
+				Name:    "some TOYOTA Brand api",
 				Price:   100,
 				BrandID: 115,
 				TypeID:  200,
@@ -289,7 +288,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 				Info:    nil,
 			}, {
 				ID:      2,
-				Name:    "another TOYOTA Brand product",
+				Name:    "another TOYOTA Brand api",
 				Price:   213,
 				BrandID: 115,
 				TypeID:  200,
@@ -312,7 +311,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		require.Equal(t, resp, mockResp.ToAPIResponse())
 	})
 
-	t.Run("request products with brandId and without typeId (Internal err)", func(t *testing.T) {
+	t.Run("request product with brandId and without typeId (Internal err)", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &product.AllProductsRequest{
@@ -334,7 +333,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		require.Equal(t, codes.Internal, status.Code(err))
 	})
 
-	t.Run("request products with brandId and without typeId (NotFoundErr err)", func(t *testing.T) {
+	t.Run("request product with brandId and without typeId (NotFoundErr err)", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &product.AllProductsRequest{
@@ -356,7 +355,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		require.Equal(t, codes.NotFound, status.Code(err))
 	})
 
-	t.Run("request products with typeId and without brandId (no err)", func(t *testing.T) {
+	t.Run("request product with typeId and without brandId (no err)", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &product.AllProductsRequest{
@@ -367,7 +366,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		mockResp := &dto.Products{
 			{
 				ID:      1,
-				Name:    "some TOYOTA Brand product",
+				Name:    "some TOYOTA Brand api",
 				Price:   100,
 				BrandID: 115,
 				TypeID:  200,
@@ -375,7 +374,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 				Info:    nil,
 			}, {
 				ID:      2,
-				Name:    "another TOYOTA Brand product",
+				Name:    "another TOYOTA Brand api",
 				Price:   213,
 				BrandID: 115,
 				TypeID:  200,
@@ -398,7 +397,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		require.Equal(t, resp, mockResp.ToAPIResponse())
 	})
 
-	t.Run("request products with typeId and without brandId (Internal err)", func(t *testing.T) {
+	t.Run("request product with typeId and without brandId (Internal err)", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &product.AllProductsRequest{
@@ -420,7 +419,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		require.Equal(t, codes.Internal, status.Code(err))
 	})
 
-	t.Run("request products with typeId and without brandId (NotFound err)", func(t *testing.T) {
+	t.Run("request product with typeId and without brandId (NotFound err)", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &product.AllProductsRequest{

@@ -14,7 +14,6 @@ import (
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/brand"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/category"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
-	"github.com/sorohimm/uacs-store-back/pkg/product"
 )
 
 func TestProductCommanderHandler_CreateBrand(t *testing.T) {
@@ -112,11 +111,11 @@ func TestProductCommanderHandler_CreateProduct(t *testing.T) {
 		productCommander: mockCategoryCmdr,
 	}
 
-	t.Run("create product no err", func(t *testing.T) {
+	t.Run("create api no err", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &product.CreateProductRequest{
-			Name:    "test product name",
+			Name:    "test api name",
 			Price:   100,
 			BrandId: 10,
 			TypeId:  1,
@@ -124,7 +123,7 @@ func TestProductCommanderHandler_CreateProduct(t *testing.T) {
 		}
 		expResp := &dto.Product{
 			ID:      1,
-			Name:    "test product name",
+			Name:    "test api name",
 			Price:   100,
 			BrandID: 10,
 			TypeID:  1,
@@ -144,11 +143,11 @@ func TestProductCommanderHandler_CreateProduct(t *testing.T) {
 		// todo: add info, img compare
 	})
 
-	t.Run("create product internal err", func(t *testing.T) {
+	t.Run("create api internal err", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &product.CreateProductRequest{
-			Name:    "test product name",
+			Name:    "test api name",
 			Price:   100,
 			BrandId: 10,
 			TypeId:  1,

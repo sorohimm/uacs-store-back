@@ -2,7 +2,7 @@
 package postgres
 
 const (
-	ProductTableName       = "product"
+	ProductTableName       = "api"
 	ProductInfoTableName   = "product_info"
 	BrandTableName         = "brand"
 	CategoryTableName      = "category"

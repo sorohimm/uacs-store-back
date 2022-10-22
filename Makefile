@@ -11,7 +11,8 @@ default: all
 
 .PHIONY: all
 all:tidy
-all:store
+all:product
+all:order
 all:auth
 
 .PHONY: linux
@@ -19,20 +20,35 @@ linux: export GOOS := linux
 linux: export GOARCH := amd64
 linux:all
 
-#### store API service build
-.PHONY: store
-store: UACS_STORE_OUT := $(OUT_DIR)/uacs-store
-store: UACS_STORE_MAIN := ./cmd/api
-store:
-	@echo BUILDING $(UACS_STORE_OUT)
-	$(V)go build  -ldflags "-s -w -X main.version=${RELEASE} -X main.buildTime=${BUILD_TIME}" -o $(UACS_STORE_OUT) $(UACS_STORE_MAIN)
+#### api service build
+.PHONY: product
+product: PRODUCT_OUT := $(OUT_DIR)/product
+product: PRODUCT_MAIN := ./cmd/product
+product:
+	@echo BUILDING $(PRODUCT_OUT)
+	$(V)go build  -ldflags "-s -w -X main.version=${RELEASE} -X main.buildTime=${BUILD_TIME}" -o $(PRODUCT_OUT) $(PRODUCT_MAIN)
 	@echo DONE
 
 #### store API service build for linux
-.PHONY: store-linux
-store-linux: export GOOS := linux
-store-linux: export GOARCH := amd64
-store-linux: store
+.PHONY: product-linux
+product-linux: export GOOS := linux
+product-linux: export GOARCH := amd64
+product-linux: product
+
+#### orders service build
+.PHONY: order
+order: ORDER_OUT := $(OUT_DIR)/order
+order: ORDER_MAIN := ./cmd/order
+order:
+	@echo BUILDING $(ORDER_OUT)
+	$(V)go build  -ldflags "-s -w -X main.version=${RELEASE} -X main.buildTime=${BUILD_TIME}" -o $(ORDER_OUT) $(ORDER_MAIN)
+	@echo DONE
+
+#### auth service build for linux
+.PHONY: order-linux
+order-linux: export GOOS := linux
+order-linux: export GOARCH := amd64
+order-linux: order
 
 #### auth service build
 .PHONY: auth
@@ -59,27 +75,42 @@ auth-linux: auth
 #	$(V)go build -ldflags "-s -w -X main.version=${RELEASE} -X main.buildTime=${BUILD_TIME}" -o $(WASM_OUT) $(WASM_MAIN)
 #	@echo DONE
 
-build:
-	GOARCH=wasm GOOS=js go build -o ./build/web/app.wasm ./cmd/frontend
-	go build -o ./build/frontend ./cmd/frontend
+#build:
+#	GOARCH=wasm GOOS=js go build -o ./build/web/app.wasm ./cmd/frontend
+#	go build -o ./build/frontend ./cmd/frontend
 
-#### gRPC store product generation
-SRC = "./pkg/api"
+
+#### gRPC product api generation
+SRC = "./pkg/api/product"
 DST = "."
-.PHONY: gen-api
-gen-api: API_SRC:= "./pkg/api"
-gen-api: API_DEST:= "."
-gen-api:
-	protoc -I=. -I$(API_SRC) --go_out=$(API_DEST) --go_opt=paths=source_relative $(API_SRC)/store.proto
-	protoc -I=. -I$(API_SRC) --go-grpc_out=$(API_DEST) --go-grpc_opt paths=source_relative $(API_SRC)/store.proto
-	protoc -I=. -I$(API_SRC) --grpc-gateway_out=$(API_DEST)  --grpc-gateway_opt=logtostderr=true --grpc-gateway_opt=paths=source_relative $(API_SRC)/store.proto
-	protoc -I=. -I$(API_SRC) --openapiv2_out=$(API_DEST) --openapiv2_opt=logtostderr=true $(API_SRC)/store.proto#### gRPC generation
+.PHONY: gen-product
+gen-product: PRODUCT_SRC:= "./pkg/api/product"
+gen-product: PRODUCT_DEST:= "."
+gen-product:
+	protoc -I=. -I$(PRODUCT_SRC) --go_out=$(PRODUCT_DEST) --go_opt=paths=source_relative $(PRODUCT_SRC)/store.proto
+	protoc -I=. -I$(PRODUCT_SRC) --go-grpc_out=$(PRODUCT_DEST) --go-grpc_opt paths=source_relative $(PRODUCT_SRC)/store.proto
+	protoc -I=. -I$(PRODUCT_SRC) --grpc-gateway_out=$(PRODUCT_DEST)  --grpc-gateway_opt=logtostderr=true --grpc-gateway_opt=paths=source_relative $(PRODUCT_SRC)/store.proto
+	protoc -I=. -I$(PRODUCT_SRC) --openapiv2_out=$(PRODUCT_DEST) --openapiv2_opt=logtostderr=true $(PRODUCT_SRC)/store.proto
 
-#### gRPC auth product generation
-SRC = "./pkg/auth"
+
+#### gRPC order api generation
+SRC = "./pkg/api/order"
+DST = "."
+.PHONY: gen-order
+gen-order: ORDER_SRC:= "./pkg/api/order"
+gen-order: ORDER_DEST:= "."
+gen-order:
+	protoc -I=. -I$(ORDER_SRC) --go_out=$(ORDER_DEST) --go_opt=paths=source_relative $(ORDER_SRC)/order.proto
+	protoc -I=. -I$(ORDER_SRC) --go-grpc_out=$(ORDER_DEST) --go-grpc_opt paths=source_relative $(ORDER_SRC)/order.proto
+	protoc -I=. -I$(ORDER_SRC) --grpc-gateway_out=$(ORDER_DEST)  --grpc-gateway_opt=logtostderr=true --grpc-gateway_opt=paths=source_relative $(ORDER_SRC)/order.proto
+	protoc -I=. -I$(ORDER_SRC) --openapiv2_out=$(ORDER_DEST) --openapiv2_opt=logtostderr=true $(ORDER_SRC)/order.proto
+
+
+#### gRPC auth api generation
+SRC = "./pkg/api/auth"
 DST = "."
 .PHONY: gen-auth
-gen-auth: AUTH_SRC:= "./pkg/auth"
+gen-auth: AUTH_SRC:= "./pkg/api/auth"
 gen-auth: AUTH_DEST:= "."
 gen-auth:
 	protoc -I=. -I$(AUTH_SRC) --go_out=$(AUTH_DEST) --go_opt=paths=source_relative $(AUTH_SRC)/auth.proto
@@ -89,12 +120,12 @@ gen-auth:
 
 REPO := "sorohimm"
 AUTH := "uacs-auth"
-STORE:= "uacs-store-api"
+STORE:= "uacs-product"
 .PHONY: images
 images: linux
 images:
 	docker image build -t ${REPO}/${AUTH}:${RELEASE} -t ${REPO}/${AUTH}:latest -f scripts/auth-server.Dockerfile .
-	docker image build -t ${REPO}/${STORE}:${RELEASE} -t ${REPO}/${STORE}:latest -f scripts/store-server.Dockerfile .
+	docker image build -t ${REPO}/${STORE}:${RELEASE} -t ${REPO}/${STORE}:latest -f scripts/product-server.Dockerfile .
 
 #### docker compose up
 .PHONY: compose-up

@@ -1,9 +1,9 @@
 syntax = "proto3";
 
 package github.com.sorohimm.uacs_store;
-option go_package = "github.com/sorohimm/shop/pkg/product";
+option go_package = "github.com/sorohimm/uacs-store-back/pkg/api";
 
-import "google/product/annotations.proto";
+import "google/api/annotations.proto";
 
 message CreateProductRequest {
   string name = 10;
@@ -63,13 +63,13 @@ message CategoryResponse {
 service StoreServiceRequester {
   rpc GetProduct (ProductRequest) returns (ProductResponse) {
     option (google.api.http) = {
-      get: "/v1/product/{id}"
+      get: "/v1/api/{id}"
     };
   };
 
   rpc GetAllProducts (AllProductsRequest) returns (AllProductsResponse) {
     option (google.api.http) = {
-      get: "/v1/product"
+      get: "/v1/api"
     };
   };
 }
@@ -77,7 +77,7 @@ service StoreServiceRequester {
 service StoreServiceCommander {
   rpc CreateProduct (CreateProductRequest) returns (ProductResponse) {
     option (google.api.http) = {
-      post: "/v1/product"
+      post: "/v1/api"
       body: "*"
     };
   };

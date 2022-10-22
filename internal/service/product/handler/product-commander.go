@@ -3,6 +3,8 @@ package handler
 
 import (
 	"context"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product"
+	product2 "github.com/sorohimm/uacs-store-back/pkg/api/product"
 
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/brand"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/category"
@@ -13,8 +15,6 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 
 	"github.com/sorohimm/uacs-store-back/internal/storage"
-	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product"
-	"github.com/sorohimm/uacs-store-back/pkg/product"
 )
 
 func NewProductCommanderHandler(schema string, pool *pgxpool.Pool) *ProductCommanderHandler {
@@ -26,13 +26,13 @@ func NewProductCommanderHandler(schema string, pool *pgxpool.Pool) *ProductComma
 }
 
 type ProductCommanderHandler struct {
-	product.UnimplementedStoreServiceCommanderServer
+	product2.UnimplementedStoreServiceCommanderServer
 	productCommander  storage.ProductCommander
 	brandCommander    storage.BrandCommander
 	categoryCommander storage.CategoryCommander
 }
 
-func (o *ProductCommanderHandler) CreateProduct(ctx context.Context, req *product.CreateProductRequest) (*product.ProductResponse, error) {
+func (o *ProductCommanderHandler) CreateProduct(ctx context.Context, req *product2.CreateProductRequest) (*product2.ProductResponse, error) {
 	var (
 		prod *dto.Product
 		err  error
@@ -45,7 +45,7 @@ func (o *ProductCommanderHandler) CreateProduct(ctx context.Context, req *produc
 	return prod.ToAPIResponse(), nil
 }
 
-func (o *ProductCommanderHandler) CreateCategory(ctx context.Context, req *product.CreateCategoryRequest) (*product.CreateCategoryResponse, error) {
+func (o *ProductCommanderHandler) CreateCategory(ctx context.Context, req *product2.CreateCategoryRequest) (*product2.CategoryResponse, error) {
 	var (
 		newCategory *category.Category
 		err         error
@@ -58,7 +58,7 @@ func (o *ProductCommanderHandler) CreateCategory(ctx context.Context, req *produ
 	return newCategory.ToAPIResponse(), nil
 }
 
-func (o *ProductCommanderHandler) CreateBrand(ctx context.Context, req *product.CreateBrandRequest) (*product.CreateBrandResponse, error) {
+func (o *ProductCommanderHandler) CreateBrand(ctx context.Context, req *product2.CreateBrandRequest) (*product2.BrandResponse, error) {
 	var (
 		newBrand *brand.Brand
 		err      error

@@ -6,11 +6,11 @@ package product
 
 import (
 	context "context"
+	api "github.com/sorohimm/uacs-store-back/pkg/api/product"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
 	category "github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/category"
-	api "github.com/sorohimm/uacs-store-back/pkg/product"
 )
 
 // MockCategoryCommanderHandler is a mock of CategoryCommanderHandler interface.

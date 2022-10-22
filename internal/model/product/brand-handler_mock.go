@@ -6,11 +6,11 @@ package product
 
 import (
 	context "context"
+	api "github.com/sorohimm/uacs-store-back/pkg/api/product"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
 	brand "github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/brand"
-	api "github.com/sorohimm/uacs-store-back/pkg/product"
 )
 
 // MockBrandCommanderHandler is a mock of BrandCommanderHandler interface.

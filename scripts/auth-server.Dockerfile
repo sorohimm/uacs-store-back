@@ -8,7 +8,7 @@ COPY /build/uacs-auth /usr/local/bin/uacs-auth
 # http gateway
 EXPOSE 2104/tcp
 
-# grpc product
+# grpc api
 EXPOSE 9001/tcp
 
 WORKDIR /uacs

@@ -1,8 +1,6 @@
 // Package brand TODO
 package brand
 
-import "github.com/sorohimm/uacs-store-back/pkg/product"
-
 func NewBrandFromRequest(req *product.CreateBrandRequest) *Brand {
 	return &Brand{
 		Name: req.Name,
@@ -14,9 +12,9 @@ type Brand struct {
 	Name string
 }
 
-func (o Brand) ToAPIResponse() *product.CreateBrandResponse {
-	return &product.CreateBrandResponse{
-		ID:   o.ID,
+func (o Brand) ToAPIResponse() *product.BrandResponse {
+	return &product.BrandResponse{
+		Id:   o.ID,
 		Name: o.Name,
 	}
 }

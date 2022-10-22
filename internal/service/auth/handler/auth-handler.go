@@ -4,6 +4,7 @@ package handler
 import (
 	"context"
 	"errors"
+	"github.com/sorohimm/uacs-store-back/pkg/api/auth"
 	"github.com/sorohimm/uacs-store-back/pkg/log"
 	"time"
 
@@ -18,7 +19,6 @@ import (
 	"github.com/sorohimm/uacs-store-back/internal/security"
 	"github.com/sorohimm/uacs-store-back/internal/storage"
 	repo "github.com/sorohimm/uacs-store-back/internal/storage/postgres/auth"
-	proto "github.com/sorohimm/uacs-store-back/pkg/auth"
 )
 
 func NewAuthHandler(schema string, pool *pgxpool.Pool) *AuthHandler {
@@ -29,7 +29,7 @@ func NewAuthHandler(schema string, pool *pgxpool.Pool) *AuthHandler {
 }
 
 type AuthHandler struct {
-	proto.UnimplementedAuthServiceServer
+	auth.UnimplementedAuthServiceServer
 	authRepoCommander     storage.UserCommander
 	authRepoRequester     storage.UserRequester
 	accessExpireDuration  time.Duration
@@ -52,7 +52,7 @@ func (o *AuthHandler) SetRefreshExpireDuration(expireDuration time.Duration) *Au
 	return o
 }
 
-func (o *AuthHandler) Registration(ctx context.Context, req *proto.RegistrationRequest) (*empty.Empty, error) {
+func (o *AuthHandler) Registration(ctx context.Context, req *auth.RegistrationRequest) (*empty.Empty, error) {
 	logger := log.FromContext(ctx).Sugar()
 	logger.Debug("AuthHandler.Registration was called")
 
@@ -88,7 +88,7 @@ func (o *AuthHandler) Registration(ctx context.Context, req *proto.RegistrationR
 	return &empty.Empty{}, nil
 }
 
-func (o *AuthHandler) Login(ctx context.Context, req *proto.LoginRequest) (*empty.Empty, error) {
+func (o *AuthHandler) Login(ctx context.Context, req *auth.LoginRequest) (*empty.Empty, error) {
 	logger := log.FromContext(ctx).Sugar()
 	logger.Debug("AuthHandler.Login was called")
 

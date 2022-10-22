@@ -1,4 +1,4 @@
-// Package product TODO
+// Package api TODO
 package product
 
 import (
@@ -19,7 +19,6 @@ import (
 	"github.com/sorohimm/uacs-store-back/internal/service/product/handler"
 	"github.com/sorohimm/uacs-store-back/internal/service/product/initial"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
-	"github.com/sorohimm/uacs-store-back/pkg/product"
 )
 
 func NewService() *Service {

@@ -1,7 +1,5 @@
 package dto
 
-import "github.com/sorohimm/uacs-store-back/pkg/product"
-
 func NewProductFromRequest(req *product.CreateProductRequest) *Product {
 	info := make([]*ProductInfo, 0, len(req.Info))
 	for _, el := range req.Info {

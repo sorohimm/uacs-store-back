@@ -3,12 +3,10 @@ package storage
 
 import (
 	"context"
-
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/brand"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/category"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/auth"
-	"github.com/sorohimm/uacs-store-back/pkg/product"
 )
 
 type ProductRequester interface {

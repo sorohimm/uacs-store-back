@@ -1,4 +1,4 @@
-// Package product TODO
+// Package api TODO
 package product
 
 import (
@@ -12,7 +12,6 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
-	"github.com/sorohimm/uacs-store-back/pkg/product"
 )
 
 var ErrNotFound = errors.New("not found")
@@ -225,20 +224,20 @@ func (o *ProductRepo) CreateProduct(ctx context.Context, request *product.Create
 	product := dto.NewProductFromRequest(request)
 	id, err := createProduct(ctx, o.schema, tx, product)
 	if err != nil {
-		logger.Debugf("create product err: %s", err)
+		logger.Debugf("create api err: %s", err)
 		return nil, err
 	}
 	product.SetID(id)
 
 	if err = addProductInfo(ctx, o.schema, tx, product.Info, product.ID); err != nil {
-		logger.Debugf("add product info err: %s", err)
+		logger.Debugf("add api info err: %s", err)
 		return nil, err
 	}
 
 	return product, nil
 }
 
-// createProduct inserts new product and returns id
+// createProduct inserts new api and returns id
 func createProduct(ctx context.Context, schema string, tx pgx.Tx, product *dto.Product) (int64, error) {
 	sql := `
 INSERT INTO ` + schema + `.` + postgres.ProductTableName + `

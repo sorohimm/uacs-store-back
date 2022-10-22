@@ -2,13 +2,10 @@ package product
 
 import (
 	"context"
-
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
-
-	"github.com/sorohimm/uacs-store-back/pkg/product"
 )
 
-//go:generate mockgen -source=product-handler.go -package=model -destination=product-handler_mock.go
+//go:generate mockgen -source=api-handler.go -package=model -destination=api-handler_mock.go
 
 type ProductRequesterHandler interface {
 	GetProductByID(ctx context.Context, id int64) (*dto.Product, error)

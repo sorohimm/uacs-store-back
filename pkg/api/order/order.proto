@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package github.com.sorohimm.uacs_store;
+option go_package = "github.com/sorohimm/uacs-store-back/pkg/api";
+
+import "google/api/annotations.proto";
+
+message Product {
+  int64 id = 10;
+}
+
+message Cart {
+  repeated Product products = 10;
+}
+
+message NewOrder {
+  int64 user_id = 10;
+  Cart cart = 20;
+}
