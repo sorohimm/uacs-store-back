@@ -11,7 +11,7 @@ message Order {
   int64 cartId = 20;
 }
 
-service AuthService {
+service OrderService {
   rpc NewOrder (Order) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v1/auth/registration"

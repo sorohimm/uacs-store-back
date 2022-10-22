@@ -6,7 +6,7 @@
   },
   "tags": [
     {
-      "name": "AuthService"
+      "name": "OrderService"
     }
   ],
   "consumes": [
@@ -18,7 +18,7 @@
   "paths": {
     "/v1/auth/registration": {
       "post": {
-        "operationId": "AuthService_NewOrder",
+        "operationId": "OrderService_NewOrder",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -45,7 +45,7 @@
           }
         ],
         "tags": [
-          "AuthService"
+          "OrderService"
         ]
       }
     }
