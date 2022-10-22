@@ -3,6 +3,7 @@ package product
 import (
 	"context"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
+	"github.com/sorohimm/uacs-store-back/pkg/api"
 )
 
 //go:generate mockgen -source=api-handler.go -package=model -destination=api-handler_mock.go
@@ -16,5 +17,5 @@ type ProductRequesterHandler interface {
 }
 
 type ProductCommanderHandler interface {
-	CreateProduct(ctx context.Context, req *product.CreateProductRequest) (*dto.Product, error)
+	CreateProduct(ctx context.Context, req *api.CreateProductRequest) (*dto.Product, error)
 }

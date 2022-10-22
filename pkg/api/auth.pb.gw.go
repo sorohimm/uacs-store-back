@@ -6,7 +6,7 @@ Package auth is a reverse proxy.
 
 It translates gRPC into RESTful JSON APIs.
 */
-package auth
+package api
 
 import (
 	"context"

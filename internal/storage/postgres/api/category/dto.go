@@ -1,6 +1,8 @@
 package category
 
-func NewCategoryFromRequest(req *product.CreateCategoryRequest) *Category {
+import "github.com/sorohimm/uacs-store-back/pkg/api"
+
+func NewCategoryFromRequest(req *api.CreateCategoryRequest) *Category {
 	return &Category{
 		Name: req.GetName(),
 	}
@@ -11,8 +13,8 @@ type Category struct {
 	Name string
 }
 
-func (o Category) ToAPIResponse() *product.CategoryResponse {
-	return &product.CategoryResponse{
+func (o Category) ToAPIResponse() *api.CategoryResponse {
+	return &api.CategoryResponse{
 		Id:   o.ID,
 		Name: o.Name,
 	}

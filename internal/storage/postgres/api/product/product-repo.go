@@ -1,17 +1,17 @@
-// Package api TODO
+// Package product TODO
 package product
 
 import (
 	"context"
 	"errors"
-	"github.com/sorohimm/uacs-store-back/pkg/log"
-
-	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
 
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
+	"github.com/sorohimm/uacs-store-back/pkg/api"
+	"github.com/sorohimm/uacs-store-back/pkg/log"
 )
 
 var ErrNotFound = errors.New("not found")
@@ -205,7 +205,7 @@ func (o *ProductRepo) scanAllProducts(rows pgx.Rows) (*dto.Products, error) {
 	return &products, nil
 }
 
-func (o *ProductRepo) CreateProduct(ctx context.Context, request *product.CreateProductRequest) (*dto.Product, error) {
+func (o *ProductRepo) CreateProduct(ctx context.Context, request *api.CreateProductRequest) (*dto.Product, error) {
 	var (
 		tx     pgx.Tx
 		err    error

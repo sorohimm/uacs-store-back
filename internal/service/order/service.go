@@ -3,8 +3,7 @@ package order
 import (
 	"context"
 	"errors"
-	api "github.com/sorohimm/uacs-store-back/pkg/api/auth"
-
+	"github.com/sorohimm/uacs-store-back/pkg/api"
 	stdl "log"
 	"os"
 

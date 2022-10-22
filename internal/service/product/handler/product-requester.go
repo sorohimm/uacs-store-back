@@ -5,9 +5,8 @@ import (
 	"context"
 	"errors"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product"
-	product2 "github.com/sorohimm/uacs-store-back/pkg/api/product"
-
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
+	"github.com/sorohimm/uacs-store-back/pkg/api"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -24,11 +23,11 @@ func NewProductRequesterHandler(schema string, pool *pgxpool.Pool) *ProductReque
 }
 
 type ProductRequesterHandler struct {
-	product2.UnimplementedStoreServiceRequesterServer
+	api.UnimplementedStoreServiceRequesterServer
 	productRequester storage.ProductRequester
 }
 
-func (o *ProductRequesterHandler) GetProduct(ctx context.Context, req *product2.ProductRequest) (*product2.ProductResponse, error) {
+func (o *ProductRequesterHandler) GetProduct(ctx context.Context, req *api.ProductRequest) (*api.ProductResponse, error) {
 	prod, err := o.productRequester.GetProductByID(ctx, req.GetId())
 	if err != nil {
 		if errors.Is(err, product.ErrNotFound) {
@@ -40,7 +39,7 @@ func (o *ProductRequesterHandler) GetProduct(ctx context.Context, req *product2.
 	return prod.ToAPIResponse(), nil
 }
 
-func (o *ProductRequesterHandler) GetAllProducts(ctx context.Context, req *product2.AllProductsRequest) (*product2.AllProductsResponse, error) {
+func (o *ProductRequesterHandler) GetAllProducts(ctx context.Context, req *api.AllProductsRequest) (*api.AllProductsResponse, error) {
 	limit := req.GetLimit()
 	offset := req.GetPage()*limit - limit
 

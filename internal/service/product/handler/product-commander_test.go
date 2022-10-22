@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/sorohimm/uacs-store-back/internal/model/product"
+	"github.com/sorohimm/uacs-store-back/pkg/api"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -27,7 +28,7 @@ func TestProductCommanderHandler_CreateBrand(t *testing.T) {
 
 	t.Run("create brand no err", func(t *testing.T) {
 		ctx := context.Background()
-		req := &product.CreateBrandRequest{Name: "testBrandName"}
+		req := &api.CreateBrandRequest{Name: "testBrandName"}
 		expResp := &brand.Brand{
 			ID:   1,
 			Name: "testBrandName",
@@ -40,13 +41,13 @@ func TestProductCommanderHandler_CreateBrand(t *testing.T) {
 		require.NotNil(t, resp)
 		require.Equal(t, codes.OK, status.Code(err))
 
-		require.Equal(t, expResp.ID, resp.ID)
+		require.Equal(t, expResp.ID, resp.Id)
 		require.Equal(t, expResp.Name, resp.Name)
 	})
 
 	t.Run("create brand internal err", func(t *testing.T) {
 		ctx := context.Background()
-		req := &product.CreateBrandRequest{Name: "testBrandName"}
+		req := &api.CreateBrandRequest{Name: "testBrandName"}
 
 		expErr := errors.New("some internal err")
 		mockBrandCmdr.EXPECT().CreateBrand(ctx, req).Return(nil, expErr)
@@ -70,7 +71,7 @@ func TestProductCommanderHandler_CreateCategory(t *testing.T) {
 	t.Run("create category no err", func(t *testing.T) {
 		ctx := context.Background()
 
-		req := &product.CreateCategoryRequest{Name: "someTestCategory"}
+		req := &api.CreateCategoryRequest{Name: "someTestCategory"}
 		expResp := &category.Category{
 			ID:   1,
 			Name: "someTestCategory",
@@ -90,7 +91,7 @@ func TestProductCommanderHandler_CreateCategory(t *testing.T) {
 	t.Run("create category internal err", func(t *testing.T) {
 		ctx := context.Background()
 
-		req := &product.CreateCategoryRequest{Name: "someTestCategory"}
+		req := &api.CreateCategoryRequest{Name: "someTestCategory"}
 
 		err := errors.New("some internal create category err")
 		mockCategoryCmdr.EXPECT().CreateCategory(ctx, req).Return(nil, err)
@@ -114,7 +115,7 @@ func TestProductCommanderHandler_CreateProduct(t *testing.T) {
 	t.Run("create api no err", func(t *testing.T) {
 		ctx := context.Background()
 
-		req := &product.CreateProductRequest{
+		req := &api.CreateProductRequest{
 			Name:    "test api name",
 			Price:   100,
 			BrandId: 10,
@@ -146,7 +147,7 @@ func TestProductCommanderHandler_CreateProduct(t *testing.T) {
 	t.Run("create api internal err", func(t *testing.T) {
 		ctx := context.Background()
 
-		req := &product.CreateProductRequest{
+		req := &api.CreateProductRequest{
 			Name:    "test api name",
 			Price:   100,
 			BrandId: 10,

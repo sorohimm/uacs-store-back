@@ -4,7 +4,7 @@ package auth
 import (
 	"context"
 	"errors"
-	"github.com/sorohimm/uacs-store-back/pkg/api/auth"
+	"github.com/sorohimm/uacs-store-back/pkg/api"
 	"github.com/sorohimm/uacs-store-back/pkg/conf"
 	"github.com/sorohimm/uacs-store-back/pkg/log"
 	stdl "log"
@@ -79,12 +79,12 @@ func (o *Service) Init(ctx context.Context, appName, version, built string) {
 		SetRefreshExpireDuration(cfg.JWT.RefreshTokenExpireDuration)
 
 	o.Add(initial.Grpc(ctx, func(s *grpc.Server) {
-		auth.RegisterAuthServiceServer(s, storeReqHandler)
+		api.RegisterAuthServiceServer(s, storeReqHandler)
 	}))
 
 	exec, inter, err := initial.HTTP(ctx, cfg,
 		func(ctx context.Context, mux *runtime.ServeMux, grpcAddr string, opts []grpc.DialOption) error {
-			if err = auth.RegisterAuthServiceHandlerFromEndpoint(ctx, mux, grpcAddr, opts); err != nil {
+			if err = api.RegisterAuthServiceHandlerFromEndpoint(ctx, mux, grpcAddr, opts); err != nil {
 				return err
 			}
 			return nil

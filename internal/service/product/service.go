@@ -4,6 +4,7 @@ package product
 import (
 	"context"
 	"errors"
+	"github.com/sorohimm/uacs-store-back/pkg/api"
 	"github.com/sorohimm/uacs-store-back/pkg/conf"
 	"github.com/sorohimm/uacs-store-back/pkg/log"
 	stdl "log"
@@ -75,16 +76,16 @@ func (o *Service) Init(ctx context.Context, appName, version, built string) {
 	storeReqHandler := handler.NewProductRequesterHandler(cfg.Postgres.SchemaName, pool)
 	storeCommandHandler := handler.NewProductCommanderHandler(cfg.Postgres.SchemaName, pool)
 	o.Add(initial.Grpc(ctx, func(s *grpc.Server) {
-		product.RegisterStoreServiceRequesterServer(s, storeReqHandler)
-		product.RegisterStoreServiceCommanderServer(s, storeCommandHandler)
+		api.RegisterStoreServiceRequesterServer(s, storeReqHandler)
+		api.RegisterStoreServiceCommanderServer(s, storeCommandHandler)
 	}))
 
 	exec, inter, err := initial.HTTP(ctx, cfg,
 		func(ctx context.Context, mux *runtime.ServeMux, grpcAddr string, opts []grpc.DialOption) error {
-			if err = product.RegisterStoreServiceRequesterHandlerFromEndpoint(ctx, mux, grpcAddr, opts); err != nil {
+			if err = api.RegisterStoreServiceRequesterHandlerFromEndpoint(ctx, mux, grpcAddr, opts); err != nil {
 				return err
 			}
-			if err = product.RegisterStoreServiceCommanderHandlerFromEndpoint(ctx, mux, grpcAddr, opts); err != nil {
+			if err = api.RegisterStoreServiceCommanderHandlerFromEndpoint(ctx, mux, grpcAddr, opts); err != nil {
 				return err
 			}
 			return nil

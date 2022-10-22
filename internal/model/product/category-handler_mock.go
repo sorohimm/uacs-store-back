@@ -6,7 +6,7 @@ package product
 
 import (
 	context "context"
-	api "github.com/sorohimm/uacs-store-back/pkg/api/product"
+	"github.com/sorohimm/uacs-store-back/pkg/api"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
