@@ -1,11 +1,9 @@
-// Package product TODO
-package product
+package order
 
 import (
 	"context"
 	"errors"
-	"github.com/sorohimm/uacs-store-back/pkg/conf"
-	"github.com/sorohimm/uacs-store-back/pkg/log"
+
 	stdl "log"
 	"os"
 
@@ -15,11 +13,12 @@ import (
 	"google.golang.org/grpc"
 
 	"github.com/sorohimm/uacs-store-back/internal"
-	"github.com/sorohimm/uacs-store-back/internal/service/product/config"
-	"github.com/sorohimm/uacs-store-back/internal/service/product/handler"
-	"github.com/sorohimm/uacs-store-back/internal/service/product/initial"
+	"github.com/sorohimm/uacs-store-back/internal/service/order/config"
+	"github.com/sorohimm/uacs-store-back/internal/service/order/initial"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
-	"github.com/sorohimm/uacs-store-back/pkg/product"
+	api "github.com/sorohimm/uacs-store-back/pkg/auth"
+	"github.com/sorohimm/uacs-store-back/pkg/conf"
+	"github.com/sorohimm/uacs-store-back/pkg/log"
 )
 
 func NewService() *Service {
@@ -58,8 +57,8 @@ func (o *Service) initLogger(ctx context.Context, version, built, appName string
 
 func (o *Service) Init(ctx context.Context, appName, version, built string) {
 	var (
-		err  error
-		pool *pgxpool.Pool
+		err error
+		_   *pgxpool.Pool
 	)
 
 	logger := log.FromContext(ctx).Sugar()
@@ -67,25 +66,15 @@ func (o *Service) Init(ctx context.Context, appName, version, built string) {
 	ctx = o.initConfigs(ctx)
 	ctx = o.initLogger(ctx, version, built, appName)
 
-	if pool, err = postgres.NewPGXPool(ctx, config.FromContext(ctx).Postgres); err != nil {
+	if _, err = postgres.NewPGXPool(ctx, config.FromContext(ctx).Postgres); err != nil {
 		logger.Fatalf("failed to init ruleset.RepoRuleset from postgres: %v", err)
 	}
 
 	cfg := config.FromContext(ctx)
 
-	storeReqHandler := handler.NewProductRequesterHandler(cfg.Postgres.SchemaName, pool)
-	storeCommandHandler := handler.NewProductCommanderHandler(cfg.Postgres.SchemaName, pool)
-	o.Add(initial.Grpc(ctx, func(s *grpc.Server) {
-		product.RegisterStoreServiceRequesterServer(s, storeReqHandler)
-		product.RegisterStoreServiceCommanderServer(s, storeCommandHandler)
-	}))
-
 	exec, inter, err := initial.HTTP(ctx, cfg,
 		func(ctx context.Context, mux *runtime.ServeMux, grpcAddr string, opts []grpc.DialOption) error {
-			if err = product.RegisterStoreServiceRequesterHandlerFromEndpoint(ctx, mux, grpcAddr, opts); err != nil {
-				return err
-			}
-			if err = product.RegisterStoreServiceCommanderHandlerFromEndpoint(ctx, mux, grpcAddr, opts); err != nil {
+			if err = api.RegisterAuthServiceHandlerFromEndpoint(ctx, mux, grpcAddr, opts); err != nil {
 				return err
 			}
 			return nil

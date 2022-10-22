@@ -4,7 +4,7 @@
 // 	protoc        v3.21.5
 // source: pkg/product/store.proto
 
-package api
+package product
 
 import (
 	_ "google.golang.org/genproto/googleapis/api/annotations"

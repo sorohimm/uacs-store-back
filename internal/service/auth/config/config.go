@@ -21,8 +21,11 @@ type LoggerConf struct {
 }
 
 type HTTPConfig struct {
-	Host    string `long:"host" env:"HOST" default:"127.0.0.1" description:"host to listen to"`
-	Port    int    `long:"port" env:"PORT" default:"2104" description:"port to listen to"`
+	Host string `long:"host" env:"HOST" default:"127.0.0.1" description:"host to listen to"`
+	Port int    `long:"port" env:"PORT" default:"2104" description:"port to listen to"`
+	Cors struct {
+		AllowedOrigins []string `long:"allowed-origin" env:"ALLOWED_ORIGINS" default:"*" description:"indicates whether the response can be shared with requesting code from the given origin"`
+	}
 	Timeout struct {
 		Idle       time.Duration `long:"idle" env:"IDLE" description:"the maximum amount of time to wait for the next request when keep-alives are enabled."`
 		Read       time.Duration `long:"read" env:"READ" description:"the maximum duration for reading the entire request, including the body"`

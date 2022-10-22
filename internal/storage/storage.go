@@ -8,7 +8,7 @@ import (
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/category"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/auth"
-	"github.com/sorohimm/uacs-store-back/pkg/api"
+	"github.com/sorohimm/uacs-store-back/pkg/product"
 )
 
 type ProductRequester interface {
@@ -20,7 +20,7 @@ type ProductRequester interface {
 }
 
 type ProductCommander interface {
-	CreateProduct(ctx context.Context, request *api.CreateProductRequest) (*dto.Product, error)
+	CreateProduct(ctx context.Context, request *product.CreateProductRequest) (*dto.Product, error)
 }
 
 type InfoRequester interface {
@@ -28,15 +28,15 @@ type InfoRequester interface {
 }
 
 type InfoCommander interface {
-	AddInfo(ctx context.Context, info []*api.ProductInfo, productID int64) error
+	AddInfo(ctx context.Context, info []*product.ProductInfo, productID int64) error
 }
 
 type BrandCommander interface {
-	CreateBrand(ctx context.Context, request *api.CreateBrandRequest) (*brand.Brand, error)
+	CreateBrand(ctx context.Context, request *product.CreateBrandRequest) (*brand.Brand, error)
 }
 
 type CategoryCommander interface {
-	CreateCategory(ctx context.Context, request *api.CreateCategoryRequest) (*category.Category, error)
+	CreateCategory(ctx context.Context, request *product.CreateCategoryRequest) (*category.Category, error)
 }
 
 type UserCommander interface {

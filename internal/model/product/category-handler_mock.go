@@ -2,7 +2,7 @@
 // Source: category-handler.go
 
 // Package model is a generated GoMock package.
-package model
+package product
 
 import (
 	context "context"
@@ -10,7 +10,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	category "github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/category"
-	api "github.com/sorohimm/uacs-store-back/pkg/api"
+	api "github.com/sorohimm/uacs-store-back/pkg/product"
 )
 
 // MockCategoryCommanderHandler is a mock of CategoryCommanderHandler interface.

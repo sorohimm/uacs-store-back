@@ -5,12 +5,14 @@ import (
 	"context"
 	"time"
 
+	"github.com/sorohimm/uacs-store-back/internal/jwt"
+
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
 )
 
 type GRPCConf struct {
 	Host string `long:"host" default:"0.0.0.0" env:"HOST" description:"grpc host to listen to"`
-	Port int    `long:"port" default:"9000" env:"PORT" description:"grpc port to listen to"`
+	Port int    `long:"port" default:"9002" env:"PORT" description:"grpc port to listen to"`
 }
 
 type LoggerConf struct {
@@ -20,7 +22,7 @@ type LoggerConf struct {
 
 type HTTPConfig struct {
 	Host string `long:"host" env:"HOST" default:"127.0.0.1" description:"host to listen to"`
-	Port int    `long:"port" env:"PORT" default:"2604" description:"port to listen to"`
+	Port int    `long:"port" env:"PORT" default:"3001" description:"port to listen to"`
 	Cors struct {
 		AllowedOrigins []string `long:"allowed-origin" env:"ALLOWED_ORIGINS" default:"*" description:"indicates whether the response can be shared with requesting code from the given origin"`
 	}
@@ -41,6 +43,7 @@ type Config struct {
 	Log      *LoggerConf      `group:"logger option" namespace:"log" env-namespace:"LOG"`
 	HTTP     *HTTPConfig      `group:"http grpc gateway option" namespace:"http" env-namespace:"HTTP"`
 	GRPC     *GRPCConf        `group:"grpc option" namespace:"grpc" env-namespace:"GRPC"`
+	JWT      *jwt.Config      `group:"jwt option" namespace:"jwt" env-namespace:"JWT"`
 	Postgres *postgres.Config `group:"pg" namespace:"pg" env-namespace:"PG"`
 }
 

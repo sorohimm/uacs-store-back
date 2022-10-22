@@ -8,7 +8,7 @@ import (
 
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
-	"github.com/sorohimm/uacs-store-back/pkg/api"
+	"github.com/sorohimm/uacs-store-back/pkg/product"
 )
 
 func NewCategoryRepo(schema string, pool *pgxpool.Pool) *CategoryRepo {
@@ -23,7 +23,7 @@ type CategoryRepo struct {
 	pool   *pgxpool.Pool
 }
 
-func (o *CategoryRepo) CreateCategory(ctx context.Context, request *api.CreateCategoryRequest) (*Category, error) {
+func (o *CategoryRepo) CreateCategory(ctx context.Context, request *product.CreateCategoryRequest) (*Category, error) {
 	var (
 		id     int64
 		tx     pgx.Tx

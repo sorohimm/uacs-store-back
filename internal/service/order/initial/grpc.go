@@ -12,7 +12,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/sorohimm/uacs-store-back/internal/service/product/config"
+	"github.com/sorohimm/uacs-store-back/internal/service/order/config"
 	"github.com/sorohimm/uacs-store-back/pkg/log"
 )
 

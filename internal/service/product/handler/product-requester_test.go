@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"errors"
+	product2 "github.com/sorohimm/uacs-store-back/internal/model/product"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -10,17 +11,16 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/sorohimm/uacs-store-back/internal/model"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
-	"github.com/sorohimm/uacs-store-back/pkg/api"
+	"github.com/sorohimm/uacs-store-back/pkg/product"
 )
 
 func TestProductRequesterHandler_GetProduct(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	t.Cleanup(ctrl.Finish)
 
-	mockProdReq := model.NewMockProductRequesterHandler(ctrl)
+	mockProdReq := product2.NewMockProductRequesterHandler(ctrl)
 
 	requester := ProductRequesterHandler{
 		productRequester: mockProdReq,
@@ -29,7 +29,7 @@ func TestProductRequesterHandler_GetProduct(t *testing.T) {
 	t.Run("get product no err", func(t *testing.T) {
 		ctx := context.Background()
 
-		req := &api.ProductRequest{
+		req := &product.ProductRequest{
 			Id: 1,
 		}
 		mockResp := &dto.Product{
@@ -56,7 +56,7 @@ func TestProductRequesterHandler_GetProduct(t *testing.T) {
 	t.Run("get product err not found", func(t *testing.T) {
 		ctx := context.Background()
 
-		req := &api.ProductRequest{
+		req := &product.ProductRequest{
 			Id: 1,
 		}
 
@@ -73,7 +73,7 @@ func TestProductRequesterHandler_GetProduct(t *testing.T) {
 	t.Run("get product err internal", func(t *testing.T) {
 		ctx := context.Background()
 
-		req := &api.ProductRequest{
+		req := &product.ProductRequest{
 			Id: 0,
 		}
 
@@ -92,7 +92,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	t.Cleanup(ctrl.Finish)
 
-	mockProdReq := model.NewMockProductRequesterHandler(ctrl)
+	mockProdReq := product2.NewMockProductRequesterHandler(ctrl)
 
 	requester := ProductRequesterHandler{
 		productRequester: mockProdReq,
@@ -101,7 +101,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 	t.Run("request products without specific type and brand (no err)", func(t *testing.T) {
 		ctx := context.Background()
 
-		req := &api.AllProductsRequest{
+		req := &product.AllProductsRequest{
 			Limit: 10,
 			Page:  1,
 		}
@@ -142,7 +142,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 	t.Run("request products without specific type and brand (Internal err)", func(t *testing.T) {
 		ctx := context.Background()
 
-		req := &api.AllProductsRequest{
+		req := &product.AllProductsRequest{
 			Limit: 10,
 			Page:  1,
 		}
@@ -163,7 +163,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 	t.Run("request products without specific type and brand (NotFound err)", func(t *testing.T) {
 		ctx := context.Background()
 
-		req := &api.AllProductsRequest{
+		req := &product.AllProductsRequest{
 			Limit: 10,
 			Page:  1,
 		}
@@ -184,7 +184,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 	t.Run("request products with brandId and with typeId (no err)", func(t *testing.T) {
 		ctx := context.Background()
 
-		req := &api.AllProductsRequest{
+		req := &product.AllProductsRequest{
 			BrandId: 115,
 			TypeId:  200,
 			Limit:   10,
@@ -227,7 +227,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 	t.Run("request products with brandId and with typeId (Internal err)", func(t *testing.T) {
 		ctx := context.Background()
 
-		req := &api.AllProductsRequest{
+		req := &product.AllProductsRequest{
 			BrandId: 115,
 			TypeId:  200,
 			Limit:   10,
@@ -250,7 +250,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 	t.Run("request products with brandId and with typeId (Internal err)", func(t *testing.T) {
 		ctx := context.Background()
 
-		req := &api.AllProductsRequest{
+		req := &product.AllProductsRequest{
 			BrandId: 115,
 			TypeId:  200,
 			Limit:   10,
@@ -273,7 +273,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 	t.Run("request products with brandId and without typeId (no err)", func(t *testing.T) {
 		ctx := context.Background()
 
-		req := &api.AllProductsRequest{
+		req := &product.AllProductsRequest{
 			BrandId: 115,
 			Limit:   10,
 			Page:    1,
@@ -315,7 +315,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 	t.Run("request products with brandId and without typeId (Internal err)", func(t *testing.T) {
 		ctx := context.Background()
 
-		req := &api.AllProductsRequest{
+		req := &product.AllProductsRequest{
 			BrandId: 115,
 			Limit:   10,
 			Page:    1,
@@ -337,7 +337,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 	t.Run("request products with brandId and without typeId (NotFoundErr err)", func(t *testing.T) {
 		ctx := context.Background()
 
-		req := &api.AllProductsRequest{
+		req := &product.AllProductsRequest{
 			BrandId: 115,
 			Limit:   10,
 			Page:    1,
@@ -359,7 +359,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 	t.Run("request products with typeId and without brandId (no err)", func(t *testing.T) {
 		ctx := context.Background()
 
-		req := &api.AllProductsRequest{
+		req := &product.AllProductsRequest{
 			TypeId: 200,
 			Limit:  10,
 			Page:   1,
@@ -401,7 +401,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 	t.Run("request products with typeId and without brandId (Internal err)", func(t *testing.T) {
 		ctx := context.Background()
 
-		req := &api.AllProductsRequest{
+		req := &product.AllProductsRequest{
 			TypeId: 200,
 			Limit:  10,
 			Page:   1,
@@ -423,7 +423,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 	t.Run("request products with typeId and without brandId (NotFound err)", func(t *testing.T) {
 		ctx := context.Background()
 
-		req := &api.AllProductsRequest{
+		req := &product.AllProductsRequest{
 			TypeId: 200,
 			Limit:  10,
 			Page:   1,

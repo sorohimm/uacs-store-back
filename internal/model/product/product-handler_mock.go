@@ -2,7 +2,7 @@
 // Source: product-handler.go
 
 // Package model is a generated GoMock package.
-package model
+package product
 
 import (
 	context "context"
@@ -10,7 +10,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	dto "github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
-	api "github.com/sorohimm/uacs-store-back/pkg/api"
+	api "github.com/sorohimm/uacs-store-back/pkg/product"
 )
 
 // MockProductRequesterHandler is a mock of ProductRequesterHandler interface.

@@ -4,7 +4,6 @@ package initial
 import (
 	"context"
 	"fmt"
-	"github.com/rs/cors"
 	"math"
 	"net"
 	"net/http"
@@ -17,7 +16,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/encoding/protojson"
 
-	"github.com/sorohimm/uacs-store-back/internal/service/product/config"
+	"github.com/sorohimm/uacs-store-back/internal/service/order/config"
 	"github.com/sorohimm/uacs-store-back/pkg/log"
 )
 
@@ -59,13 +58,6 @@ func HTTP(ctx context.Context, cnf *config.Config, registrar HTTPRegistrar) (fun
 	gwMux := runtime.NewServeMux(grpcGatewayOptions()...)
 	httpMux.Handle("/", gwMux)
 
-	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
-		AllowCredentials: true,
-		AllowedMethods:   []string{http.MethodGet, http.MethodPost},
-	})
-	handler := c.Handler(httpMux)
-
 	if httpServer, err = NewHTTPServer(httpc); err != nil {
 		return nil, nil, err
 	}
@@ -83,7 +75,7 @@ func HTTP(ctx context.Context, cnf *config.Config, registrar HTTPRegistrar) (fun
 		}
 	}
 
-	httpServer.Handler = handler
+	httpServer.Handler = httpMux
 
 	exec := func() error {
 		httpAddr := net.JoinHostPort(cnf.HTTP.Host, strconv.Itoa(cnf.HTTP.Port))

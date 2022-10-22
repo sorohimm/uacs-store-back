@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"errors"
+	"github.com/sorohimm/uacs-store-back/internal/model/product"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -10,25 +11,24 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/sorohimm/uacs-store-back/internal/model"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/brand"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/category"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
-	"github.com/sorohimm/uacs-store-back/pkg/api"
+	"github.com/sorohimm/uacs-store-back/pkg/product"
 )
 
 func TestProductCommanderHandler_CreateBrand(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	t.Cleanup(ctrl.Finish)
 
-	mockBrandCmdr := model.NewMockBrandCommanderHandler(ctrl)
+	mockBrandCmdr := product.NewMockBrandCommanderHandler(ctrl)
 	c := &ProductCommanderHandler{
 		brandCommander: mockBrandCmdr,
 	}
 
 	t.Run("create brand no err", func(t *testing.T) {
 		ctx := context.Background()
-		req := &api.CreateBrandRequest{Name: "testBrandName"}
+		req := &product.CreateBrandRequest{Name: "testBrandName"}
 		expResp := &brand.Brand{
 			ID:   1,
 			Name: "testBrandName",
@@ -47,7 +47,7 @@ func TestProductCommanderHandler_CreateBrand(t *testing.T) {
 
 	t.Run("create brand internal err", func(t *testing.T) {
 		ctx := context.Background()
-		req := &api.CreateBrandRequest{Name: "testBrandName"}
+		req := &product.CreateBrandRequest{Name: "testBrandName"}
 
 		expErr := errors.New("some internal err")
 		mockBrandCmdr.EXPECT().CreateBrand(ctx, req).Return(nil, expErr)
@@ -63,7 +63,7 @@ func TestProductCommanderHandler_CreateCategory(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	t.Cleanup(ctrl.Finish)
 
-	mockCategoryCmdr := model.NewMockCategoryCommanderHandler(ctrl)
+	mockCategoryCmdr := product.NewMockCategoryCommanderHandler(ctrl)
 	c := &ProductCommanderHandler{
 		categoryCommander: mockCategoryCmdr,
 	}
@@ -71,7 +71,7 @@ func TestProductCommanderHandler_CreateCategory(t *testing.T) {
 	t.Run("create category no err", func(t *testing.T) {
 		ctx := context.Background()
 
-		req := &api.CreateCategoryRequest{Name: "someTestCategory"}
+		req := &product.CreateCategoryRequest{Name: "someTestCategory"}
 		expResp := &category.Category{
 			ID:   1,
 			Name: "someTestCategory",
@@ -91,7 +91,7 @@ func TestProductCommanderHandler_CreateCategory(t *testing.T) {
 	t.Run("create category internal err", func(t *testing.T) {
 		ctx := context.Background()
 
-		req := &api.CreateCategoryRequest{Name: "someTestCategory"}
+		req := &product.CreateCategoryRequest{Name: "someTestCategory"}
 
 		err := errors.New("some internal create category err")
 		mockCategoryCmdr.EXPECT().CreateCategory(ctx, req).Return(nil, err)
@@ -107,7 +107,7 @@ func TestProductCommanderHandler_CreateProduct(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	t.Cleanup(ctrl.Finish)
 
-	mockCategoryCmdr := model.NewMockProductCommanderHandler(ctrl)
+	mockCategoryCmdr := product.NewMockProductCommanderHandler(ctrl)
 	c := &ProductCommanderHandler{
 		productCommander: mockCategoryCmdr,
 	}
@@ -115,7 +115,7 @@ func TestProductCommanderHandler_CreateProduct(t *testing.T) {
 	t.Run("create product no err", func(t *testing.T) {
 		ctx := context.Background()
 
-		req := &api.CreateProductRequest{
+		req := &product.CreateProductRequest{
 			Name:    "test product name",
 			Price:   100,
 			BrandId: 10,
@@ -147,7 +147,7 @@ func TestProductCommanderHandler_CreateProduct(t *testing.T) {
 	t.Run("create product internal err", func(t *testing.T) {
 		ctx := context.Background()
 
-		req := &api.CreateProductRequest{
+		req := &product.CreateProductRequest{
 			Name:    "test product name",
 			Price:   100,
 			BrandId: 10,
