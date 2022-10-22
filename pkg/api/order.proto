@@ -12,7 +12,21 @@ message CartItem {
   int64 quantity = 30;
 }
 
+message Cart {
+  CartItem items = 10;
+}
+
+message CartReq {
+  int64 id = 10;
+}
+
 service CartServiceCommander {
+  rpc GetCart (CartReq) returns (Cart) {
+    option (google.api.http) = {
+      get: "/v1/cart/{id}"
+    };
+  }
+
   rpc AddCartItem (CartItem) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v1/cart/item"

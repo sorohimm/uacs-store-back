@@ -38,13 +38,14 @@ func (o *AuthRepo) CreateUser(ctx context.Context, req *CreateUserRequest) (*Use
 		}
 	}()
 
-	user := &User{Username: req.User.Username, Email: req.User.Email, Password: req.User.Password, Role: req.User.Role}
-	if user, err = saveUser(ctx, o.schema, tx, *user); err != nil {
-		return nil, err
+	var id int64
+	if id, err = saveUser(ctx, o.schema, tx, &req.User); err != nil {
+		return nil, postgres.ResolveError(err)
 	}
+	user := req.User.SetID(id)
 
 	if err = saveSalt(ctx, o.schema, tx, user.ID, req.PwdSalt); err != nil {
-		return nil, err
+		return nil, postgres.ResolveError(err)
 	}
 
 	return user, nil

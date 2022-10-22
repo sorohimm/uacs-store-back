@@ -5,7 +5,6 @@ import (
 	"context"
 	"errors"
 
-	"github.com/jackc/pgconn"
 	"github.com/jackc/pgx/v4"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
 )
@@ -58,7 +57,7 @@ WHERE user_id=$1
 	return salt, nil
 }
 
-func saveUser(ctx context.Context, schema string, tx pgx.Tx, user User) (*User, error) {
+func saveUser(ctx context.Context, schema string, tx pgx.Tx, user *User) (int64, error) {
 	sql := `
 INSERT INTO ` + schema + `.` + postgres.UserTableName + `
 (
@@ -74,29 +73,10 @@ RETURNING id;
 
 	var id int64
 	if err := row.Scan(&id); err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, ErrNotFound
-		}
-
-		switch v := err.(type) {
-		case *pgconn.PgError:
-			if v.Code == "23505" {
-				return nil, ErrUserAlreadyExists
-			}
-		default:
-		}
-
-		return nil, err
+		return 0, err
 	}
 
-	return &User{
-			ID:       id,
-			Username: user.Username,
-			Email:    user.Email,
-			Password: user.Password,
-			Role:     user.Role,
-		},
-		nil
+	return id, nil
 }
 
 func getUserByID(ctx context.Context, schema string, tx pgx.Tx, userID int64) (*User, error) {

@@ -3,6 +3,8 @@ package handler
 
 import (
 	"context"
+	"errors"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/brand"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/category"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product"
@@ -38,6 +40,10 @@ func (o *ProductCommanderHandler) CreateProduct(ctx context.Context, req *api.Cr
 	)
 
 	if prod, err = o.productCommander.CreateProduct(ctx, req); err != nil {
+		if errors.Is(err, postgres.ErrConflict) {
+			return nil, status.Errorf(codes.AlreadyExists, err.Error())
+		}
+
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
@@ -51,6 +57,10 @@ func (o *ProductCommanderHandler) CreateCategory(ctx context.Context, req *api.C
 	)
 
 	if newCategory, err = o.categoryCommander.CreateCategory(ctx, req); err != nil {
+		if errors.Is(err, postgres.ErrConflict) {
+			return nil, status.Errorf(codes.AlreadyExists, err.Error())
+		}
+
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
@@ -64,6 +74,10 @@ func (o *ProductCommanderHandler) CreateBrand(ctx context.Context, req *api.Crea
 	)
 
 	if newBrand, err = o.brandCommander.CreateBrand(ctx, req); err != nil {
+		if errors.Is(err, postgres.ErrConflict) {
+			return nil, status.Errorf(codes.AlreadyExists, err.Error())
+		}
+
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 

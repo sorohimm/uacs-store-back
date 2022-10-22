@@ -41,9 +41,8 @@ func (o *CategoryRepo) CreateCategory(ctx context.Context, request *api.CreateCa
 	}()
 
 	category := NewCategoryFromRequest(request)
-
 	if id, err = createCategory(ctx, o.schema, tx, category); err != nil {
-		return nil, err
+		return nil, postgres.ResolveError(err)
 	}
 	category.ID = id
 

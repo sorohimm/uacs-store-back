@@ -44,7 +44,7 @@ func (o *BrandRepo) CreateBrand(ctx context.Context, request *api.CreateBrandReq
 	brand := NewBrandFromRequest(request)
 
 	if id, err = createBrand(ctx, o.schema, tx, brand); err != nil {
-		return nil, err
+		return nil, postgres.ResolveError(err)
 	}
 	brand.ID = id
 

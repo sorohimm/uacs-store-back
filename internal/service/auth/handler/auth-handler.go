@@ -4,6 +4,7 @@ package handler
 import (
 	"context"
 	"errors"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
 	"github.com/sorohimm/uacs-store-back/pkg/api"
 	"github.com/sorohimm/uacs-store-back/pkg/log"
 	"time"
@@ -58,7 +59,6 @@ func (o *AuthHandler) Registration(ctx context.Context, req *api.RegistrationReq
 
 	var (
 		err error
-		_   *repo.User
 	)
 
 	salt := security.GenerateSalt(req.Password)
@@ -68,18 +68,16 @@ func (o *AuthHandler) Registration(ctx context.Context, req *api.RegistrationReq
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
-	repoReq := repo.CreateUserRequest{
-		User: repo.User{
-			Username: req.Username,
-			Email:    req.Email,
-			Password: hashPwd,
-			Role:     req.Role,
-		},
-		PwdSalt: salt,
-	}
+	user := repo.NewUser().
+		SetUsername(req.Username).
+		SetEmail(req.Email).
+		SetPassword(hashPwd).
+		SetRole("USER")
 
-	if _, err = o.authRepoCommander.CreateUser(ctx, &repoReq); err != nil {
-		if errors.Is(err, repo.ErrUserAlreadyExists) {
+	repoReq := repo.NewCreateUserRequest().SetUser(*user).SetSalt(salt)
+
+	if _, err = o.authRepoCommander.CreateUser(ctx, repoReq); err != nil {
+		if errors.Is(err, postgres.ErrConflict) {
 			return nil, status.Errorf(codes.AlreadyExists, err.Error())
 		}
 		return nil, status.Errorf(codes.Internal, err.Error())
@@ -97,7 +95,7 @@ func (o *AuthHandler) Login(ctx context.Context, req *api.LoginRequest) (*empty.
 		err         error
 	)
 	if credentials, err = o.authRepoRequester.GetUserCredentialByUsername(ctx, req.Username); err != nil {
-		if errors.Is(err, repo.ErrNotFound) {
+		if errors.Is(err, postgres.ErrNotFound) {
 			return nil, status.Errorf(codes.Unauthenticated, err.Error())
 		}
 		return nil, status.Errorf(codes.Internal, err.Error())

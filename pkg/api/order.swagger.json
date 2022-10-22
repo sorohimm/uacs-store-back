@@ -83,6 +83,37 @@
         ]
       }
     },
+    "/v1/cart/{id}": {
+      "get": {
+        "operationId": "CartServiceCommander_GetCart",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/uacs_storeCart"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "CartServiceCommander"
+        ]
+      }
+    },
     "/v1/order": {
       "post": {
         "operationId": "OrderServiceCommander_SubmitOrder",
@@ -165,6 +196,14 @@
         },
         "mobile": {
           "type": "string"
+        }
+      }
+    },
+    "uacs_storeCart": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "$ref": "#/definitions/uacs_storeCartItem"
         }
       }
     },

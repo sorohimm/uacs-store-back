@@ -4,6 +4,7 @@ package handler
 import (
 	"context"
 	"errors"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
 	"github.com/sorohimm/uacs-store-back/pkg/api"
@@ -30,7 +31,7 @@ type ProductRequesterHandler struct {
 func (o *ProductRequesterHandler) GetProduct(ctx context.Context, req *api.ProductRequest) (*api.ProductResponse, error) {
 	prod, err := o.productRequester.GetProductByID(ctx, req.GetId())
 	if err != nil {
-		if errors.Is(err, product.ErrNotFound) {
+		if errors.Is(err, postgres.ErrNotFound) {
 			return nil, status.Errorf(codes.NotFound, err.Error())
 		}
 		return nil, status.Errorf(codes.Internal, err.Error())
@@ -41,7 +42,7 @@ func (o *ProductRequesterHandler) GetProduct(ctx context.Context, req *api.Produ
 
 func (o *ProductRequesterHandler) GetAllProducts(ctx context.Context, req *api.AllProductsRequest) (*api.AllProductsResponse, error) {
 	limit := req.GetLimit()
-	offset := req.GetPage()*limit - limit
+	offset := offset(limit, offset(limit, req.GetPage()))
 
 	var (
 		prod *dto.Products
@@ -62,11 +63,15 @@ func (o *ProductRequesterHandler) GetAllProducts(ctx context.Context, req *api.A
 	}
 
 	if err != nil {
-		if errors.Is(err, product.ErrNotFound) {
+		if errors.Is(err, postgres.ErrNotFound) {
 			return nil, status.Errorf(codes.NotFound, err.Error())
 		}
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
 	return prod.ToAPIResponse(), nil
+}
+
+func offset(limit int64, page int64) int64 {
+	return page*limit - limit
 }

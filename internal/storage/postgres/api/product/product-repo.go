@@ -3,8 +3,6 @@ package product
 
 import (
 	"context"
-	"errors"
-
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 
@@ -13,8 +11,6 @@ import (
 	"github.com/sorohimm/uacs-store-back/pkg/api"
 	"github.com/sorohimm/uacs-store-back/pkg/log"
 )
-
-var ErrNotFound = errors.New("not found")
 
 func NewProductRepo(schema string, pool *pgxpool.Pool) *ProductRepo {
 	return &ProductRepo{
@@ -58,10 +54,7 @@ FROM ` + o.schema + `.` + postgres.ProductTableName + ` WHERE id=$1` // TODO: ad
 		&prod.Name,
 		&prod.Price,
 	); err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, ErrNotFound
-		}
-		return nil, err
+		return nil, postgres.ResolveError(err)
 	}
 
 	var info []*dto.ProductInfo
@@ -194,10 +187,7 @@ func (o *ProductRepo) scanAllProducts(rows pgx.Rows) (*dto.Products, error) {
 			&prod.Price,
 			&prod.Img,
 		); err != nil {
-			if errors.Is(err, pgx.ErrNoRows) {
-				return nil, ErrNotFound
-			}
-			return nil, err
+			return nil, postgres.ResolveError(err)
 		}
 		products = append(products, &prod)
 	}
@@ -225,13 +215,13 @@ func (o *ProductRepo) CreateProduct(ctx context.Context, request *api.CreateProd
 	id, err := createProduct(ctx, o.schema, tx, product)
 	if err != nil {
 		logger.Debugf("create api err: %s", err)
-		return nil, err
+		return nil, postgres.ResolveError(err)
 	}
 	product.SetID(id)
 
 	if err = addProductInfo(ctx, o.schema, tx, product.Info, product.ID); err != nil {
 		logger.Debugf("add api info err: %s", err)
-		return nil, err
+		return nil, postgres.ResolveError(err)
 	}
 
 	return product, nil

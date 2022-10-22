@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CartServiceCommanderClient interface {
+	GetCart(ctx context.Context, in *CartReq, opts ...grpc.CallOption) (*Cart, error)
 	AddCartItem(ctx context.Context, in *CartItem, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteCartItem(ctx context.Context, in *CartItem, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
@@ -33,6 +34,15 @@ type cartServiceCommanderClient struct {
 
 func NewCartServiceCommanderClient(cc grpc.ClientConnInterface) CartServiceCommanderClient {
 	return &cartServiceCommanderClient{cc}
+}
+
+func (c *cartServiceCommanderClient) GetCart(ctx context.Context, in *CartReq, opts ...grpc.CallOption) (*Cart, error) {
+	out := new(Cart)
+	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.CartServiceCommander/GetCart", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *cartServiceCommanderClient) AddCartItem(ctx context.Context, in *CartItem, opts ...grpc.CallOption) (*emptypb.Empty, error) {
@@ -57,6 +67,7 @@ func (c *cartServiceCommanderClient) DeleteCartItem(ctx context.Context, in *Car
 // All implementations must embed UnimplementedCartServiceCommanderServer
 // for forward compatibility
 type CartServiceCommanderServer interface {
+	GetCart(context.Context, *CartReq) (*Cart, error)
 	AddCartItem(context.Context, *CartItem) (*emptypb.Empty, error)
 	DeleteCartItem(context.Context, *CartItem) (*emptypb.Empty, error)
 	mustEmbedUnimplementedCartServiceCommanderServer()
@@ -66,6 +77,9 @@ type CartServiceCommanderServer interface {
 type UnimplementedCartServiceCommanderServer struct {
 }
 
+func (UnimplementedCartServiceCommanderServer) GetCart(context.Context, *CartReq) (*Cart, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCart not implemented")
+}
 func (UnimplementedCartServiceCommanderServer) AddCartItem(context.Context, *CartItem) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddCartItem not implemented")
 }
@@ -83,6 +97,24 @@ type UnsafeCartServiceCommanderServer interface {
 
 func RegisterCartServiceCommanderServer(s grpc.ServiceRegistrar, srv CartServiceCommanderServer) {
 	s.RegisterService(&CartServiceCommander_ServiceDesc, srv)
+}
+
+func _CartServiceCommander_GetCart_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CartReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CartServiceCommanderServer).GetCart(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/github.com.sorohimm.uacs_store.CartServiceCommander/GetCart",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CartServiceCommanderServer).GetCart(ctx, req.(*CartReq))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _CartServiceCommander_AddCartItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -128,6 +160,10 @@ var CartServiceCommander_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "github.com.sorohimm.uacs_store.CartServiceCommander",
 	HandlerType: (*CartServiceCommanderServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetCart",
+			Handler:    _CartServiceCommander_GetCart_Handler,
+		},
 		{
 			MethodName: "AddCartItem",
 			Handler:    _CartServiceCommander_AddCartItem_Handler,
