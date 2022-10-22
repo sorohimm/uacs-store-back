@@ -28,27 +28,51 @@ CREATE TABLE if NOT EXISTS users.persistent_logins
 
 CREATE TABLE if NOT EXISTS users.users_address
 (
-    id            SERIAL  NOT NULL,
-    user_id       integer NOT NULL,
-    address_line1 text    NOT NULL,
+    id            SERIAL PRIMARY KEY NOT NULL,
+    user_id       integer            NOT NULL,
+    address_line1 text               NOT NULL,
     address_line2 text,
-    city          text    NOT NULL,
-    postal_code   text    NOT NULL,
+    city          text               NOT NULL,
+    postal_code   text               NOT NULL,
     telephone     text,
     mobile        text
+);
+
+CREATE TABLE if NOT EXISTS users.order
+(
+    id              SERIAL PRIMARY KEY NOT NULL,
+    user_id         integer            NOT NULL,
+    payment_id      integer,
+    total           real               NOT NULL,
+    order_date      text,
+    status          text               NOT NULL,
+    delivery_fee    real               NOT NULL,
+    tracking_number text,
+    created_at      timestamp          NOT NULL,
+    modified_at     timestamp          NOT NULL
+);
+
+CREATE TABLE if NOT EXISTS users.order_items
+(
+    id          SERIAL PRIMARY KEY NOT NULL,
+    order_id    integer            NOT NULL,
+    product_id  integer,
+    quantity    integer            NOT NULL,
+    created_at  timestamp          NOT NULL,
+    modified_at timestamp          NOT NULL
 );
 
 CREATE TABLE if NOT EXISTS users.cart
 (
     id      SERIAL PRIMARY KEY NOT NULL,
-    user_id text               NOT NULL
+    user_id integer            NOT NULL
 );
 
 CREATE TABLE if NOT EXISTS users.cart_item
 (
     id          SERIAL PRIMARY KEY NOT NULL,
-    cart_id     text               NOT NULL,
-    product_id  text               NOT NULL,
+    cart_id     integer            NOT NULL,
+    product_id  integer            NOT NULL,
     quantity    integer            NOT NULL,
     created_at  timestamp          NOT NULL,
     modified_at timestamp          NOT NULL

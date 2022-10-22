@@ -10,7 +10,7 @@ message Order {
   int64 cartId = 20;
 }
 
-service OrderService {
+service OrderServiceCommander {
   rpc NewOrder (Order) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v1/order"

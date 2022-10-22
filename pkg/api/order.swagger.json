@@ -6,7 +6,7 @@
   },
   "tags": [
     {
-      "name": "OrderService"
+      "name": "OrderServiceCommander"
     }
   ],
   "consumes": [
@@ -18,7 +18,7 @@
   "paths": {
     "/v1/order": {
       "post": {
-        "operationId": "OrderService_NewOrder",
+        "operationId": "OrderServiceCommander_NewOrder",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -45,7 +45,7 @@
           }
         ],
         "tags": [
-          "OrderService"
+          "OrderServiceCommander"
         ]
       }
     }

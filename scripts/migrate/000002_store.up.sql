@@ -48,16 +48,4 @@ CREATE TABLE if NOT EXISTS store.brand
     deleted_at  timestamp
 );
 
-CREATE TABLE if NOT EXISTS store.orders
-(
-    id              SERIAL PRIMARY KEY NOT NULL,
-    user_id         text               NOT NULL,
-    total           real               NOT NULL,
-    order_date      text,
-    status          text               NOT NULL,
-    delivery_fee    real               NOT NULL,
-    tracking_number text
-);
-
-
 COMMIT;

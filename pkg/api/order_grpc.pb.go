@@ -19,86 +19,86 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// OrderServiceClient is the client API for OrderService service.
+// OrderServiceCommanderClient is the client API for OrderServiceCommander service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type OrderServiceClient interface {
+type OrderServiceCommanderClient interface {
 	NewOrder(ctx context.Context, in *Order, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
-type orderServiceClient struct {
+type orderServiceCommanderClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewOrderServiceClient(cc grpc.ClientConnInterface) OrderServiceClient {
-	return &orderServiceClient{cc}
+func NewOrderServiceCommanderClient(cc grpc.ClientConnInterface) OrderServiceCommanderClient {
+	return &orderServiceCommanderClient{cc}
 }
 
-func (c *orderServiceClient) NewOrder(ctx context.Context, in *Order, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *orderServiceCommanderClient) NewOrder(ctx context.Context, in *Order, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.OrderService/NewOrder", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.OrderServiceCommander/NewOrder", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// OrderServiceServer is the server API for OrderService service.
-// All implementations must embed UnimplementedOrderServiceServer
+// OrderServiceCommanderServer is the server API for OrderServiceCommander service.
+// All implementations must embed UnimplementedOrderServiceCommanderServer
 // for forward compatibility
-type OrderServiceServer interface {
+type OrderServiceCommanderServer interface {
 	NewOrder(context.Context, *Order) (*emptypb.Empty, error)
-	mustEmbedUnimplementedOrderServiceServer()
+	mustEmbedUnimplementedOrderServiceCommanderServer()
 }
 
-// UnimplementedOrderServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedOrderServiceServer struct {
+// UnimplementedOrderServiceCommanderServer must be embedded to have forward compatible implementations.
+type UnimplementedOrderServiceCommanderServer struct {
 }
 
-func (UnimplementedOrderServiceServer) NewOrder(context.Context, *Order) (*emptypb.Empty, error) {
+func (UnimplementedOrderServiceCommanderServer) NewOrder(context.Context, *Order) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method NewOrder not implemented")
 }
-func (UnimplementedOrderServiceServer) mustEmbedUnimplementedOrderServiceServer() {}
+func (UnimplementedOrderServiceCommanderServer) mustEmbedUnimplementedOrderServiceCommanderServer() {}
 
-// UnsafeOrderServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to OrderServiceServer will
+// UnsafeOrderServiceCommanderServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to OrderServiceCommanderServer will
 // result in compilation errors.
-type UnsafeOrderServiceServer interface {
-	mustEmbedUnimplementedOrderServiceServer()
+type UnsafeOrderServiceCommanderServer interface {
+	mustEmbedUnimplementedOrderServiceCommanderServer()
 }
 
-func RegisterOrderServiceServer(s grpc.ServiceRegistrar, srv OrderServiceServer) {
-	s.RegisterService(&OrderService_ServiceDesc, srv)
+func RegisterOrderServiceCommanderServer(s grpc.ServiceRegistrar, srv OrderServiceCommanderServer) {
+	s.RegisterService(&OrderServiceCommander_ServiceDesc, srv)
 }
 
-func _OrderService_NewOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _OrderServiceCommander_NewOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Order)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrderServiceServer).NewOrder(ctx, in)
+		return srv.(OrderServiceCommanderServer).NewOrder(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/github.com.sorohimm.uacs_store.OrderService/NewOrder",
+		FullMethod: "/github.com.sorohimm.uacs_store.OrderServiceCommander/NewOrder",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrderServiceServer).NewOrder(ctx, req.(*Order))
+		return srv.(OrderServiceCommanderServer).NewOrder(ctx, req.(*Order))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// OrderService_ServiceDesc is the grpc.ServiceDesc for OrderService service.
+// OrderServiceCommander_ServiceDesc is the grpc.ServiceDesc for OrderServiceCommander service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var OrderService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "github.com.sorohimm.uacs_store.OrderService",
-	HandlerType: (*OrderServiceServer)(nil),
+var OrderServiceCommander_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "github.com.sorohimm.uacs_store.OrderServiceCommander",
+	HandlerType: (*OrderServiceCommanderServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "NewOrder",
-			Handler:    _OrderService_NewOrder_Handler,
+			Handler:    _OrderServiceCommander_NewOrder_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
