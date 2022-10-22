@@ -203,7 +203,10 @@
       "type": "object",
       "properties": {
         "items": {
-          "$ref": "#/definitions/uacs_storeCartItem"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/uacs_storeCartItem"
+          }
         }
       }
     },
