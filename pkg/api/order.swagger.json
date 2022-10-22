@@ -1,16 +1,55 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "pkg/api/order/order.proto",
+    "title": "pkg/api/order.proto",
     "version": "version not set"
   },
+  "tags": [
+    {
+      "name": "AuthService"
+    }
+  ],
   "consumes": [
     "application/json"
   ],
   "produces": [
     "application/json"
   ],
-  "paths": {},
+  "paths": {
+    "/v1/auth/registration": {
+      "post": {
+        "operationId": "AuthService_NewOrder",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/uacs_storeOrder"
+            }
+          }
+        ],
+        "tags": [
+          "AuthService"
+        ]
+      }
+    }
+  },
   "definitions": {
     "protobufAny": {
       "type": "object",
@@ -36,6 +75,19 @@
           "items": {
             "$ref": "#/definitions/protobufAny"
           }
+        }
+      }
+    },
+    "uacs_storeOrder": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "cartId": {
+          "type": "string",
+          "format": "int64"
         }
       }
     }

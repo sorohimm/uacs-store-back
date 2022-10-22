@@ -79,12 +79,18 @@ auth-linux: auth
 #	GOARCH=wasm GOOS=js go build -o ./build/web/app.wasm ./cmd/frontend
 #	go build -o ./build/frontend ./cmd/frontend
 
+#### gRPC all proto generation
+.PHONY: gen
+gen: gen-product
+gen: gen-order
+gen: gen-auth
+
 
 #### gRPC product api generation
-SRC = "./pkg/api/product"
+SRC = "./pkg/api"
 DST = "."
 .PHONY: gen-product
-gen-product: PRODUCT_SRC:= "./pkg/api/product"
+gen-product: PRODUCT_SRC:= "./pkg/api"
 gen-product: PRODUCT_DEST:= "."
 gen-product:
 	protoc -I=. -I$(PRODUCT_SRC) --go_out=$(PRODUCT_DEST) --go_opt=paths=source_relative $(PRODUCT_SRC)/store.proto
@@ -94,10 +100,10 @@ gen-product:
 
 
 #### gRPC order api generation
-SRC = "./pkg/api/order"
+SRC = "./pkg/api"
 DST = "."
 .PHONY: gen-order
-gen-order: ORDER_SRC:= "./pkg/api/order"
+gen-order: ORDER_SRC:= "./pkg/api"
 gen-order: ORDER_DEST:= "."
 gen-order:
 	protoc -I=. -I$(ORDER_SRC) --go_out=$(ORDER_DEST) --go_opt=paths=source_relative $(ORDER_SRC)/order.proto
@@ -107,10 +113,10 @@ gen-order:
 
 
 #### gRPC auth api generation
-SRC = "./pkg/api/auth"
+SRC = "./pkg/api"
 DST = "."
 .PHONY: gen-auth
-gen-auth: AUTH_SRC:= "./pkg/api/auth"
+gen-auth: AUTH_SRC:= "./pkg/api"
 gen-auth: AUTH_DEST:= "."
 gen-auth:
 	protoc -I=. -I$(AUTH_SRC) --go_out=$(AUTH_DEST) --go_opt=paths=source_relative $(AUTH_SRC)/auth.proto
