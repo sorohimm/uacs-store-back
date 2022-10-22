@@ -207,17 +207,6 @@ func (o *ProductRepo) scanAllProducts(rows pgx.Rows) (*dto.Products, error) {
 }
 
 func (o *ProductRepo) CreateProduct(ctx context.Context, request *api.CreateProductRequest) (*dto.Product, error) {
-	sql := `
-INSERT INTO ` + o.schema + `.` + postgres.ProductTableName + `
-(
-name,
-price,
-brand_id,
-type_id
-)
-VALUES  ($1,$2,$3,$4)
-RETURNING id;` // Todo: add img field
-
 	var (
 		tx     pgx.Tx
 		err    error
@@ -233,18 +222,41 @@ RETURNING id;` // Todo: add img field
 		}
 	}()
 
-	row := tx.QueryRow(ctx, sql, request.Name, request.Price, request.BrandId, request.TypeId)
-
-	var id int64
-	if err = row.Scan(&id); err != nil {
+	product := dto.NewProductFromRequest(request)
+	id, err := createProduct(ctx, o.schema, tx, product)
+	if err != nil {
+		logger.Debugf("create product err: %s", err)
 		return nil, err
 	}
+	product.SetID(id)
 
-	product := dto.NewProductFromRequest(request).SetID(id)
-
-	if err = addInfo(ctx, o.schema, tx, product.Info, product.ID); err != nil {
+	if err = addProductInfo(ctx, o.schema, tx, product.Info, product.ID); err != nil {
+		logger.Debugf("add product info err: %s", err)
 		return nil, err
 	}
 
 	return product, nil
+}
+
+// createProduct inserts new product and returns id
+func createProduct(ctx context.Context, schema string, tx pgx.Tx, product *dto.Product) (int64, error) {
+	sql := `
+INSERT INTO ` + schema + `.` + postgres.ProductTableName + `
+(
+name,
+price,
+brand_id,
+type_id
+)
+VALUES  ($1,$2,$3,$4)
+RETURNING id;` // Todo: add img field
+
+	row := tx.QueryRow(ctx, sql, product.Name, product.Price, product.BrandID, product.TypeID)
+
+	var id int64
+	if err := row.Scan(&id); err != nil {
+		return 0, err
+	}
+
+	return id, nil
 }

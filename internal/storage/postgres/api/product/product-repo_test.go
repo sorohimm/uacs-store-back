@@ -27,6 +27,7 @@ var (
 func TestProductRepo(t *testing.T) {
 	initDatabase(t, testPostgresURI)
 
+	dropDatabase(t, testPostgresURI)
 }
 
 const pathToSql = "../../../../scripts/migrate"
