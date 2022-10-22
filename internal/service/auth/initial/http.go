@@ -60,7 +60,7 @@ func HTTP(ctx context.Context, cnf *config.Config, registrar HTTPRegistrar) (fun
 	httpMux.Handle("/", gwMux)
 
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
+		AllowedOrigins:   []string{"*"}, // TODO: from config
 		AllowCredentials: true,
 		AllowedMethods:   []string{http.MethodGet, http.MethodPost},
 	})

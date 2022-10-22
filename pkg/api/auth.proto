@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package github.com.sorohimm.uacs_store;
-option go_package = "github.com/sorohimm/shop/pkg/auth";
+option go_package = "github.com/sorohimm/shop/pkg/api";
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";

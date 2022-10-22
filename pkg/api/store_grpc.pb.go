@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.21.5
-// source: pkg/api/product/store.proto
+// source: pkg/api/store.proto
 
 package api
 
@@ -137,7 +137,7 @@ var StoreServiceRequester_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "pkg/api/product/store.proto",
+	Metadata: "pkg/api/store.proto",
 }
 
 // StoreServiceCommanderClient is the client API for StoreServiceCommander service.
@@ -295,5 +295,5 @@ var StoreServiceCommander_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "pkg/api/product/store.proto",
+	Metadata: "pkg/api/store.proto",
 }

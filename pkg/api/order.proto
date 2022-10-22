@@ -4,16 +4,18 @@ package github.com.sorohimm.uacs_store;
 option go_package = "github.com/sorohimm/uacs-store-back/pkg/api";
 
 import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
 
-message Product {
-  int64 id = 10;
+message Order {
+  int64 userId = 10;
+  int64 cartId = 20;
 }
 
-message Cart {
-  repeated Product products = 10;
-}
-
-message NewOrder {
-  int64 user_id = 10;
-  Cart cart = 20;
+service AuthService {
+  rpc NewOrder (Order) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1/auth/registration"
+      body: "*"
+    };
+  };
 }

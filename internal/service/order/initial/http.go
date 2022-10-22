@@ -4,6 +4,7 @@ package initial
 import (
 	"context"
 	"fmt"
+	"github.com/rs/cors"
 	"math"
 	"net"
 	"net/http"
@@ -58,6 +59,13 @@ func HTTP(ctx context.Context, cnf *config.Config, registrar HTTPRegistrar) (fun
 	gwMux := runtime.NewServeMux(grpcGatewayOptions()...)
 	httpMux.Handle("/", gwMux)
 
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"}, // TODO: from config
+		AllowCredentials: true,
+		AllowedMethods:   []string{http.MethodGet, http.MethodPost},
+	})
+	handler := c.Handler(httpMux)
+
 	if httpServer, err = NewHTTPServer(httpc); err != nil {
 		return nil, nil, err
 	}
@@ -75,7 +83,7 @@ func HTTP(ctx context.Context, cnf *config.Config, registrar HTTPRegistrar) (fun
 		}
 	}
 
-	httpServer.Handler = httpMux
+	httpServer.Handler = handler
 
 	exec := func() error {
 		httpAddr := net.JoinHostPort(cnf.HTTP.Host, strconv.Itoa(cnf.HTTP.Port))
