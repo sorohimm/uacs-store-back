@@ -6,6 +6,9 @@
   },
   "tags": [
     {
+      "name": "CartServiceCommander"
+    },
+    {
       "name": "OrderServiceCommander"
     }
   ],
@@ -16,9 +19,73 @@
     "application/json"
   ],
   "paths": {
+    "/v1/cart/item": {
+      "post": {
+        "operationId": "CartServiceCommander_AddCartItem",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/uacs_storeCartItem"
+            }
+          }
+        ],
+        "tags": [
+          "CartServiceCommander"
+        ]
+      },
+      "patch": {
+        "operationId": "CartServiceCommander_DeleteCartItem",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/uacs_storeCartItem"
+            }
+          }
+        ],
+        "tags": [
+          "CartServiceCommander"
+        ]
+      }
+    },
     "/v1/order": {
       "post": {
-        "operationId": "OrderServiceCommander_NewOrder",
+        "operationId": "OrderServiceCommander_SubmitOrder",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -78,12 +145,55 @@
         }
       }
     },
+    "uacs_storeAddress": {
+      "type": "object",
+      "properties": {
+        "addressLine1": {
+          "type": "string"
+        },
+        "addressLine2": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "telephone": {
+          "type": "string"
+        },
+        "mobile": {
+          "type": "string"
+        }
+      }
+    },
+    "uacs_storeCartItem": {
+      "type": "object",
+      "properties": {
+        "cartId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "productId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "quantity": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
     "uacs_storeOrder": {
       "type": "object",
       "properties": {
         "cartId": {
           "type": "string",
           "format": "int64"
+        },
+        "addr": {
+          "$ref": "#/definitions/uacs_storeAddress"
         }
       }
     }

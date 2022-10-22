@@ -2,14 +2,18 @@ package handler
 
 import (
 	"context"
-	"github.com/sorohimm/uacs-store-back/pkg/api"
+
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
+
+	"github.com/sorohimm/uacs-store-back/pkg/api"
 )
 
 type OrderCommanderHandler struct {
 	api.UnimplementedOrderServiceCommanderServer
 }
 
-func (o *OrderCommanderHandler) NewOrder(ctx context.Context, req *api.Order) (*emptypb.Empty, error) {
-	return nil, nil
+func (o *OrderCommanderHandler) SubmitOrder(ctx context.Context, req *api.Order) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SubmitOrder not implemented")
 }
