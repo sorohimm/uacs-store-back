@@ -6,7 +6,7 @@
   },
   "tags": [
     {
-      "name": "AuthService"
+      "name": "OrderService"
     }
   ],
   "consumes": [
@@ -16,9 +16,9 @@
     "application/json"
   ],
   "paths": {
-    "/v1/auth/registration": {
+    "/v1/order": {
       "post": {
-        "operationId": "AuthService_NewOrder",
+        "operationId": "OrderService_NewOrder",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -45,7 +45,7 @@
           }
         ],
         "tags": [
-          "AuthService"
+          "OrderService"
         ]
       }
     }
@@ -81,10 +81,6 @@
     "uacs_storeOrder": {
       "type": "object",
       "properties": {
-        "userId": {
-          "type": "string",
-          "format": "int64"
-        },
         "cartId": {
           "type": "string",
           "format": "int64"

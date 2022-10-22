@@ -7,14 +7,13 @@ import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 
 message Order {
-  int64 userId = 10;
   int64 cartId = 20;
 }
 
-service AuthService {
+service OrderService {
   rpc NewOrder (Order) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/v1/auth/registration"
+      post: "/v1/order"
       body: "*"
     };
   };
