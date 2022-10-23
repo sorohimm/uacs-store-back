@@ -83,7 +83,9 @@ auth-linux: auth
 .PHONY: gen
 gen: gen-product
 gen: gen-order
+gen: gen-cart
 gen: gen-auth
+
 
 
 #### gRPC product api generation
@@ -110,6 +112,19 @@ gen-order:
 	protoc -I=. -I$(ORDER_SRC) --go-grpc_out=$(ORDER_DEST) --go-grpc_opt paths=source_relative $(ORDER_SRC)/order.proto
 	protoc -I=. -I$(ORDER_SRC) --grpc-gateway_out=$(ORDER_DEST)  --grpc-gateway_opt=logtostderr=true --grpc-gateway_opt=paths=source_relative $(ORDER_SRC)/order.proto
 	protoc -I=. -I$(ORDER_SRC) --openapiv2_out=$(ORDER_DEST) --openapiv2_opt=logtostderr=true $(ORDER_SRC)/order.proto
+
+
+#### gRPC cart api generation
+SRC = "./pkg/api"
+DST = "."
+.PHONY: gen-cart
+gen-cart: CART_SRC:= "./pkg/api"
+gen-cart: CART_DEST:= "."
+gen-cart:
+	protoc -I=. -I$(CART_SRC) --go_out=$(CART_DEST) --go_opt=paths=source_relative $(CART_SRC)/cart.proto
+	protoc -I=. -I$(CART_SRC) --go-grpc_out=$(CART_DEST) --go-grpc_opt paths=source_relative $(CART_SRC)/cart.proto
+	protoc -I=. -I$(CART_SRC) --grpc-gateway_out=$(CART_DEST)  --grpc-gateway_opt=logtostderr=true --grpc-gateway_opt=paths=source_relative $(CART_SRC)/cart.proto
+	protoc -I=. -I$(CART_SRC) --openapiv2_out=$(CART_DEST) --openapiv2_opt=logtostderr=true $(CART_SRC)/cart.proto
 
 
 #### gRPC auth api generation

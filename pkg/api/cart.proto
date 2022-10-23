@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package github.com.sorohimm.uacs_store;
+
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+
+option go_package = "github.com/sorohimm/shop/pkg/api";
+
+message CartItem {
+    int64 id = 10;
+    int64 cart_id = 20;
+    int64 product_id = 30;
+    int64 sku = 31;
+    string name = 32;
+    float price = 33;
+    int64 quantity = 40;
+}
+
+message Cart {
+    int64 id = 10;
+    repeated CartItem items = 20;
+}
+
+message NewCart {
+    int64 user_id = 10;
+}
+
+message CartReq {
+    int64 id = 10;
+}
+
+message Customer {
+    int64 id = 10;
+    string email = 20;
+    string first_name = 30;
+    string last_name = 40;
+    string phone = 50;
+}
+
+message CartInfo {
+    int64 id = 10;
+    Customer customer = 20;
+}
+
+service CartService {
+    rpc CreateCart (Cart) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post: "/v1/cart"
+            body: "*"
+        };
+    }
+
+    rpc Info (CartReq) returns (Cart) {
+        option (google.api.http) = {
+            get: "/v1/cart/info/{id}"
+        };
+    }
+
+    rpc AddCartItem (CartItem) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post: "/v1/cart/item"
+            body: "*"
+        };
+    }
+
+    rpc PatchCartItem (CartItem) returns (Cart) {
+        option (google.api.http) = {
+            patch: "/v1/cart/item"
+            body: "*"
+        };
+    }
+
+    rpc DeleteCartItem (CartItem) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            delete: "/v1/cart/item/{id}"
+        };
+    }
+}

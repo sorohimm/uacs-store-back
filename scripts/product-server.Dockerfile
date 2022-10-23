@@ -3,7 +3,7 @@ LABEL maintainer="sorohimm"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-COPY /build/uacs-store /usr/local/bin/uacs-store
+COPY /build/product /usr/local/bin/product
 
 # http gateway
 EXPOSE 2604/tcp
@@ -11,6 +11,4 @@ EXPOSE 2604/tcp
 # grpc api
 EXPOSE 9000/tcp
 
-WORKDIR /uacs
-
-ENTRYPOINT ["/usr/local/bin/uacs-store"]
+ENTRYPOINT ["/usr/local/bin/product"]
