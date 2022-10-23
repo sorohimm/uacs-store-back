@@ -2,12 +2,12 @@ package auth
 
 import (
 	"context"
-	"github.com/sorohimm/uacs-store-back/pkg/log"
 
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
+	"github.com/sorohimm/uacs-store-back/pkg/log"
 )
 
 func NewAuthRepo(schema string, pool *pgxpool.Pool) *AuthRepo {

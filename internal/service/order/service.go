@@ -3,7 +3,6 @@ package order
 import (
 	"context"
 	"errors"
-	"github.com/sorohimm/uacs-store-back/pkg/api"
 	stdl "log"
 	"os"
 
@@ -14,8 +13,10 @@ import (
 
 	"github.com/sorohimm/uacs-store-back/internal"
 	"github.com/sorohimm/uacs-store-back/internal/service/order/config"
+	"github.com/sorohimm/uacs-store-back/internal/service/order/handler"
 	"github.com/sorohimm/uacs-store-back/internal/service/order/initial"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
+	"github.com/sorohimm/uacs-store-back/pkg/api"
 	"github.com/sorohimm/uacs-store-back/pkg/conf"
 	"github.com/sorohimm/uacs-store-back/pkg/log"
 )
@@ -56,8 +57,8 @@ func (o *Service) initLogger(ctx context.Context, version, built, appName string
 
 func (o *Service) Init(ctx context.Context, appName, version, built string) {
 	var (
-		err error
-		_   *pgxpool.Pool
+		err  error
+		pool *pgxpool.Pool
 	)
 
 	logger := log.FromContext(ctx).Sugar()
@@ -65,15 +66,20 @@ func (o *Service) Init(ctx context.Context, appName, version, built string) {
 	ctx = o.initConfigs(ctx)
 	ctx = o.initLogger(ctx, version, built, appName)
 
-	if _, err = postgres.NewPGXPool(ctx, config.FromContext(ctx).Postgres); err != nil {
+	if pool, err = postgres.NewPGXPool(ctx, config.FromContext(ctx).Postgres); err != nil {
 		logger.Fatalf("failed to init ruleset.RepoRuleset from postgres: %v", err)
 	}
 
 	cfg := config.FromContext(ctx)
 
+	cartHandler := handler.NewCartCommanderHandler(cfg.Postgres.SchemaName, pool)
+	o.Add(initial.Grpc(ctx, func(s *grpc.Server) {
+		api.RegisterCartServiceServer(s, cartHandler)
+	}))
+
 	exec, inter, err := initial.HTTP(ctx, cfg,
 		func(ctx context.Context, mux *runtime.ServeMux, grpcAddr string, opts []grpc.DialOption) error {
-			if err = api.RegisterAuthServiceHandlerFromEndpoint(ctx, mux, grpcAddr, opts); err != nil {
+			if err = api.RegisterCartServiceHandlerFromEndpoint(ctx, mux, grpcAddr, opts); err != nil {
 				return err
 			}
 			return nil

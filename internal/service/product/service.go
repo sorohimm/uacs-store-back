@@ -1,4 +1,4 @@
-// Package api TODO
+// Package product TODO
 package product
 
 import (

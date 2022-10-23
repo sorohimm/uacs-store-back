@@ -57,7 +57,7 @@ CREATE TABLE if NOT EXISTS users.order_items
     id          SERIAL PRIMARY KEY NOT NULL,
     order_id    integer            NOT NULL,
     product_id  integer,
-    quantity    integer            NOT NULL,
+    quantity    smallint           NOT NULL,
     created_at  timestamp          NOT NULL,
     modified_at timestamp          NOT NULL
 );
@@ -73,7 +73,7 @@ CREATE TABLE if NOT EXISTS users.cart_item
     id          SERIAL PRIMARY KEY NOT NULL,
     cart_id     integer            NOT NULL,
     product_id  integer            NOT NULL,
-    quantity    integer            NOT NULL,
+    quantity    smallint           NOT NULL,
     created_at  timestamp          NOT NULL,
     modified_at timestamp          NOT NULL
 );

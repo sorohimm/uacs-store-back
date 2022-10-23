@@ -11,7 +11,7 @@ import (
 )
 
 type OrderCommanderHandler struct {
-	api.UnimplementedOrderServiceCommanderServer
+	api.UnimplementedOrderServiceServer
 }
 
 func (o *OrderCommanderHandler) SubmitOrder(ctx context.Context, req *api.Order) (*emptypb.Empty, error) {

@@ -19,244 +19,280 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// CartServiceCommanderClient is the client API for CartServiceCommander service.
+// CartServiceClient is the client API for CartService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type CartServiceCommanderClient interface {
+type CartServiceClient interface {
 	GetCart(ctx context.Context, in *CartReq, opts ...grpc.CallOption) (*Cart, error)
 	AddCartItem(ctx context.Context, in *CartItem, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	PatchCartItem(ctx context.Context, in *CartItem, opts ...grpc.CallOption) (*Cart, error)
 	DeleteCartItem(ctx context.Context, in *CartItem, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
-type cartServiceCommanderClient struct {
+type cartServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewCartServiceCommanderClient(cc grpc.ClientConnInterface) CartServiceCommanderClient {
-	return &cartServiceCommanderClient{cc}
+func NewCartServiceClient(cc grpc.ClientConnInterface) CartServiceClient {
+	return &cartServiceClient{cc}
 }
 
-func (c *cartServiceCommanderClient) GetCart(ctx context.Context, in *CartReq, opts ...grpc.CallOption) (*Cart, error) {
+func (c *cartServiceClient) GetCart(ctx context.Context, in *CartReq, opts ...grpc.CallOption) (*Cart, error) {
 	out := new(Cart)
-	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.CartServiceCommander/GetCart", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.CartService/GetCart", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *cartServiceCommanderClient) AddCartItem(ctx context.Context, in *CartItem, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *cartServiceClient) AddCartItem(ctx context.Context, in *CartItem, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.CartServiceCommander/AddCartItem", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.CartService/AddCartItem", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *cartServiceCommanderClient) DeleteCartItem(ctx context.Context, in *CartItem, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *cartServiceClient) PatchCartItem(ctx context.Context, in *CartItem, opts ...grpc.CallOption) (*Cart, error) {
+	out := new(Cart)
+	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.CartService/PatchCartItem", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cartServiceClient) DeleteCartItem(ctx context.Context, in *CartItem, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.CartServiceCommander/DeleteCartItem", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.CartService/DeleteCartItem", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// CartServiceCommanderServer is the server API for CartServiceCommander service.
-// All implementations must embed UnimplementedCartServiceCommanderServer
+// CartServiceServer is the server API for CartService service.
+// All implementations must embed UnimplementedCartServiceServer
 // for forward compatibility
-type CartServiceCommanderServer interface {
+type CartServiceServer interface {
 	GetCart(context.Context, *CartReq) (*Cart, error)
 	AddCartItem(context.Context, *CartItem) (*emptypb.Empty, error)
+	PatchCartItem(context.Context, *CartItem) (*Cart, error)
 	DeleteCartItem(context.Context, *CartItem) (*emptypb.Empty, error)
-	mustEmbedUnimplementedCartServiceCommanderServer()
+	mustEmbedUnimplementedCartServiceServer()
 }
 
-// UnimplementedCartServiceCommanderServer must be embedded to have forward compatible implementations.
-type UnimplementedCartServiceCommanderServer struct {
+// UnimplementedCartServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedCartServiceServer struct {
 }
 
-func (UnimplementedCartServiceCommanderServer) GetCart(context.Context, *CartReq) (*Cart, error) {
+func (UnimplementedCartServiceServer) GetCart(context.Context, *CartReq) (*Cart, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCart not implemented")
 }
-func (UnimplementedCartServiceCommanderServer) AddCartItem(context.Context, *CartItem) (*emptypb.Empty, error) {
+func (UnimplementedCartServiceServer) AddCartItem(context.Context, *CartItem) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddCartItem not implemented")
 }
-func (UnimplementedCartServiceCommanderServer) DeleteCartItem(context.Context, *CartItem) (*emptypb.Empty, error) {
+func (UnimplementedCartServiceServer) PatchCartItem(context.Context, *CartItem) (*Cart, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PatchCartItem not implemented")
+}
+func (UnimplementedCartServiceServer) DeleteCartItem(context.Context, *CartItem) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCartItem not implemented")
 }
-func (UnimplementedCartServiceCommanderServer) mustEmbedUnimplementedCartServiceCommanderServer() {}
+func (UnimplementedCartServiceServer) mustEmbedUnimplementedCartServiceServer() {}
 
-// UnsafeCartServiceCommanderServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to CartServiceCommanderServer will
+// UnsafeCartServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to CartServiceServer will
 // result in compilation errors.
-type UnsafeCartServiceCommanderServer interface {
-	mustEmbedUnimplementedCartServiceCommanderServer()
+type UnsafeCartServiceServer interface {
+	mustEmbedUnimplementedCartServiceServer()
 }
 
-func RegisterCartServiceCommanderServer(s grpc.ServiceRegistrar, srv CartServiceCommanderServer) {
-	s.RegisterService(&CartServiceCommander_ServiceDesc, srv)
+func RegisterCartServiceServer(s grpc.ServiceRegistrar, srv CartServiceServer) {
+	s.RegisterService(&CartService_ServiceDesc, srv)
 }
 
-func _CartServiceCommander_GetCart_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CartService_GetCart_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CartReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CartServiceCommanderServer).GetCart(ctx, in)
+		return srv.(CartServiceServer).GetCart(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/github.com.sorohimm.uacs_store.CartServiceCommander/GetCart",
+		FullMethod: "/github.com.sorohimm.uacs_store.CartService/GetCart",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CartServiceCommanderServer).GetCart(ctx, req.(*CartReq))
+		return srv.(CartServiceServer).GetCart(ctx, req.(*CartReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CartServiceCommander_AddCartItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CartService_AddCartItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CartItem)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CartServiceCommanderServer).AddCartItem(ctx, in)
+		return srv.(CartServiceServer).AddCartItem(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/github.com.sorohimm.uacs_store.CartServiceCommander/AddCartItem",
+		FullMethod: "/github.com.sorohimm.uacs_store.CartService/AddCartItem",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CartServiceCommanderServer).AddCartItem(ctx, req.(*CartItem))
+		return srv.(CartServiceServer).AddCartItem(ctx, req.(*CartItem))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CartServiceCommander_DeleteCartItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CartService_PatchCartItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CartItem)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CartServiceCommanderServer).DeleteCartItem(ctx, in)
+		return srv.(CartServiceServer).PatchCartItem(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/github.com.sorohimm.uacs_store.CartServiceCommander/DeleteCartItem",
+		FullMethod: "/github.com.sorohimm.uacs_store.CartService/PatchCartItem",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CartServiceCommanderServer).DeleteCartItem(ctx, req.(*CartItem))
+		return srv.(CartServiceServer).PatchCartItem(ctx, req.(*CartItem))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// CartServiceCommander_ServiceDesc is the grpc.ServiceDesc for CartServiceCommander service.
+func _CartService_DeleteCartItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CartItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CartServiceServer).DeleteCartItem(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/github.com.sorohimm.uacs_store.CartService/DeleteCartItem",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CartServiceServer).DeleteCartItem(ctx, req.(*CartItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// CartService_ServiceDesc is the grpc.ServiceDesc for CartService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var CartServiceCommander_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "github.com.sorohimm.uacs_store.CartServiceCommander",
-	HandlerType: (*CartServiceCommanderServer)(nil),
+var CartService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "github.com.sorohimm.uacs_store.CartService",
+	HandlerType: (*CartServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetCart",
-			Handler:    _CartServiceCommander_GetCart_Handler,
+			Handler:    _CartService_GetCart_Handler,
 		},
 		{
 			MethodName: "AddCartItem",
-			Handler:    _CartServiceCommander_AddCartItem_Handler,
+			Handler:    _CartService_AddCartItem_Handler,
+		},
+		{
+			MethodName: "PatchCartItem",
+			Handler:    _CartService_PatchCartItem_Handler,
 		},
 		{
 			MethodName: "DeleteCartItem",
-			Handler:    _CartServiceCommander_DeleteCartItem_Handler,
+			Handler:    _CartService_DeleteCartItem_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "pkg/api/order.proto",
 }
 
-// OrderServiceCommanderClient is the client API for OrderServiceCommander service.
+// OrderServiceClient is the client API for OrderService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type OrderServiceCommanderClient interface {
+type OrderServiceClient interface {
 	SubmitOrder(ctx context.Context, in *Order, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
-type orderServiceCommanderClient struct {
+type orderServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewOrderServiceCommanderClient(cc grpc.ClientConnInterface) OrderServiceCommanderClient {
-	return &orderServiceCommanderClient{cc}
+func NewOrderServiceClient(cc grpc.ClientConnInterface) OrderServiceClient {
+	return &orderServiceClient{cc}
 }
 
-func (c *orderServiceCommanderClient) SubmitOrder(ctx context.Context, in *Order, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *orderServiceClient) SubmitOrder(ctx context.Context, in *Order, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.OrderServiceCommander/SubmitOrder", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.OrderService/SubmitOrder", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// OrderServiceCommanderServer is the server API for OrderServiceCommander service.
-// All implementations must embed UnimplementedOrderServiceCommanderServer
+// OrderServiceServer is the server API for OrderService service.
+// All implementations must embed UnimplementedOrderServiceServer
 // for forward compatibility
-type OrderServiceCommanderServer interface {
+type OrderServiceServer interface {
 	SubmitOrder(context.Context, *Order) (*emptypb.Empty, error)
-	mustEmbedUnimplementedOrderServiceCommanderServer()
+	mustEmbedUnimplementedOrderServiceServer()
 }
 
-// UnimplementedOrderServiceCommanderServer must be embedded to have forward compatible implementations.
-type UnimplementedOrderServiceCommanderServer struct {
+// UnimplementedOrderServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedOrderServiceServer struct {
 }
 
-func (UnimplementedOrderServiceCommanderServer) SubmitOrder(context.Context, *Order) (*emptypb.Empty, error) {
+func (UnimplementedOrderServiceServer) SubmitOrder(context.Context, *Order) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SubmitOrder not implemented")
 }
-func (UnimplementedOrderServiceCommanderServer) mustEmbedUnimplementedOrderServiceCommanderServer() {}
+func (UnimplementedOrderServiceServer) mustEmbedUnimplementedOrderServiceServer() {}
 
-// UnsafeOrderServiceCommanderServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to OrderServiceCommanderServer will
+// UnsafeOrderServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to OrderServiceServer will
 // result in compilation errors.
-type UnsafeOrderServiceCommanderServer interface {
-	mustEmbedUnimplementedOrderServiceCommanderServer()
+type UnsafeOrderServiceServer interface {
+	mustEmbedUnimplementedOrderServiceServer()
 }
 
-func RegisterOrderServiceCommanderServer(s grpc.ServiceRegistrar, srv OrderServiceCommanderServer) {
-	s.RegisterService(&OrderServiceCommander_ServiceDesc, srv)
+func RegisterOrderServiceServer(s grpc.ServiceRegistrar, srv OrderServiceServer) {
+	s.RegisterService(&OrderService_ServiceDesc, srv)
 }
 
-func _OrderServiceCommander_SubmitOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _OrderService_SubmitOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Order)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrderServiceCommanderServer).SubmitOrder(ctx, in)
+		return srv.(OrderServiceServer).SubmitOrder(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/github.com.sorohimm.uacs_store.OrderServiceCommander/SubmitOrder",
+		FullMethod: "/github.com.sorohimm.uacs_store.OrderService/SubmitOrder",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrderServiceCommanderServer).SubmitOrder(ctx, req.(*Order))
+		return srv.(OrderServiceServer).SubmitOrder(ctx, req.(*Order))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// OrderServiceCommander_ServiceDesc is the grpc.ServiceDesc for OrderServiceCommander service.
+// OrderService_ServiceDesc is the grpc.ServiceDesc for OrderService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var OrderServiceCommander_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "github.com.sorohimm.uacs_store.OrderServiceCommander",
-	HandlerType: (*OrderServiceCommanderServer)(nil),
+var OrderService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "github.com.sorohimm.uacs_store.OrderService",
+	HandlerType: (*OrderServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "SubmitOrder",
-			Handler:    _OrderServiceCommander_SubmitOrder_Handler,
+			Handler:    _OrderService_SubmitOrder_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

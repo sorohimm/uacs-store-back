@@ -8,9 +8,10 @@ import "google/api/annotations.proto";
 option go_package = "github.com/sorohimm/uacs-store-back/pkg/api";
 
 message CartItem {
-  int64 cart_id = 10;
-  int64 product_id = 20;
-  int64 quantity = 30;
+  int64 id = 10;
+  int64 cart_id = 20;
+  int64 product_id = 30;
+  int64 quantity = 40;
 }
 
 message Cart {
@@ -22,7 +23,7 @@ message CartReq {
   int64 id = 10;
 }
 
-service CartServiceCommander {
+service CartService {
   rpc GetCart (CartReq) returns (Cart) {
     option (google.api.http) = {
       get: "/v1/cart/{id}"
@@ -36,10 +37,16 @@ service CartServiceCommander {
     };
   }
 
-  rpc DeleteCartItem (CartItem) returns (google.protobuf.Empty) {
+  rpc PatchCartItem (CartItem) returns (Cart) {
     option (google.api.http) = {
       patch: "/v1/cart/item"
       body: "*"
+    };
+  }
+
+  rpc DeleteCartItem (CartItem) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v1/cart/item/{id}"
     };
   }
 }
@@ -58,7 +65,7 @@ message Order {
   Address addr = 20;
 }
 
-service OrderServiceCommander {
+service OrderService {
   rpc SubmitOrder (Order) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v1/order"
