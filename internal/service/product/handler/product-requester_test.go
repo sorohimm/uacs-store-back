@@ -181,7 +181,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		require.Equal(t, codes.NotFound, status.Code(err))
 	})
 
-	t.Run("request product with brandId and with typeId (no err)", func(t *testing.T) {
+	t.Run("request product with brand_id and with type_id (no err)", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &api.AllProductsRequest{
@@ -224,7 +224,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		require.Equal(t, resp, mockResp.ToAPIResponse())
 	})
 
-	t.Run("request product with brandId and with typeId (Internal err)", func(t *testing.T) {
+	t.Run("request product with brand_id and with type_id (Internal err)", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &api.AllProductsRequest{
@@ -247,7 +247,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		require.Equal(t, codes.Internal, status.Code(err))
 	})
 
-	t.Run("request product with brandId and with typeId (Internal err)", func(t *testing.T) {
+	t.Run("request product with brand_id and with type_id (Internal err)", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &api.AllProductsRequest{
@@ -270,7 +270,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		require.Equal(t, codes.NotFound, status.Code(err))
 	})
 
-	t.Run("request product with brandId and without typeId (no err)", func(t *testing.T) {
+	t.Run("request product with brand_id and without type_id (no err)", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &api.AllProductsRequest{
@@ -312,7 +312,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		require.Equal(t, resp, mockResp.ToAPIResponse())
 	})
 
-	t.Run("request product with brandId and without typeId (Internal err)", func(t *testing.T) {
+	t.Run("request product with brand_id and without type_id (Internal err)", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &api.AllProductsRequest{
@@ -334,7 +334,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		require.Equal(t, codes.Internal, status.Code(err))
 	})
 
-	t.Run("request product with brandId and without typeId (NotFoundErr err)", func(t *testing.T) {
+	t.Run("request product with brand_id and without type_id (NotFoundErr err)", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &api.AllProductsRequest{
@@ -356,7 +356,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		require.Equal(t, codes.NotFound, status.Code(err))
 	})
 
-	t.Run("request product with typeId and without brandId (no err)", func(t *testing.T) {
+	t.Run("request product with type_id and without brand_id (no err)", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &api.AllProductsRequest{
@@ -398,7 +398,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		require.Equal(t, resp, mockResp.ToAPIResponse())
 	})
 
-	t.Run("request product with typeId and without brandId (Internal err)", func(t *testing.T) {
+	t.Run("request product with type_id and without brand_id (Internal err)", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &api.AllProductsRequest{
@@ -420,7 +420,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		require.Equal(t, codes.Internal, status.Code(err))
 	})
 
-	t.Run("request product with typeId and without brandId (NotFound err)", func(t *testing.T) {
+	t.Run("request product with type_id and without brand_id (NotFound err)", func(t *testing.T) {
 		ctx := context.Background()
 
 		req := &api.AllProductsRequest{

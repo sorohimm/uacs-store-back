@@ -1,19 +1,21 @@
 syntax = "proto3";
 
 package github.com.sorohimm.uacs_store;
+
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+
 option go_package = "github.com/sorohimm/uacs-store-back/pkg/api";
 
-import "google/api/annotations.proto";
-import "google/protobuf/empty.proto";
-
 message CartItem {
-  int64 cartId = 10;
-  int64 productId = 20;
+  int64 cart_id = 10;
+  int64 product_id = 20;
   int64 quantity = 30;
 }
 
 message Cart {
-  repeated CartItem items = 10;
+  int64 id = 10;
+  repeated CartItem items = 20;
 }
 
 message CartReq {
@@ -52,7 +54,7 @@ message Address {
 }
 
 message Order {
-  int64 cartId = 10;
+  int64 cart_id = 10;
   Address addr = 20;
 }
 

@@ -23,11 +23,11 @@ func (o *Repo) GetCart(ctx context.Context) (*Cart, error) {
 	return nil, nil
 }
 
-func getCart(ctx context.Context, schema string, tx pgx.Tx) error {
-	return nil
+func getCart(ctx context.Context, schema string, tx pgx.Tx) (*Cart, error) {
+	return nil, nil
 }
 
-func (o *Repo) DeleteItemFromCart(ctx context.Context) error {
+func (o *Repo) DeleteItemFromCart(ctx context.Context, api.Delete) error {
 	return nil
 }
 

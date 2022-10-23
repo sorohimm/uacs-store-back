@@ -3,8 +3,6 @@ package auth
 
 import (
 	"context"
-	"errors"
-
 	"github.com/jackc/pgx/v4"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
 )
@@ -49,9 +47,6 @@ WHERE user_id=$1
 	row := tx.QueryRow(ctx, sql, userID)
 	var salt string
 	if err := row.Scan(&salt); err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return "", ErrNotFound
-		}
 		return "", err
 	}
 	return salt, nil
@@ -92,9 +87,6 @@ WHERE id=$1
 	row := tx.QueryRow(ctx, sql, userID)
 	user := User{ID: userID}
 	if err := row.Scan(&user.Username, &user.Email, &user.Password, &user.Role); err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, ErrNotFound
-		}
 		return nil, err
 	}
 
@@ -114,9 +106,6 @@ WHERE username=$1
 	row := tx.QueryRow(ctx, sql, username)
 	user := User{Username: username}
 	if err := row.Scan(&user.ID, &user.Email, &user.Password, &user.Role); err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, ErrNotFound
-		}
 		return nil, err
 	}
 

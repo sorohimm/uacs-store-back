@@ -1,98 +1,99 @@
 syntax = "proto3";
 
 package github.com.sorohimm.uacs_store;
-option go_package = "github.com/sorohimm/uacs-store-back/pkg/api";
 
 import "google/api/annotations.proto";
 
+option go_package = "github.com/sorohimm/uacs-store-back/pkg/api";
+
 message CreateProductRequest {
-  string name = 10;
-  float price = 20;
-  int64 brandId = 30;
-  int64 typeId = 40;
-  repeated ProductInfo info = 50;
+    string name = 10;
+    float price = 20;
+    int64 brand_id = 30;
+    int64 type_id = 40;
+    repeated ProductInfo info = 50;
 }
 
 message ProductInfo {
-  int64  product_id = 10;
-  string title = 20;
-  string description = 30;
+    int64 product_id = 10;
+    string title = 20;
+    string description = 30;
 }
 
 message ProductRequest {
-  int64 id = 10;
+    int64 id = 10;
 }
 
 message ProductResponse {
-  int64 id = 10;
-  string name = 20;
-  float price = 30;
-  string img = 40;
-  repeated ProductInfo info = 50;
+    int64 id = 10;
+    string name = 20;
+    float price = 30;
+    string img = 40;
+    repeated ProductInfo info = 50;
 }
 
 message AllProductsRequest {
-  int64 brand_id = 10;
-  int64 type_id = 20;
-  int64 limit = 30;
-  int64 page = 40;
+    int64 brand_id = 10;
+    int64 type_id = 20;
+    int64 limit = 30;
+    int64 page = 40;
 }
 
 message AllProductsResponse {
-  repeated ProductResponse products = 10;
+    repeated ProductResponse products = 10;
 }
 
 message CreateBrandRequest {
-  string name = 20;
+    string name = 20;
 }
 
 message BrandResponse {
-  int64 id = 10;
-  string name = 20;
+    int64 id = 10;
+    string name = 20;
 }
 
 message CreateCategoryRequest {
-  string name = 20;
+    string name = 20;
 }
 
 message CategoryResponse {
-  int64 id = 10;
-  string name = 20;
+    int64 id = 10;
+    string name = 20;
 }
 
 service StoreServiceRequester {
-  rpc GetProduct (ProductRequest) returns (ProductResponse) {
-    option (google.api.http) = {
-      get: "/v1/api/{id}"
+    rpc GetProduct (ProductRequest) returns (ProductResponse) {
+        option (google.api.http) = {
+            get: "/v1/api/{id}"
+        };
     };
-  };
 
-  rpc GetAllProducts (AllProductsRequest) returns (AllProductsResponse) {
-    option (google.api.http) = {
-      get: "/v1/api"
+    rpc GetAllProducts (AllProductsRequest) returns (AllProductsResponse) {
+        option (google.api.http) = {
+            get: "/v1/api"
+        };
     };
-  };
 }
 
 service StoreServiceCommander {
-  rpc CreateProduct (CreateProductRequest) returns (ProductResponse) {
-    option (google.api.http) = {
-      post: "/v1/api"
-      body: "*"
+    rpc CreateProduct (CreateProductRequest) returns (ProductResponse) {
+        option (google.api.http) = {
+            post: "/v1/api"
+            body: "*"
+        };
     };
-  };
 
-  rpc CreateBrand (CreateBrandRequest) returns (BrandResponse) {
-    option (google.api.http) = {
-      post: "/v1/brand"
-      body: "*"
+    rpc CreateBrand (CreateBrandRequest) returns (BrandResponse) {
+        option (google.api.http) = {
+            post: "/v1/brand"
+            body: "*"
+        };
     };
-  };
 
-  rpc CreateCategory (CreateCategoryRequest) returns (CategoryResponse) {
-    option (google.api.http) = {
-      post: "/v1/category"
-      body: "*"
+    rpc CreateCategory (CreateCategoryRequest) returns (CategoryResponse) {
+        option (google.api.http) = {
+            post: "/v1/category"
+            body: "*"
+        };
     };
-  };
 }

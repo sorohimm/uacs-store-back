@@ -202,6 +202,10 @@
     "uacs_storeCart": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
         "items": {
           "type": "array",
           "items": {
