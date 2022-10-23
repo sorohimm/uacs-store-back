@@ -1,13 +1,16 @@
+// Package dto TODO
 package dto
 
-import "github.com/sorohimm/uacs-store-back/pkg/api"
+import (
+	"github.com/sorohimm/uacs-store-back/pkg/api"
+)
 
 func NewProductInfosFromAPI(info []*api.ProductInfo) []*ProductInfo {
-	var infos []*ProductInfo
+	to := make([]*ProductInfo, 0, len(info))
 	for _, el := range info {
-		infos = append(infos, NewProductInfoFromAPI(el))
+		to = append(to, NewProductInfoFromAPI(el))
 	}
-	return infos
+	return to
 }
 
 func NewProductInfoFromAPI(info *api.ProductInfo) *ProductInfo {

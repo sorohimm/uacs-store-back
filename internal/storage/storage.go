@@ -1,9 +1,11 @@
+// Package storage TODO
 package storage
 
 import (
 	"context"
 
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/brand"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/cart"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/category"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/auth"
@@ -46,4 +48,13 @@ type UserRequester interface {
 	GetUserByID(ctx context.Context, userID int64) (*auth.User, error)
 	GetUserByUsername(ctx context.Context, username string) (*auth.User, error)
 	GetUserCredentialByUsername(ctx context.Context, username string) (*auth.Credentials, error)
+}
+
+type CartCommander interface {
+	AddCartItem(ctx context.Context, item *api.CartItem) (*cart.Item, error)
+	DeleteCartItem(ctx context.Context, item *api.CartItem) error
+}
+
+type CartRequester interface {
+	GetCart(ctx context.Context, req *api.CartReq) (*cart.Cart, error)
 }

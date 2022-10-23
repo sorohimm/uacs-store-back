@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package github.com.sorohimm.uacs_store;
+
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+
+option go_package = "github.com/sorohimm/shop/pkg/api";
+
+message RegistrationRequest {
+    string email = 10;
+    string username = 11;
+    string password = 20;
+    string role = 30;
+}
+
+message LoginRequest {
+    string username = 10;
+    string password = 20;
+}
+
+service AuthService {
+    rpc Registration (RegistrationRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post: "/v1/auth/registration"
+            body: "*"
+        };
+    };
+
+    rpc Login (LoginRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post: "/v1/auth/login"
+            body: "*"
+        };
+    };
+
+    rpc Logout (google.protobuf.Empty) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post: "/v1/auth/logout"
+        };
+    };
+
+    rpc RefreshAccessToken (google.protobuf.Empty) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post: "/v1/auth/refresh"
+        };
+    };
+}

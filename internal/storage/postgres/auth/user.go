@@ -1,29 +1,13 @@
+// Package auth TODO
 package auth
 
 import (
 	"context"
-	"errors"
-	"github.com/jackc/pgconn"
+
 	"github.com/jackc/pgx/v4"
+
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
 )
-
-func getCredentialsByUserID(ctx context.Context, schema string, tx pgx.Tx, userID int64) (*Credentials, error) {
-	var (
-		user *User
-		salt string
-		err  error
-	)
-
-	if user, err = getUserByID(ctx, schema, tx, userID); err != nil {
-		return nil, err
-	}
-	if salt, err = getSalt(ctx, schema, tx, userID); err != nil {
-		return nil, err
-	}
-
-	return &Credentials{PwdSalt: salt, UserID: user.ID, Email: user.Email, Username: user.Username, Password: user.Password}, nil
-}
 
 func getCredentialsByUsername(ctx context.Context, schema string, tx pgx.Tx, username string) (*Credentials, error) {
 	var (
@@ -65,15 +49,12 @@ WHERE user_id=$1
 	row := tx.QueryRow(ctx, sql, userID)
 	var salt string
 	if err := row.Scan(&salt); err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return "", ErrNotFound
-		}
 		return "", err
 	}
 	return salt, nil
 }
 
-func saveUser(ctx context.Context, schema string, tx pgx.Tx, user User) (*User, error) {
+func saveUser(ctx context.Context, schema string, tx pgx.Tx, user *User) (int64, error) {
 	sql := `
 INSERT INTO ` + schema + `.` + postgres.UserTableName + `
 (
@@ -89,25 +70,10 @@ RETURNING id;
 
 	var id int64
 	if err := row.Scan(&id); err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, ErrNotFound
-		}
-
-		if err.(*pgconn.PgError).Code == "23505" {
-			return nil, ErrUserAlreadyExists
-		}
-
-		return nil, err
+		return 0, err
 	}
 
-	return &User{
-			ID:       id,
-			Username: user.Username,
-			Email:    user.Email,
-			Password: user.Password,
-			Role:     user.Role,
-		},
-		nil
+	return id, nil
 }
 
 func getUserByID(ctx context.Context, schema string, tx pgx.Tx, userID int64) (*User, error) {
@@ -121,11 +87,8 @@ FROM ` + schema + `.` + postgres.UserTableName + `
 WHERE id=$1
 `
 	row := tx.QueryRow(ctx, sql, userID)
-	var user = User{ID: userID}
+	user := User{ID: userID}
 	if err := row.Scan(&user.Username, &user.Email, &user.Password, &user.Role); err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, ErrNotFound
-		}
 		return nil, err
 	}
 
@@ -143,11 +106,8 @@ FROM ` + schema + `.` + postgres.UserTableName + `
 WHERE username=$1
 `
 	row := tx.QueryRow(ctx, sql, username)
-	var user = User{Username: username}
+	user := User{Username: username}
 	if err := row.Scan(&user.ID, &user.Email, &user.Password, &user.Role); err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, ErrNotFound
-		}
 		return nil, err
 	}
 

@@ -4,6 +4,7 @@ package initial
 import (
 	"context"
 	"fmt"
+	"github.com/sorohimm/uacs-store-back/pkg/log"
 	"math"
 	"net"
 	"net/http"
@@ -17,7 +18,6 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/encoding/protojson"
 
-	"github.com/sorohimm/uacs-store-back/internal/log"
 	"github.com/sorohimm/uacs-store-back/internal/service/auth/config"
 )
 
@@ -60,7 +60,7 @@ func HTTP(ctx context.Context, cnf *config.Config, registrar HTTPRegistrar) (fun
 	httpMux.Handle("/", gwMux)
 
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
+		AllowedOrigins:   []string{"*"}, // TODO: from config
 		AllowCredentials: true,
 		AllowedMethods:   []string{http.MethodGet, http.MethodPost},
 	})

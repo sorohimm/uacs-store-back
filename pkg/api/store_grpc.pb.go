@@ -145,8 +145,8 @@ var StoreServiceRequester_ServiceDesc = grpc.ServiceDesc{
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type StoreServiceCommanderClient interface {
 	CreateProduct(ctx context.Context, in *CreateProductRequest, opts ...grpc.CallOption) (*ProductResponse, error)
-	CreateBrand(ctx context.Context, in *CreateBrandRequest, opts ...grpc.CallOption) (*CreateBrandResponse, error)
-	CreateCategory(ctx context.Context, in *CreateCategoryRequest, opts ...grpc.CallOption) (*CreateCategoryResponse, error)
+	CreateBrand(ctx context.Context, in *CreateBrandRequest, opts ...grpc.CallOption) (*BrandResponse, error)
+	CreateCategory(ctx context.Context, in *CreateCategoryRequest, opts ...grpc.CallOption) (*CategoryResponse, error)
 }
 
 type storeServiceCommanderClient struct {
@@ -166,8 +166,8 @@ func (c *storeServiceCommanderClient) CreateProduct(ctx context.Context, in *Cre
 	return out, nil
 }
 
-func (c *storeServiceCommanderClient) CreateBrand(ctx context.Context, in *CreateBrandRequest, opts ...grpc.CallOption) (*CreateBrandResponse, error) {
-	out := new(CreateBrandResponse)
+func (c *storeServiceCommanderClient) CreateBrand(ctx context.Context, in *CreateBrandRequest, opts ...grpc.CallOption) (*BrandResponse, error) {
+	out := new(BrandResponse)
 	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.StoreServiceCommander/CreateBrand", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -175,8 +175,8 @@ func (c *storeServiceCommanderClient) CreateBrand(ctx context.Context, in *Creat
 	return out, nil
 }
 
-func (c *storeServiceCommanderClient) CreateCategory(ctx context.Context, in *CreateCategoryRequest, opts ...grpc.CallOption) (*CreateCategoryResponse, error) {
-	out := new(CreateCategoryResponse)
+func (c *storeServiceCommanderClient) CreateCategory(ctx context.Context, in *CreateCategoryRequest, opts ...grpc.CallOption) (*CategoryResponse, error) {
+	out := new(CategoryResponse)
 	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.StoreServiceCommander/CreateCategory", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -189,8 +189,8 @@ func (c *storeServiceCommanderClient) CreateCategory(ctx context.Context, in *Cr
 // for forward compatibility
 type StoreServiceCommanderServer interface {
 	CreateProduct(context.Context, *CreateProductRequest) (*ProductResponse, error)
-	CreateBrand(context.Context, *CreateBrandRequest) (*CreateBrandResponse, error)
-	CreateCategory(context.Context, *CreateCategoryRequest) (*CreateCategoryResponse, error)
+	CreateBrand(context.Context, *CreateBrandRequest) (*BrandResponse, error)
+	CreateCategory(context.Context, *CreateCategoryRequest) (*CategoryResponse, error)
 	mustEmbedUnimplementedStoreServiceCommanderServer()
 }
 
@@ -201,10 +201,10 @@ type UnimplementedStoreServiceCommanderServer struct {
 func (UnimplementedStoreServiceCommanderServer) CreateProduct(context.Context, *CreateProductRequest) (*ProductResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateProduct not implemented")
 }
-func (UnimplementedStoreServiceCommanderServer) CreateBrand(context.Context, *CreateBrandRequest) (*CreateBrandResponse, error) {
+func (UnimplementedStoreServiceCommanderServer) CreateBrand(context.Context, *CreateBrandRequest) (*BrandResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateBrand not implemented")
 }
-func (UnimplementedStoreServiceCommanderServer) CreateCategory(context.Context, *CreateCategoryRequest) (*CreateCategoryResponse, error) {
+func (UnimplementedStoreServiceCommanderServer) CreateCategory(context.Context, *CreateCategoryRequest) (*CategoryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateCategory not implemented")
 }
 func (UnimplementedStoreServiceCommanderServer) mustEmbedUnimplementedStoreServiceCommanderServer() {}

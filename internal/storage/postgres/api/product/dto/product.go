@@ -1,9 +1,11 @@
 package dto
 
-import "github.com/sorohimm/uacs-store-back/pkg/api"
+import (
+	"github.com/sorohimm/uacs-store-back/pkg/api"
+)
 
 func NewProductFromRequest(req *api.CreateProductRequest) *Product {
-	var info []*ProductInfo
+	info := make([]*ProductInfo, 0, len(req.Info))
 	for _, el := range req.Info {
 		info = append(info, NewProductInfoFromAPI(el))
 	}
@@ -32,8 +34,8 @@ func (o *Product) SetID(id int64) *Product {
 	return o
 }
 
-func (o Product) ToAPIResponse() *api.ProductResponse {
-	var info []*api.ProductInfo
+func (o *Product) ToAPIResponse() *api.ProductResponse {
+	info := make([]*api.ProductInfo, 0, len(o.Info))
 	for _, el := range o.Info {
 		info = append(info, el.ToAPI())
 	}
@@ -49,7 +51,7 @@ func (o Product) ToAPIResponse() *api.ProductResponse {
 type Products []*Product
 
 func (o Products) ToAPIResponse() *api.AllProductsResponse {
-	var products []*api.ProductResponse
+	products := make([]*api.ProductResponse, 0, len(o))
 	for _, el := range o {
 		products = append(products, el.ToAPIResponse())
 	}

@@ -1,10 +1,15 @@
+// Package handler TODO
 package handler
 
 import (
 	"context"
 	"errors"
-	jwt2 "github.com/sorohimm/uacs-store-back/internal/jwt"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
+	"github.com/sorohimm/uacs-store-back/pkg/api"
+	"github.com/sorohimm/uacs-store-back/pkg/log"
 	"time"
+
+	jwt2 "github.com/sorohimm/uacs-store-back/internal/jwt"
 
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -12,11 +17,9 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	"github.com/sorohimm/uacs-store-back/internal/log"
 	"github.com/sorohimm/uacs-store-back/internal/security"
 	"github.com/sorohimm/uacs-store-back/internal/storage"
 	repo "github.com/sorohimm/uacs-store-back/internal/storage/postgres/auth"
-	proto "github.com/sorohimm/uacs-store-back/pkg/auth"
 )
 
 func NewAuthHandler(schema string, pool *pgxpool.Pool) *AuthHandler {
@@ -27,7 +30,7 @@ func NewAuthHandler(schema string, pool *pgxpool.Pool) *AuthHandler {
 }
 
 type AuthHandler struct {
-	proto.UnimplementedAuthServiceServer
+	api.UnimplementedAuthServiceServer
 	authRepoCommander     storage.UserCommander
 	authRepoRequester     storage.UserRequester
 	accessExpireDuration  time.Duration
@@ -50,13 +53,12 @@ func (o *AuthHandler) SetRefreshExpireDuration(expireDuration time.Duration) *Au
 	return o
 }
 
-func (o *AuthHandler) Registration(ctx context.Context, req *proto.RegistrationRequest) (*empty.Empty, error) {
+func (o *AuthHandler) Registration(ctx context.Context, req *api.RegistrationRequest) (*empty.Empty, error) {
 	logger := log.FromContext(ctx).Sugar()
 	logger.Debug("AuthHandler.Registration was called")
 
 	var (
 		err error
-		_   *repo.User
 	)
 
 	salt := security.GenerateSalt(req.Password)
@@ -66,18 +68,16 @@ func (o *AuthHandler) Registration(ctx context.Context, req *proto.RegistrationR
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
-	repoReq := repo.CreateUserRequest{
-		User: repo.User{
-			Username: req.Username,
-			Email:    req.Email,
-			Password: hashPwd,
-			Role:     req.Role,
-		},
-		PwdSalt: salt,
-	}
+	user := repo.NewUser().
+		SetUsername(req.Username).
+		SetEmail(req.Email).
+		SetPassword(hashPwd).
+		SetRole("USER")
 
-	if _, err = o.authRepoCommander.CreateUser(ctx, &repoReq); err != nil {
-		if errors.Is(err, repo.ErrUserAlreadyExists) {
+	repoReq := repo.NewCreateUserRequest().SetUser(*user).SetSalt(salt)
+
+	if _, err = o.authRepoCommander.CreateUser(ctx, repoReq); err != nil {
+		if errors.Is(err, postgres.ErrConflict) {
 			return nil, status.Errorf(codes.AlreadyExists, err.Error())
 		}
 		return nil, status.Errorf(codes.Internal, err.Error())
@@ -86,7 +86,7 @@ func (o *AuthHandler) Registration(ctx context.Context, req *proto.RegistrationR
 	return &empty.Empty{}, nil
 }
 
-func (o *AuthHandler) Login(ctx context.Context, req *proto.LoginRequest) (*empty.Empty, error) {
+func (o *AuthHandler) Login(ctx context.Context, req *api.LoginRequest) (*empty.Empty, error) {
 	logger := log.FromContext(ctx).Sugar()
 	logger.Debug("AuthHandler.Login was called")
 
@@ -95,7 +95,7 @@ func (o *AuthHandler) Login(ctx context.Context, req *proto.LoginRequest) (*empt
 		err         error
 	)
 	if credentials, err = o.authRepoRequester.GetUserCredentialByUsername(ctx, req.Username); err != nil {
-		if errors.Is(err, repo.ErrNotFound) {
+		if errors.Is(err, postgres.ErrNotFound) {
 			return nil, status.Errorf(codes.Unauthenticated, err.Error())
 		}
 		return nil, status.Errorf(codes.Internal, err.Error())

@@ -1,19 +1,17 @@
+// Package product TODO
 package product
 
 import (
 	"context"
-	"errors"
-	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
 
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 
-	"github.com/sorohimm/uacs-store-back/internal/log"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
 	"github.com/sorohimm/uacs-store-back/pkg/api"
+	"github.com/sorohimm/uacs-store-back/pkg/log"
 )
-
-var ErrNotFound = errors.New("not found")
 
 func NewProductRepo(schema string, pool *pgxpool.Pool) *ProductRepo {
 	return &ProductRepo{
@@ -36,13 +34,18 @@ price
 FROM ` + o.schema + `.` + postgres.ProductTableName + ` WHERE id=$1` // TODO: add image
 
 	var (
-		tx  pgx.Tx
-		err error
+		tx     pgx.Tx
+		err    error
+		logger = log.FromContext(ctx).Sugar()
 	)
 	if tx, err = o.pool.BeginTx(ctx, pgx.TxOptions{}); err != nil {
 		return nil, err
 	}
-	defer postgres.CommitOrRollbackTx(ctx, tx, err)
+	defer func() {
+		if err = postgres.CommitOrRollbackTx(ctx, tx, err); err != nil {
+			logger.Errorf("tx: %s", err)
+		}
+	}()
 
 	row := tx.QueryRow(ctx, sql, id)
 
@@ -52,10 +55,7 @@ FROM ` + o.schema + `.` + postgres.ProductTableName + ` WHERE id=$1` // TODO: ad
 		&prod.Name,
 		&prod.Price,
 	); err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, ErrNotFound
-		}
-		return nil, err
+		return nil, postgres.ResolveError(err)
 	}
 
 	var info []*dto.ProductInfo
@@ -95,7 +95,6 @@ LIMIT $1 OFFSET $2;`
 }
 
 func (o *ProductRepo) GetAllProductsWithBrand(ctx context.Context, brandID int64, limit int64, offset int64) (*dto.Products, error) {
-
 	sql := `
 SELECT 
 id,
@@ -189,10 +188,7 @@ func (o *ProductRepo) scanAllProducts(rows pgx.Rows) (*dto.Products, error) {
 			&prod.Price,
 			&prod.Img,
 		); err != nil {
-			if errors.Is(err, pgx.ErrNoRows) {
-				return nil, ErrNotFound
-			}
-			return nil, err
+			return nil, postgres.ResolveError(err)
 		}
 		products = append(products, &prod)
 	}
@@ -201,8 +197,41 @@ func (o *ProductRepo) scanAllProducts(rows pgx.Rows) (*dto.Products, error) {
 }
 
 func (o *ProductRepo) CreateProduct(ctx context.Context, request *api.CreateProductRequest) (*dto.Product, error) {
+	var (
+		tx     pgx.Tx
+		err    error
+		logger = log.FromContext(ctx).Sugar()
+	)
+
+	if tx, err = o.pool.BeginTx(ctx, pgx.TxOptions{}); err != nil {
+		return nil, err
+	}
+	defer func() {
+		if err = postgres.CommitOrRollbackTx(ctx, tx, err); err != nil {
+			logger.Errorf("tx: %s", err)
+		}
+	}()
+
+	product := dto.NewProductFromRequest(request)
+	id, err := createProduct(ctx, o.schema, tx, product)
+	if err != nil {
+		logger.Debugf("create api err: %s", err)
+		return nil, postgres.ResolveError(err)
+	}
+	product.SetID(id)
+
+	if err = addProductInfo(ctx, o.schema, tx, product.Info, product.ID); err != nil {
+		logger.Debugf("add api info err: %s", err)
+		return nil, postgres.ResolveError(err)
+	}
+
+	return product, nil
+}
+
+// createProduct inserts new api and returns id
+func createProduct(ctx context.Context, schema string, tx pgx.Tx, product *dto.Product) (int64, error) {
 	sql := `
-INSERT INTO ` + o.schema + `.` + postgres.ProductTableName + `
+INSERT INTO ` + schema + `.` + postgres.ProductTableName + `
 (
 name,
 price,
@@ -212,28 +241,12 @@ type_id
 VALUES  ($1,$2,$3,$4)
 RETURNING id;` // Todo: add img field
 
-	var (
-		tx  pgx.Tx
-		err error
-	)
-
-	if tx, err = o.pool.BeginTx(ctx, pgx.TxOptions{}); err != nil {
-		return nil, err
-	}
-	defer postgres.CommitOrRollbackTx(ctx, tx, err)
-
-	row := tx.QueryRow(ctx, sql, request.Name, request.Price, request.BrandId, request.TypeId)
+	row := tx.QueryRow(ctx, sql, product.Name, product.Price, product.BrandID, product.TypeID)
 
 	var id int64
-	if err = row.Scan(&id); err != nil {
-		return nil, err
+	if err := row.Scan(&id); err != nil {
+		return 0, err
 	}
 
-	product := dto.NewProductFromRequest(request).SetID(id)
-
-	if err = addInfo(ctx, o.schema, tx, product.Info, product.ID); err != nil {
-		return nil, err
-	}
-
-	return product, nil
+	return id, nil
 }

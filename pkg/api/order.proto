@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package github.com.sorohimm.uacs_store;
+
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+
+option go_package = "github.com/sorohimm/uacs-store-back/pkg/api";
+
+message CartItem {
+  int64 id = 10;
+  int64 cart_id = 20;
+  int64 product_id = 30;
+  int64 quantity = 40;
+}
+
+message Cart {
+  int64 id = 10;
+  repeated CartItem items = 20;
+}
+
+message CartReq {
+  int64 id = 10;
+}
+
+service CartService {
+  rpc GetCart (CartReq) returns (Cart) {
+    option (google.api.http) = {
+      get: "/v1/cart/{id}"
+    };
+  }
+
+  rpc AddCartItem (CartItem) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1/cart/item"
+      body: "*"
+    };
+  }
+
+  rpc PatchCartItem (CartItem) returns (Cart) {
+    option (google.api.http) = {
+      patch: "/v1/cart/item"
+      body: "*"
+    };
+  }
+
+  rpc DeleteCartItem (CartItem) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v1/cart/item/{id}"
+    };
+  }
+}
+
+message Address {
+  string address_line1 = 10;
+  string address_line2 = 20;
+  string city = 30;
+  string postal_code = 40;
+  string telephone = 50;
+  string mobile = 60;
+}
+
+message Order {
+  int64 cart_id = 10;
+  Address addr = 20;
+}
+
+service OrderService {
+  rpc SubmitOrder (Order) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1/order"
+      body: "*"
+    };
+  };
+}

@@ -235,7 +235,7 @@ func RegisterStoreServiceRequesterHandlerServer(ctx context.Context, mux *runtim
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/github.com.sorohimm.uacs_store.StoreServiceRequester/GetProduct", runtime.WithHTTPPathPattern("/v1/product/{id}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/github.com.sorohimm.uacs_store.StoreServiceRequester/GetProduct", runtime.WithHTTPPathPattern("/v1/api/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -260,7 +260,7 @@ func RegisterStoreServiceRequesterHandlerServer(ctx context.Context, mux *runtim
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/github.com.sorohimm.uacs_store.StoreServiceRequester/GetAllProducts", runtime.WithHTTPPathPattern("/v1/product"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/github.com.sorohimm.uacs_store.StoreServiceRequester/GetAllProducts", runtime.WithHTTPPathPattern("/v1/api"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -294,7 +294,7 @@ func RegisterStoreServiceCommanderHandlerServer(ctx context.Context, mux *runtim
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/github.com.sorohimm.uacs_store.StoreServiceCommander/CreateProduct", runtime.WithHTTPPathPattern("/v1/product"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/github.com.sorohimm.uacs_store.StoreServiceCommander/CreateProduct", runtime.WithHTTPPathPattern("/v1/api"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -408,7 +408,7 @@ func RegisterStoreServiceRequesterHandlerClient(ctx context.Context, mux *runtim
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/github.com.sorohimm.uacs_store.StoreServiceRequester/GetProduct", runtime.WithHTTPPathPattern("/v1/product/{id}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/github.com.sorohimm.uacs_store.StoreServiceRequester/GetProduct", runtime.WithHTTPPathPattern("/v1/api/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -430,7 +430,7 @@ func RegisterStoreServiceRequesterHandlerClient(ctx context.Context, mux *runtim
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/github.com.sorohimm.uacs_store.StoreServiceRequester/GetAllProducts", runtime.WithHTTPPathPattern("/v1/product"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/github.com.sorohimm.uacs_store.StoreServiceRequester/GetAllProducts", runtime.WithHTTPPathPattern("/v1/api"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -450,9 +450,9 @@ func RegisterStoreServiceRequesterHandlerClient(ctx context.Context, mux *runtim
 }
 
 var (
-	pattern_StoreServiceRequester_GetProduct_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "product", "id"}, ""))
+	pattern_StoreServiceRequester_GetProduct_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "api", "id"}, ""))
 
-	pattern_StoreServiceRequester_GetAllProducts_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "product"}, ""))
+	pattern_StoreServiceRequester_GetAllProducts_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "api"}, ""))
 )
 
 var (
@@ -505,7 +505,7 @@ func RegisterStoreServiceCommanderHandlerClient(ctx context.Context, mux *runtim
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/github.com.sorohimm.uacs_store.StoreServiceCommander/CreateProduct", runtime.WithHTTPPathPattern("/v1/product"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/github.com.sorohimm.uacs_store.StoreServiceCommander/CreateProduct", runtime.WithHTTPPathPattern("/v1/api"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -569,7 +569,7 @@ func RegisterStoreServiceCommanderHandlerClient(ctx context.Context, mux *runtim
 }
 
 var (
-	pattern_StoreServiceCommander_CreateProduct_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "product"}, ""))
+	pattern_StoreServiceCommander_CreateProduct_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "api"}, ""))
 
 	pattern_StoreServiceCommander_CreateBrand_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "brand"}, ""))
 
