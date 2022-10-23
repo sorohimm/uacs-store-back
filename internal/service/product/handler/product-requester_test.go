@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	product2 "github.com/sorohimm/uacs-store-back/internal/model/product"
+	"github.com/sorohimm/uacs-store-back/internal/storage/postgres"
 	"github.com/sorohimm/uacs-store-back/pkg/api"
 	"testing"
 
@@ -12,7 +13,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product"
 	"github.com/sorohimm/uacs-store-back/internal/storage/postgres/api/product/dto"
 )
 
@@ -60,7 +60,7 @@ func TestProductRequesterHandler_GetProduct(t *testing.T) {
 			Id: 1,
 		}
 
-		expErr := product.ErrNotFound
+		expErr := postgres.ErrNotFound
 		mockProdReq.EXPECT().GetProductByID(ctx, req.GetId()).Return(nil, expErr)
 
 		resp, err := requester.GetProduct(ctx, req)
@@ -171,7 +171,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		limit := req.GetLimit()
 		offset := req.GetPage()*limit - limit
 
-		expErr := product.ErrNotFound
+		expErr := postgres.ErrNotFound
 		mockProdReq.EXPECT().GetAllProducts(ctx, limit, offset).Return(nil, expErr)
 
 		resp, err := requester.GetAllProducts(ctx, req)
@@ -260,7 +260,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		limit := req.GetLimit()
 		offset := req.GetPage()*limit - limit
 
-		expErr := product.ErrNotFound
+		expErr := postgres.ErrNotFound
 		mockProdReq.EXPECT().GetAllProductsWithBrandAndType(ctx, req.TypeId, req.GetBrandId(), limit, offset).Return(nil, expErr)
 
 		resp, err := requester.GetAllProducts(ctx, req)
@@ -346,7 +346,7 @@ func TestProductRequesterHandler_GetAllProducts(t *testing.T) {
 		limit := req.GetLimit()
 		offset := req.GetPage()*limit - limit
 
-		expErr := product.ErrNotFound
+		expErr := postgres.ErrNotFound
 		mockProdReq.EXPECT().GetAllProductsWithBrand(ctx, req.GetBrandId(), limit, offset).Return(nil, expErr)
 
 		resp, err := requester.GetAllProducts(ctx, req)

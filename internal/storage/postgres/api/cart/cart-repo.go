@@ -3,6 +3,7 @@ package cart
 import (
 	"context"
 	"github.com/jackc/pgx/v4"
+	"github.com/sorohimm/uacs-store-back/pkg/api"
 
 	"github.com/jackc/pgx/v4/pgxpool"
 )
@@ -27,7 +28,7 @@ func getCart(ctx context.Context, schema string, tx pgx.Tx) (*Cart, error) {
 	return nil, nil
 }
 
-func (o *Repo) DeleteItemFromCart(ctx context.Context, api.Delete) error {
+func (o *Repo) DeleteItemFromCart(ctx context.Context, item *api.CartItem) error {
 	return nil
 }
 
@@ -35,7 +36,7 @@ func deleteItemFromCart(ctx context.Context, schema string, tx pgx.Tx) error {
 	return nil
 }
 
-func (o *Repo) AddItemToCart(ctx context.Context) error {
+func (o *Repo) AddItemToCart(ctx context.Context, item *api.CartItem) error {
 	return nil
 }
 

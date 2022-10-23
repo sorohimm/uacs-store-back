@@ -42,7 +42,7 @@ func (o *ProductRequesterHandler) GetProduct(ctx context.Context, req *api.Produ
 
 func (o *ProductRequesterHandler) GetAllProducts(ctx context.Context, req *api.AllProductsRequest) (*api.AllProductsResponse, error) {
 	limit := req.GetLimit()
-	offset := offset(limit, offset(limit, req.GetPage()))
+	offset := offset(limit, req.GetPage())
 
 	var (
 		prod *dto.Products
