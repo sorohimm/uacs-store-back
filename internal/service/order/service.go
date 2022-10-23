@@ -72,7 +72,7 @@ func (o *Service) Init(ctx context.Context, appName, version, built string) {
 
 	cfg := config.FromContext(ctx)
 
-	cartHandler := handler.NewCartCommanderHandler(cfg.Postgres.SchemaName, pool)
+	cartHandler := handler.NewCartHandler(cfg.Postgres.SchemaName, pool)
 	o.Add(initial.Grpc(ctx, func(s *grpc.Server) {
 		api.RegisterCartServiceServer(s, cartHandler)
 	}))

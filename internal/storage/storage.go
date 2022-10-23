@@ -57,4 +57,5 @@ type CartCommander interface {
 
 type CartRequester interface {
 	GetCart(ctx context.Context, req *api.CartReq) (*cart.Cart, error)
+	GetInfo(ctx context.Context, req *api.CartReq) (*cart.CartInfo, error)
 }

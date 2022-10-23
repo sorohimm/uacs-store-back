@@ -41,6 +41,7 @@ message Customer {
 message CartInfo {
     int64 id = 10;
     Customer customer = 20;
+    repeated CartItem items = 30;
 }
 
 service CartService {
@@ -51,7 +52,7 @@ service CartService {
         };
     }
 
-    rpc Info (CartReq) returns (Cart) {
+    rpc Info (CartReq) returns (CartInfo) {
         option (google.api.http) = {
             get: "/v1/cart/info/{id}"
         };

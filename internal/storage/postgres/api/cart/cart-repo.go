@@ -2,6 +2,7 @@ package cart
 
 import (
 	"context"
+	"errors"
 
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -21,6 +22,11 @@ func NewRepo(schema string, pool *pgxpool.Pool) *Repo {
 type Repo struct {
 	schema string
 	pool   *pgxpool.Pool
+}
+
+func (o *Repo) GetInfo(ctx context.Context, req *api.CartReq) (*CartInfo, error) {
+	//TODO: implement
+	return nil, errors.New("unimplemented")
 }
 
 func (o *Repo) GetCart(ctx context.Context, req *api.CartReq) (*Cart, error) {

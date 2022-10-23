@@ -24,7 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CartServiceClient interface {
 	CreateCart(ctx context.Context, in *Cart, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	Info(ctx context.Context, in *CartReq, opts ...grpc.CallOption) (*Cart, error)
+	Info(ctx context.Context, in *CartReq, opts ...grpc.CallOption) (*CartInfo, error)
 	AddCartItem(ctx context.Context, in *CartItem, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	PatchCartItem(ctx context.Context, in *CartItem, opts ...grpc.CallOption) (*Cart, error)
 	DeleteCartItem(ctx context.Context, in *CartItem, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -47,8 +47,8 @@ func (c *cartServiceClient) CreateCart(ctx context.Context, in *Cart, opts ...gr
 	return out, nil
 }
 
-func (c *cartServiceClient) Info(ctx context.Context, in *CartReq, opts ...grpc.CallOption) (*Cart, error) {
-	out := new(Cart)
+func (c *cartServiceClient) Info(ctx context.Context, in *CartReq, opts ...grpc.CallOption) (*CartInfo, error) {
+	out := new(CartInfo)
 	err := c.cc.Invoke(ctx, "/github.com.sorohimm.uacs_store.CartService/Info", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -88,7 +88,7 @@ func (c *cartServiceClient) DeleteCartItem(ctx context.Context, in *CartItem, op
 // for forward compatibility
 type CartServiceServer interface {
 	CreateCart(context.Context, *Cart) (*emptypb.Empty, error)
-	Info(context.Context, *CartReq) (*Cart, error)
+	Info(context.Context, *CartReq) (*CartInfo, error)
 	AddCartItem(context.Context, *CartItem) (*emptypb.Empty, error)
 	PatchCartItem(context.Context, *CartItem) (*Cart, error)
 	DeleteCartItem(context.Context, *CartItem) (*emptypb.Empty, error)
@@ -102,7 +102,7 @@ type UnimplementedCartServiceServer struct {
 func (UnimplementedCartServiceServer) CreateCart(context.Context, *Cart) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateCart not implemented")
 }
-func (UnimplementedCartServiceServer) Info(context.Context, *CartReq) (*Cart, error) {
+func (UnimplementedCartServiceServer) Info(context.Context, *CartReq) (*CartInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Info not implemented")
 }
 func (UnimplementedCartServiceServer) AddCartItem(context.Context, *CartItem) (*emptypb.Empty, error) {

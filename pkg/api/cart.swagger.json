@@ -56,7 +56,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/uacs_storeCart"
+              "$ref": "#/definitions/uacs_storeCartInfo"
             }
           },
           "default": {
@@ -260,6 +260,24 @@
         }
       }
     },
+    "uacs_storeCartInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "customer": {
+          "$ref": "#/definitions/uacs_storeCustomer"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/uacs_storeCartItem"
+          }
+        }
+      }
+    },
     "uacs_storeCartItem": {
       "type": "object",
       "properties": {
@@ -289,6 +307,27 @@
         "quantity": {
           "type": "string",
           "format": "int64"
+        }
+      }
+    },
+    "uacs_storeCustomer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "email": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
         }
       }
     }
